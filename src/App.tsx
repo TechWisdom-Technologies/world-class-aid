@@ -106,9 +106,8 @@ const App = () => (
               }
             >
               <Route index element={<PartnerOverview />} />
-              <Route path="wallet" element={<PartnerWallet />} />
+              <Route path="students" element={<PartnerStudents />} />
               <Route path="marketing" element={<PartnerMarketing />} />
-              <Route path="team" element={<PartnerTeam />} />
             </Route>
 
             {/* Redirects for old routes */}
