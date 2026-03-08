@@ -23,7 +23,7 @@ export function useInsertRow(table: TableName) {
   const { toast } = useToast();
   return useMutation({
     mutationFn: async (row: Record<string, any>) => {
-      const { data, error } = await supabase.from(table).insert(row).select().single();
+      const { data, error } = await (supabase.from(table) as any).insert(row).select().single();
       if (error) throw error;
       return data;
     },
