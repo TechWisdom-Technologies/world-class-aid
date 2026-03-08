@@ -7,16 +7,20 @@ import { UniversitiesSection } from "@/components/public/UniversitiesSection";
 import { AccommodationsSection } from "@/components/public/AccommodationsSection";
 import { TestimonialsSection } from "@/components/public/TestimonialsSection";
 import { BlogSection } from "@/components/public/BlogSection";
+import { IntakeCalendar } from "@/components/public/IntakeCalendar";
+import { ResourcesSection } from "@/components/public/ResourcesSection";
+import { LeadBanner } from "@/components/public/LeadBanner";
+import { AmbassadorChat } from "@/components/public/AmbassadorChat";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { GraduationCap, Calculator, Handshake, Globe } from "lucide-react";
+import { GraduationCap, Calculator, Handshake, Globe, Trophy, Calendar } from "lucide-react";
 
 const quickLinks = [
   { icon: Globe, title: "Explore Countries", desc: "Browse universities by country", href: "/countries" },
+  { icon: Trophy, title: "Compare Universities", desc: "Side-by-side comparison", href: "/compare" },
   { icon: GraduationCap, title: "Eligibility Test", desc: "Find your best-fit university", href: "/eligibility" },
-  { icon: Calculator, title: "Cost Calculator", desc: "Estimate living expenses", href: "/cost-calculator" },
-  { icon: Handshake, title: "Become a Partner", desc: "Join our B2B network", href: "/b2b" },
+  { icon: Calendar, title: "Events & Webinars", desc: "Register for free events", href: "/events" },
 ];
 
 const Index = () => {
@@ -29,9 +33,9 @@ const Index = () => {
         {/* Quick Links */}
         <div className="container mx-auto px-4 -mt-8 relative z-20">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {quickLinks.map((l) => (
+            {quickLinks.map((l, i) => (
               <Link key={l.title} to={l.href}>
-                <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+                <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group animate-fade-in" style={{ animationDelay: `${i * 100}ms` }}>
                   <CardContent className="p-5 flex items-center gap-4">
                     <div className="h-12 w-12 rounded-2xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
                       <l.icon className="h-6 w-6 text-secondary" />
@@ -49,12 +53,16 @@ const Index = () => {
 
         <ServicesGrid />
         <StatsBanner />
+        <IntakeCalendar />
         <UniversitiesSection />
         <AccommodationsSection />
+        <ResourcesSection />
         <TestimonialsSection />
         <BlogSection />
       </main>
       <PublicFooter />
+      <LeadBanner />
+      <AmbassadorChat />
     </div>
   );
 };

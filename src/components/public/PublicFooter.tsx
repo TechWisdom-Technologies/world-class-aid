@@ -14,27 +14,26 @@ export function PublicFooter() {
               </span>
             </div>
             <p className="text-sm text-primary-foreground/70">
-              Expert guidance for international students seeking quality education in Malaysia.
+              Expert guidance for international students seeking quality education worldwide.
             </p>
           </div>
 
           <div>
             <h4 className="font-semibold mb-3">Quick Links</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li><a href="#universities" className="hover:text-secondary transition-colors">Universities</a></li>
-              <li><a href="#courses" className="hover:text-secondary transition-colors">Courses</a></li>
-              <li><a href="#accommodations" className="hover:text-secondary transition-colors">Accommodations</a></li>
-              <li><a href="#" className="hover:text-secondary transition-colors">Blog</a></li>
+              <li><Link to="/countries" className="hover:text-secondary transition-colors">Universities</Link></li>
+              <li><Link to="/compare" className="hover:text-secondary transition-colors">Compare</Link></li>
+              <li><Link to="/eligibility" className="hover:text-secondary transition-colors">Eligibility Test</Link></li>
+              <li><Link to="/events" className="hover:text-secondary transition-colors">Events</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-3">Services</h4>
+            <h4 className="font-semibold mb-3">Tools & Resources</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li>Free Consultations</li>
-              <li>Admission & Visa</li>
-              <li>Accommodation</li>
-              <li>Airport Pickup</li>
+              <li><Link to="/cost-calculator" className="hover:text-secondary transition-colors">Cost Calculator</Link></li>
+              <li><Link to="/b2b" className="hover:text-secondary transition-colors">Partner With Us</Link></li>
+              <li><Link to="/login" className="hover:text-secondary transition-colors">Sign In</Link></li>
             </ul>
           </div>
 

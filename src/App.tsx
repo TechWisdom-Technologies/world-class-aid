@@ -14,6 +14,8 @@ import UniversityDetail from "./pages/UniversityDetail";
 import EligibilityWizard from "./pages/EligibilityWizard";
 import B2BLanding from "./pages/B2BLanding";
 import CostCalculator from "./pages/CostCalculator";
+import Compare from "./pages/Compare";
+import Events from "./pages/Events";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUniversities from "./pages/admin/AdminUniversities";
@@ -41,6 +43,8 @@ const App = () => (
             <Route path="/eligibility" element={<EligibilityWizard />} />
             <Route path="/b2b" element={<B2BLanding />} />
             <Route path="/cost-calculator" element={<CostCalculator />} />
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/events" element={<Events />} />
             <Route
               path="/admin"
               element={
