@@ -201,10 +201,70 @@ export interface Resource {
 }
 
 export const countries: Country[] = [
-  { id: 1, name: "Malaysia", code: "MY", flag_icon: "🇲🇾" },
-  { id: 2, name: "United Kingdom", code: "GB", flag_icon: "🇬🇧" },
-  { id: 3, name: "Australia", code: "AU", flag_icon: "🇦🇺" },
-  { id: 4, name: "Canada", code: "CA", flag_icon: "🇨🇦" },
+  {
+    id: 1, name: "Malaysia", code: "MY", flag_icon: "🇲🇾",
+    bannerImage: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1400&h=600&fit=crop",
+    capital: "Kuala Lumpur", currency: "MYR (Ringgit)", language: "Malay & English", population: "33 Million",
+    aboutText: "Malaysia has emerged as one of the top education hubs in Asia, hosting over 170,000 international students from 150+ countries. The Malaysian government actively promotes its 'Education Malaysia' initiative, offering world-class programs at public and private universities, many with dual-degree partnerships with institutions in the UK, Australia, and the US. English is widely spoken and used as the medium of instruction in most international programs, making it an accessible destination for students worldwide.",
+    reasonsToStudy: [
+      { title: "Affordable Tuition", description: "Tuition fees are 50-70% lower than the US, UK, or Australia while maintaining international standards.", iconName: "DollarSign" },
+      { title: "Cultural Diversity", description: "Experience a rich multicultural society with Malay, Chinese, Indian, and indigenous cultures.", iconName: "Globe" },
+      { title: "High-Tech Campuses", description: "Modern universities with state-of-the-art labs, smart classrooms, and digital libraries.", iconName: "Laptop" },
+      { title: "Gateway to Asia", description: "Strategic location with easy access to Singapore, Thailand, Indonesia, and beyond.", iconName: "Plane" },
+      { title: "Safe & Welcoming", description: "Ranked one of the safest countries in Southeast Asia with friendly locals.", iconName: "Shield" },
+      { title: "Globally Recognized Degrees", description: "Many programs are accredited by UK, Australian, and international bodies.", iconName: "Award" },
+    ],
+    costOfLiving: { housing: "$200 – $600/month", food: "$150 – $250/month", transport: "$30 – $60/month" },
+    postStudyWorkRights: "International graduates from Malaysian universities can apply for a 12-month Professional Visit Pass to seek employment. Malaysia's Digital Nomad visa and growing tech sector also provide pathways for graduates in STEM fields. The Malaysia My Second Home (MM2H) program offers long-term residency options for qualifying individuals.",
+  },
+  {
+    id: 2, name: "United Kingdom", code: "GB", flag_icon: "🇬🇧",
+    bannerImage: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1400&h=600&fit=crop",
+    capital: "London", currency: "GBP (Pound Sterling)", language: "English", population: "67 Million",
+    aboutText: "The United Kingdom is home to some of the world's oldest and most prestigious universities, including Oxford and Cambridge. UK degrees are recognized and respected globally, with a strong emphasis on research and critical thinking. The UK's shorter degree programs (3-year Bachelor's, 1-year Master's) offer excellent value, allowing students to enter the workforce sooner. With a thriving multicultural society and rich history, the UK provides an unparalleled student experience.",
+    reasonsToStudy: [
+      { title: "World-Class Universities", description: "Home to 4 of the world's top 10 universities including Oxford and Cambridge.", iconName: "GraduationCap" },
+      { title: "Shorter Degrees", description: "3-year Bachelor's and 1-year Master's programs save time and money.", iconName: "Clock" },
+      { title: "Research Excellence", description: "The UK produces 14% of the world's most cited research papers.", iconName: "FlaskConical" },
+      { title: "Cultural Capital", description: "London, Edinburgh, and Manchester are global centres for arts, tech, and finance.", iconName: "Building" },
+      { title: "NHS Healthcare", description: "International students get access to the UK's National Health Service.", iconName: "Heart" },
+      { title: "Post-Study Work Visa", description: "2-year Graduate Route visa allows you to work in the UK after graduation.", iconName: "Briefcase" },
+    ],
+    costOfLiving: { housing: "$600 – $1,400/month", food: "$250 – $400/month", transport: "$80 – $150/month" },
+    postStudyWorkRights: "The UK's Graduate Route visa allows international students to stay and work for 2 years after completing a degree (3 years for PhD graduates). There is no minimum salary requirement, and it can lead to a Skilled Worker visa for long-term settlement. The UK's thriving job market in finance, tech, healthcare, and creative industries makes it an attractive post-study destination.",
+  },
+  {
+    id: 3, name: "Australia", code: "AU", flag_icon: "🇦🇺",
+    bannerImage: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=1400&h=600&fit=crop",
+    capital: "Canberra", currency: "AUD (Australian Dollar)", language: "English", population: "26 Million",
+    aboutText: "Australia is the third most popular study destination in the world, known for its innovative education system, stunning natural environment, and high quality of life. Australian universities consistently rank among the world's best, with 7 institutions in the global top 100. The country's strong focus on research, combined with a relaxed lifestyle and welcoming multicultural society, makes it a top choice for international students seeking both academic excellence and adventure.",
+    reasonsToStudy: [
+      { title: "Top-Ranked Universities", description: "7 of Australia's universities are in the global top 100.", iconName: "Trophy" },
+      { title: "Post-Study Work Rights", description: "Up to 4 years of post-study work rights depending on your degree level.", iconName: "Briefcase" },
+      { title: "Quality of Life", description: "Australian cities consistently rank among the world's most liveable.", iconName: "Sun" },
+      { title: "Research Innovation", description: "Wi-Fi, Google Maps, and the cochlear implant were all invented in Australia.", iconName: "Lightbulb" },
+      { title: "Work While Studying", description: "International students can work up to 48 hours per fortnight during term.", iconName: "Clock" },
+      { title: "Stunning Environment", description: "From the Great Barrier Reef to the Outback, Australia's natural beauty is unmatched.", iconName: "Mountain" },
+    ],
+    costOfLiving: { housing: "$600 – $1,200/month", food: "$250 – $400/month", transport: "$60 – $120/month" },
+    postStudyWorkRights: "Australia offers generous post-study work rights through the Temporary Graduate visa (subclass 485). Bachelor's graduates receive 2 years, Master's graduates 3 years, and PhD graduates up to 4 years. Regional study can add an extra 1-2 years. Australia's strong economy, particularly in mining, tech, healthcare, and education, provides excellent job prospects for graduates.",
+  },
+  {
+    id: 4, name: "Canada", code: "CA", flag_icon: "🇨🇦",
+    bannerImage: "https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1400&h=600&fit=crop",
+    capital: "Ottawa", currency: "CAD (Canadian Dollar)", language: "English & French", population: "40 Million",
+    aboutText: "Canada is renowned for its inclusive society, high academic standards, and clear immigration pathways for international graduates. Canadian degrees are recognized worldwide, and the country's universities are known for cutting-edge research in AI, engineering, and health sciences. With a bilingual culture (English and French), affordable tuition compared to the US, and one of the best post-graduation immigration systems in the world, Canada is an increasingly popular choice for students planning to build long-term careers abroad.",
+    reasonsToStudy: [
+      { title: "Immigration Pathways", description: "Canada's Express Entry and PNP programs make it easier to become a permanent resident after graduation.", iconName: "MapPin" },
+      { title: "Affordable Education", description: "Tuition fees are significantly lower than in the US while offering comparable quality.", iconName: "DollarSign" },
+      { title: "Bilingual Advantage", description: "Learn in English or French — or both — giving you a unique competitive edge.", iconName: "Languages" },
+      { title: "Safe & Inclusive", description: "Canada is consistently ranked one of the safest and most welcoming countries.", iconName: "Shield" },
+      { title: "Co-op & Internships", description: "Many programs include mandatory co-op placements with real companies.", iconName: "Handshake" },
+      { title: "AI & Tech Hub", description: "Toronto, Montreal, and Vancouver are global leaders in AI and tech innovation.", iconName: "Cpu" },
+    ],
+    costOfLiving: { housing: "$500 – $1,300/month", food: "$250 – $400/month", transport: "$70 – $130/month" },
+    postStudyWorkRights: "Canada's Post-Graduation Work Permit (PGWP) allows graduates to work for up to 3 years after completing their studies. This work experience can be used to qualify for permanent residency through Express Entry or Provincial Nominee Programs. Canada's welcoming immigration policies and growing economy in tech, healthcare, and natural resources make it one of the best countries for international graduates seeking long-term settlement.",
+  },
 ];
 
 const defaultFaqs: UniversityFAQ[] = [
