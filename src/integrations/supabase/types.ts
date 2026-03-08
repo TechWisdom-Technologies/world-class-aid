@@ -274,6 +274,42 @@ export type Database = {
         }
         Relationships: []
       }
+      intake_reminders: {
+        Row: {
+          active: boolean
+          created_at: string
+          deadline_date: string | null
+          email: string
+          full_name: string | null
+          id: string
+          intake_label: string | null
+          last_sent_at: string | null
+          university_name: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          deadline_date?: string | null
+          email: string
+          full_name?: string | null
+          id?: string
+          intake_label?: string | null
+          last_sent_at?: string | null
+          university_name?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          deadline_date?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          intake_label?: string | null
+          last_sent_at?: string | null
+          university_name?: string | null
+        }
+        Relationships: []
+      }
       language_centers: {
         Row: {
           city: string
@@ -315,6 +351,51 @@ export type Database = {
           name?: string
           overview?: string | null
           tuition_fee?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          interested_course: string | null
+          interested_university: string | null
+          nationality: string | null
+          phone: string | null
+          source: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          interested_course?: string | null
+          interested_university?: string | null
+          nationality?: string | null
+          phone?: string | null
+          source?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          interested_course?: string | null
+          interested_university?: string | null
+          nationality?: string | null
+          phone?: string | null
+          source?: string
+          status?: string
           updated_at?: string
         }
         Relationships: []

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { useTableData } from "@/hooks/useSupabaseData";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +19,7 @@ export default function CourseDetail() {
   const { courseId } = useParams();
   const { data: courses = [], isLoading: loadingC } = useTableData("courses");
   const { data: universities = [] } = useTableData("universities");
+  const [leadOpen, setLeadOpen] = useState(false);
 
   const course = courses.find((c: any) => c.id === courseId);
   const uni = course ? universities.find((u: any) => u.id === course.university_id) : null;
@@ -192,7 +195,7 @@ export default function CourseDetail() {
                     )}
                   </div>
                   <div className="pt-2 space-y-3">
-                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 text-base font-bold">Apply Now</Button>
+                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 text-base font-bold" onClick={() => setLeadOpen(true)}>Apply Now</Button>
                     <Button variant="outline" className="w-full h-10"><Download className="h-4 w-4 mr-2" /> Download Syllabus</Button>
                   </div>
                 </CardContent>
@@ -201,6 +204,15 @@ export default function CourseDetail() {
           </aside>
         </div>
       </div>
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        defaultCourse={course.title}
+        defaultUniversity={uni?.name || ""}
+        source="course_apply"
+      />
+
       <PublicFooter />
     </div>
   );
