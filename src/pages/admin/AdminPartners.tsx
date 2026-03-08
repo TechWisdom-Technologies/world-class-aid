@@ -63,44 +63,29 @@ export default function AdminPartners() {
     if (!selectedReg || !session) return;
     setProcessing(true);
     try {
-      const token = session.access_token;
-
-      // Update registration status
-      const updateRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/partner_registrations?id=eq.${selectedReg.id}`,
+      // Call edge function which handles: status update, role assignment, and email notification
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID || "kelwzcacbnrrioophnzh";
+      const res = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/notify-partner`,
         {
-          method: "PATCH",
-          headers: {
-            "apikey": SUPABASE_KEY,
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal",
-          },
-          body: JSON.stringify({ status: action, admin_notes: adminNotes }),
-        }
-      );
-      if (!updateRes.ok) throw new Error(await updateRes.text());
-
-      // If approved, assign partner role
-      if (action === "approved" && selectedReg.user_id) {
-        const roleRes = await fetch(`${SUPABASE_URL}/rest/v1/user_roles`, {
           method: "POST",
           headers: {
-            "apikey": SUPABASE_KEY,
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${session.access_token}`,
             "Content-Type": "application/json",
-            "Prefer": "return=minimal",
           },
-          body: JSON.stringify({ user_id: selectedReg.user_id, role: "partner" }),
-        });
-        if (!roleRes.ok) {
-          const errText = await roleRes.text();
-          // Ignore duplicate role errors
-          if (!errText.includes("duplicate")) throw new Error(errText);
+          body: JSON.stringify({
+            registration_id: selectedReg.id,
+            action,
+            admin_notes: adminNotes,
+          }),
         }
-      }
+      );
 
-      toast.success(`Partner registration ${action}!`);
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Action failed");
+
+      const emailNote = result.emailSent ? " Email notification sent!" : " (Email not configured yet)";
+      toast.success(`Partner registration ${action}!${emailNote}`);
       setDetailOpen(false);
       fetchRegistrations();
     } catch (err: any) {
