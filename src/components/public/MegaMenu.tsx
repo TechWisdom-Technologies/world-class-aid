@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
-  Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home,
+  Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
+  BookOpen, FileText, Calendar, Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -25,9 +26,14 @@ const cityLinks = [
   { label: "Penang", to: "/destinations/malaysia/penang" },
 ];
 
-const toolsLinks = [
+const resourceToolsLinks = [
+  { label: "AI Eligibility Test", to: "/eligibility", icon: Sparkles },
+  { label: "Compare Universities", to: "/compare", icon: GitCompare },
   { label: "Cost Calculator", to: "/tools/calculator", icon: Calculator },
   { label: "GPA Converter", to: "/tools/gpa-converter", icon: RefreshCw },
+  { label: "Scholarships", to: "/scholarships", icon: Award },
+  { label: "Visa Guide", to: "/visa-guide", icon: FileText },
+  { label: "Events & Webinars", to: "/events", icon: Calendar },
 ];
 
 export function MegaMenu() {
@@ -117,15 +123,22 @@ export function MegaMenu() {
             <Button variant="ghost" size="sm" className="text-sm font-medium">Courses</Button>
           </Link>
 
-          {/* Tools & Hubs Dropdown */}
+          {/* Accommodations */}
+          <Link to="/housing">
+            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
+              <Building2 className="h-3.5 w-3.5" /> Accommodations
+            </Button>
+          </Link>
+
+          {/* Resources & Tools Dropdown */}
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-accent">
-                  Tools & Hubs
+                  Resources & Tools
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[480px] grid-cols-5 p-4 gap-4">
+                  <div className="grid w-[520px] grid-cols-5 p-4 gap-4">
                     <div className="col-span-2 rounded-lg bg-secondary/10 p-5 flex flex-col justify-between">
                       <div>
                         <Sparkles className="h-8 w-8 text-secondary mb-3" />
@@ -140,13 +153,13 @@ export function MegaMenu() {
                     </div>
                     <div className="col-span-3 space-y-0.5">
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 pb-2">
-                        Interactive Tools
+                        Tools & Resources
                       </p>
-                      {toolsLinks.map((item) => (
+                      {resourceToolsLinks.map((item) => (
                         <Link
                           key={item.to}
                           to={item.to}
-                          className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+                          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
                         >
                           <item.icon className="h-4 w-4 text-muted-foreground" />
                           {item.label}
@@ -203,7 +216,7 @@ export function MegaMenu() {
           )}
           {user?.role === "partner" && (
             <>
-              <Link to="/partner">
+              <Link to="/partner-dashboard">
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <LayoutDashboard className="h-3.5 w-3.5" /> Partner Dashboard
                 </Button>
@@ -259,19 +272,19 @@ export function MegaMenu() {
 
                 <MobileNavLink to="/universities">Universities</MobileNavLink>
                 <MobileNavLink to="/courses">Courses</MobileNavLink>
+                <MobileNavLink to="/housing">
+                  <span className="flex items-center gap-2"><Building2 className="h-4 w-4 text-muted-foreground" /> Accommodations</span>
+                </MobileNavLink>
 
-                {/* Tools collapsible */}
+                {/* Resources & Tools collapsible */}
                 <div className="pt-3 pb-1">
                   <Collapsible>
                     <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
-                      Tools & Hubs
+                      Resources & Tools
                       <ChevronDown className="h-3.5 w-3.5" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-0.5">
-                      <MobileNavLink to="/eligibility">
-                        <span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-secondary" /> AI Eligibility Matcher</span>
-                      </MobileNavLink>
-                      {toolsLinks.map((item) => (
+                      {resourceToolsLinks.map((item) => (
                         <MobileNavLink key={item.to} to={item.to}>
                           <span className="flex items-center gap-2"><item.icon className="h-4 w-4 text-muted-foreground" /> {item.label}</span>
                         </MobileNavLink>
@@ -314,7 +327,7 @@ export function MegaMenu() {
                 {user?.role === "partner" && (
                   <>
                     <SheetClose asChild>
-                      <Link to="/partner" className="block">
+                      <Link to="/partner-dashboard" className="block">
                         <Button variant="outline" className="w-full gap-1.5"><LayoutDashboard className="h-4 w-4" /> Partner Dashboard</Button>
                       </Link>
                     </SheetClose>

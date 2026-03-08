@@ -85,6 +85,19 @@ const App = () => (
 
             {/* Partner / Agency */}
             <Route path="/partner" element={<B2BLanding />} />
+            <Route
+              path="/partner-dashboard"
+              element={
+                <ProtectedRoute requiredRole="partner">
+                  <PartnerLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<PartnerOverview />} />
+              <Route path="wallet" element={<PartnerWallet />} />
+              <Route path="marketing" element={<PartnerMarketing />} />
+              <Route path="team" element={<PartnerTeam />} />
+            </Route>
 
             {/* Redirects for old routes */}
             <Route path="/study-in-malaysia" element={<Navigate to="/destinations/malaysia" replace />} />
@@ -96,7 +109,6 @@ const App = () => (
             <Route path="/gpa-converter" element={<Navigate to="/tools/gpa-converter" replace />} />
             <Route path="/eligibility-test" element={<Navigate to="/eligibility" replace />} />
             <Route path="/b2b" element={<Navigate to="/partner" replace />} />
-            <Route path="/partner-dashboard" element={<Navigate to="/partner" replace />} />
 
             {/* Catch-all for coming soon */}
             <Route path="/virtual-tours" element={<ComingSoon />} />
