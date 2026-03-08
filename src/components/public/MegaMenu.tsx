@@ -2,17 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
-  Calculator, RefreshCw, FolderOpen, Handshake, Headphones, Sparkles, ChevronRight,
-  MapPin,
+  Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -26,27 +19,15 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
-const resourceLinks = [
-  { label: "Scholarships", to: "/scholarships" },
-  { label: "Accommodation", to: "/housing" },
-  { label: "Visa Guide", to: "/visa-guide" },
-  { label: "Events & Webinars", to: "/events" },
+const cityLinks = [
+  { label: "Kuala Lumpur", to: "/destinations/malaysia/kuala-lumpur" },
+  { label: "Cyberjaya", to: "/destinations/malaysia/cyberjaya" },
+  { label: "Penang", to: "/destinations/malaysia/penang" },
 ];
 
 const toolsLinks = [
-  { label: "Cost of Living Calculator", to: "/calculator", icon: Calculator },
-  { label: "GPA Converter", to: "/gpa-converter", icon: RefreshCw },
-  { label: "Student Document Vault", to: "/student-dashboard/documents", icon: FolderOpen },
-  { label: "B2B Partner Portal", to: "/partner", icon: Handshake },
-  { label: "Virtual Campus Tours", to: "/virtual-tours", icon: Headphones },
-];
-
-const malaysianCityLinks = [
-  { label: "Study in Kuala Lumpur", to: "/universities?city=Kuala+Lumpur" },
-  { label: "Study in Cyberjaya", to: "/universities?city=Cyberjaya" },
-  { label: "Study in Penang", to: "/universities?city=Penang" },
-  { label: "Study in Subang Jaya", to: "/universities?city=Subang+Jaya" },
-  { label: "Study in Johor Bahru", to: "/universities?city=Johor+Bahru" },
+  { label: "Cost Calculator", to: "/tools/calculator", icon: Calculator },
+  { label: "GPA Converter", to: "/tools/gpa-converter", icon: RefreshCw },
 ];
 
 export function MegaMenu() {
@@ -79,54 +60,64 @@ export function MegaMenu() {
           </span>
         </Link>
 
-        {/* Desktop Center Links */}
+        {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-1">
+          <Link to="/">
+            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
+              <Home className="h-3.5 w-3.5" /> Home
+            </Button>
+          </Link>
+
+          {/* Destinations Dropdown */}
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-accent">
+                  Destinations
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-[420px] p-4">
+                    <Link
+                      to="/destinations/malaysia"
+                      className="flex items-center gap-3 rounded-lg p-3 hover:bg-accent transition-colors mb-2"
+                    >
+                      <span className="text-2xl">🇲🇾</span>
+                      <div>
+                        <p className="text-sm font-bold text-foreground">Malaysia</p>
+                        <p className="text-xs text-muted-foreground">Your gateway to world-class, affordable education</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                    </Link>
+                    <div className="border-t pt-2 mt-1">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                        Top Student Cities
+                      </p>
+                      {cityLinks.map((c) => (
+                        <Link
+                          key={c.to}
+                          to={c.to}
+                          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+                        >
+                          <MapPin className="h-4 w-4 text-muted-foreground" />
+                          {c.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+
           <Link to="/universities">
             <Button variant="ghost" size="sm" className="text-sm font-medium">Universities</Button>
           </Link>
+
           <Link to="/courses">
             <Button variant="ghost" size="sm" className="text-sm font-medium">Courses</Button>
           </Link>
 
-          {/* Study in Malaysia Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-sm font-medium gap-1">
-                Study in Malaysia <ChevronDown className="h-3.5 w-3.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="w-56">
-              <DropdownMenuItem asChild>
-                <Link to="/study-in-malaysia" className="w-full cursor-pointer font-semibold">
-                  <MapPin className="h-3.5 w-3.5 mr-2" /> Overview — Study in Malaysia
-                </Link>
-              </DropdownMenuItem>
-              <div className="h-px bg-border my-1" />
-              {malaysianCityLinks.map((c) => (
-                <DropdownMenuItem key={c.to} asChild>
-                  <Link to={c.to} className="w-full cursor-pointer">{c.label}</Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Resources Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-sm font-medium gap-1">
-                Resources <ChevronDown className="h-3.5 w-3.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="w-48">
-              {resourceLinks.map((r) => (
-                <DropdownMenuItem key={r.to} asChild>
-                  <Link to={r.to} className="w-full cursor-pointer">{r.label}</Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Tools & Hubs Mega Menu */}
+          {/* Tools & Hubs Dropdown */}
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -134,22 +125,22 @@ export function MegaMenu() {
                   Tools & Hubs
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[560px] grid-cols-5 p-4 gap-4">
+                  <div className="grid w-[480px] grid-cols-5 p-4 gap-4">
                     <div className="col-span-2 rounded-lg bg-secondary/10 p-5 flex flex-col justify-between">
                       <div>
                         <Sparkles className="h-8 w-8 text-secondary mb-3" />
                         <p className="font-bold text-base text-foreground leading-tight">AI Eligibility Matcher</p>
                         <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                          Find out your acceptance chances at top Malaysian universities in 60 seconds.
+                          Find your acceptance chances at top Malaysian universities in 60 seconds.
                         </p>
                       </div>
-                      <Link to="/eligibility-test" className="mt-4 inline-flex items-center text-xs font-semibold text-secondary hover:underline">
+                      <Link to="/eligibility" className="mt-4 inline-flex items-center text-xs font-semibold text-secondary hover:underline">
                         Try it Now <ChevronRight className="h-3 w-3 ml-0.5" />
                       </Link>
                     </div>
                     <div className="col-span-3 space-y-0.5">
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 pb-2">
-                        Interactive Features
+                        Interactive Tools
                       </p>
                       {toolsLinks.map((item) => (
                         <Link
@@ -167,14 +158,14 @@ export function MegaMenu() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-
-          <Link to="/b2b">
-            <Button variant="ghost" size="sm" className="text-sm font-medium">For Agencies</Button>
-          </Link>
         </nav>
 
         {/* Desktop Right Actions */}
         <div className="hidden lg:flex items-center gap-2">
+          <Link to="/partner">
+            <Button variant="ghost" size="sm" className="text-sm font-medium">For Agencies</Button>
+          </Link>
+
           {!user && (
             <>
               <Link to="/login">
@@ -212,7 +203,7 @@ export function MegaMenu() {
           )}
           {user?.role === "partner" && (
             <>
-              <Link to="/partner-dashboard">
+              <Link to="/partner">
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <LayoutDashboard className="h-3.5 w-3.5" /> Partner Dashboard
                 </Button>
@@ -244,35 +235,32 @@ export function MegaMenu() {
               </div>
 
               <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-                <MobileNavLink to="/universities">Universities</MobileNavLink>
-                <MobileNavLink to="/courses">Courses</MobileNavLink>
+                <MobileNavLink to="/">Home</MobileNavLink>
 
-                {/* Study in Malaysia */}
+                {/* Destinations collapsible */}
                 <div className="pt-3 pb-1">
                   <Collapsible>
                     <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
-                      Study in Malaysia
+                      Destinations
                       <ChevronDown className="h-3.5 w-3.5" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-0.5">
-                      <MobileNavLink to="/study-in-malaysia">
-                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-secondary" /> Overview</span>
+                      <MobileNavLink to="/destinations/malaysia">
+                        <span className="flex items-center gap-2">🇲🇾 Malaysia Overview</span>
                       </MobileNavLink>
-                      {malaysianCityLinks.map((c) => (
-                        <MobileNavLink key={c.to} to={c.to}>{c.label}</MobileNavLink>
+                      {cityLinks.map((c) => (
+                        <MobileNavLink key={c.to} to={c.to}>
+                          <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-muted-foreground" /> {c.label}</span>
+                        </MobileNavLink>
                       ))}
                     </CollapsibleContent>
                   </Collapsible>
                 </div>
 
-                <div className="pt-3 pb-1">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">Resources</p>
-                  {resourceLinks.map((r) => (
-                    <MobileNavLink key={r.to} to={r.to}>{r.label}</MobileNavLink>
-                  ))}
-                </div>
+                <MobileNavLink to="/universities">Universities</MobileNavLink>
+                <MobileNavLink to="/courses">Courses</MobileNavLink>
 
-                {/* Tools & Hubs collapsible */}
+                {/* Tools collapsible */}
                 <div className="pt-3 pb-1">
                   <Collapsible>
                     <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
@@ -280,7 +268,7 @@ export function MegaMenu() {
                       <ChevronDown className="h-3.5 w-3.5" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-0.5">
-                      <MobileNavLink to="/eligibility-test">
+                      <MobileNavLink to="/eligibility">
                         <span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-secondary" /> AI Eligibility Matcher</span>
                       </MobileNavLink>
                       {toolsLinks.map((item) => (
@@ -292,12 +280,7 @@ export function MegaMenu() {
                   </Collapsible>
                 </div>
 
-                <div className="pt-3 pb-1">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">More</p>
-                  <MobileNavLink to="/b2b">For Agencies</MobileNavLink>
-                  <MobileNavLink to="/careers">Career Hub</MobileNavLink>
-                  <MobileNavLink to="/help">Help Center</MobileNavLink>
-                </div>
+                <MobileNavLink to="/partner">For Agencies</MobileNavLink>
               </nav>
 
               {/* Mobile Auth Footer */}
@@ -331,7 +314,7 @@ export function MegaMenu() {
                 {user?.role === "partner" && (
                   <>
                     <SheetClose asChild>
-                      <Link to="/partner-dashboard" className="block">
+                      <Link to="/partner" className="block">
                         <Button variant="outline" className="w-full gap-1.5"><LayoutDashboard className="h-4 w-4" /> Partner Dashboard</Button>
                       </Link>
                     </SheetClose>
