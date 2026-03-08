@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Countries from "./pages/Countries";
 import Universities from "./pages/Universities";
 import CoursesPage from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import CountryHub from "./pages/CountryHub";
 import UniversityDetail from "./pages/UniversityDetail";
 import EligibilityWizard from "./pages/EligibilityWizard";
