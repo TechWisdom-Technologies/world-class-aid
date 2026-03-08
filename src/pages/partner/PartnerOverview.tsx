@@ -1,72 +1,81 @@
-import { useState } from "react";
-import { b2bPartners, students, universities, courses, referralChartData, funnelData } from "@/data/mockData";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Users, Clock, CheckCircle, DollarSign, UserPlus } from "lucide-react";
-import { DocumentVault } from "@/components/public/DocumentVault";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText } from "lucide-react";
+import { Users, Clock, CheckCircle, FileSearch, AlertTriangle, GraduationCap } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Loader2 } from "lucide-react";
 
-const partner = b2bPartners[0];
-const partnerStudents = students.filter((s) => s.referred_by_partner_id === partner.id);
+const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
 
-const stageColors: Record<string, string> = {
-  "Document Review": "bg-muted text-muted-foreground",
-  "Applied": "bg-secondary/10 text-secondary border-secondary/20",
-  "Offer Letter": "bg-warning/10 text-warning border-warning/20",
-  "Visa": "bg-primary/10 text-primary border-primary/20",
-  "Done": "bg-success/10 text-success border-success/20",
-  "Rejected": "bg-destructive/10 text-destructive border-destructive/20",
+const statusMap: Record<string, { label: string; color: string }> = {
+  document_review: { label: "Document Review", color: "bg-muted text-muted-foreground" },
+  documents_verified: { label: "Documents Verified", color: "bg-blue-500/10 text-blue-600" },
+  applied: { label: "Applied", color: "bg-secondary/10 text-secondary" },
+  offer_received: { label: "Offer Received", color: "bg-warning/10 text-warning" },
+  visa_processing: { label: "Visa Processing", color: "bg-primary/10 text-primary" },
+  visa_approved: { label: "Visa Approved", color: "bg-green-500/10 text-green-600" },
+  enrolled: { label: "Enrolled", color: "bg-green-600/10 text-green-700" },
+  rejected: { label: "Rejected", color: "bg-destructive/10 text-destructive" },
 };
 
+const pipelineOrder = ["document_review", "documents_verified", "applied", "offer_received", "visa_processing", "visa_approved", "enrolled"];
+
+interface Student {
+  id: string;
+  full_name: string;
+  status: string;
+  target_university: string;
+  target_course: string;
+  degree_level: string;
+  created_at: string;
+}
+
 export default function PartnerOverview() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { session, user } = useAuth();
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!session) return;
+    (async () => {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/students?select=id,full_name,status,target_university,target_course,degree_level,created_at&partner_id=eq.${user?.id}&order=created_at.desc`,
+          { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` } }
+        );
+        if (res.ok) setStudents(await res.json());
+      } catch { /* ignore */ } finally { setLoading(false); }
+    })();
+  }, [session]);
+
+  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+
+  const total = students.length;
+  const inReview = students.filter(s => s.status === "document_review").length;
+  const inProgress = students.filter(s => ["documents_verified", "applied", "offer_received", "visa_processing"].includes(s.status)).length;
+  const enrolled = students.filter(s => s.status === "enrolled").length;
+  const rejected = students.filter(s => s.status === "rejected").length;
 
   const metrics = [
-    { label: "Total Students Submitted", value: partner.total_sent, icon: Users, color: "text-secondary" },
-    { label: "Applications Processing", value: partner.processing, icon: Clock, color: "text-warning" },
-    { label: "Successfully Converted", value: partner.converted, icon: CheckCircle, color: "text-success" },
-    { label: "Total Commission Earned", value: `$${partner.commission.toLocaleString()}`, icon: DollarSign, color: "text-secondary" },
+    { label: "Total Students", value: total, icon: Users, color: "text-secondary" },
+    { label: "In Review", value: inReview, icon: FileSearch, color: "text-warning" },
+    { label: "In Progress", value: inProgress, icon: Clock, color: "text-primary" },
+    { label: "Enrolled", value: enrolled, icon: GraduationCap, color: "text-green-600" },
   ];
+
+  // Group by status for pipeline view
+  const pipeline = pipelineOrder.map(status => ({
+    status,
+    ...statusMap[status],
+    students: students.filter(s => s.status === status),
+  }));
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold">Welcome back, {partner.company_name}!</h1>
-          <p className="text-muted-foreground text-sm">Manage your student referrals and track performance</p>
-        </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
-              <UserPlus className="h-4 w-4 mr-2" />Submit New Student
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg">
-            <DialogHeader><DialogTitle>Submit New Student Referral</DialogTitle></DialogHeader>
-            <div className="space-y-4 pt-2">
-              <div className="grid grid-cols-2 gap-4">
-                <div><Label>Student Name</Label><Input placeholder="Full name" /></div>
-                <div><Label>Student Email</Label><Input placeholder="email@example.com" /></div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><Label>Target University</Label><Input placeholder="University" /></div>
-                <div><Label>Target Course</Label><Input placeholder="Course" /></div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><Label>Academic Score / GPA</Label><Input type="number" placeholder="e.g. 3.5" /></div>
-                <div><Label>IELTS Score</Label><Input type="number" step="0.5" placeholder="e.g. 7.0" /></div>
-              </div>
-              <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={() => setDialogOpen(false)}>Submit Referral</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+      <div>
+        <h1 className="text-2xl font-extrabold">Dashboard Overview</h1>
+        <p className="text-muted-foreground text-sm">Track your students' application progress in real-time</p>
       </div>
 
       {/* KPI Cards */}
@@ -86,91 +95,76 @@ export default function PartnerOverview() {
         ))}
       </div>
 
-      {/* Charts */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader><CardTitle>Student Referrals — Last 6 Months</CardTitle></CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={referralChartData}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="month" className="text-xs" />
-                <YAxis className="text-xs" />
-                <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px" }} />
-                <Bar dataKey="referrals" fill="hsl(38, 92%, 50%)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+      {/* Pipeline View */}
+      <Card>
+        <CardHeader><CardTitle>Application Pipeline</CardTitle></CardHeader>
+        <CardContent>
+          {total === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Users className="h-12 w-12 mx-auto mb-4 opacity-30" />
+              <p>No students added yet. Go to Students tab to add your first student.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {pipeline.filter(p => p.students.length > 0).map(p => (
+                <div key={p.status}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className={p.color}>{p.label}</Badge>
+                    <span className="text-sm text-muted-foreground font-medium">{p.students.length} student{p.students.length > 1 ? "s" : ""}</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {p.students.map(s => (
+                      <div key={s.id} className="p-3 rounded-lg border bg-card hover:bg-muted/30 transition-colors">
+                        <p className="font-medium text-sm">{s.full_name}</p>
+                        <p className="text-xs text-muted-foreground">{s.target_university || "No university"} · {s.target_course || "No course"}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{s.degree_level} · Added {new Date(s.created_at).toLocaleDateString()}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {rejected > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="bg-destructive/10 text-destructive">Rejected</Badge>
+                    <span className="text-sm text-muted-foreground font-medium">{rejected} student{rejected > 1 ? "s" : ""}</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {students.filter(s => s.status === "rejected").map(s => (
+                      <div key={s.id} className="p-3 rounded-lg border border-destructive/20 bg-destructive/5">
+                        <p className="font-medium text-sm">{s.full_name}</p>
+                        <p className="text-xs text-muted-foreground">{s.target_university || "No university"}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
+      {/* Recent Activity */}
+      {students.length > 0 && (
         <Card>
-          <CardHeader><CardTitle>Enrollment Funnel</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Recently Added Students</CardTitle></CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {funnelData.map((item) => {
-                const maxVal = funnelData[0].value;
-                const pct = (item.value / maxVal) * 100;
-                return (
-                  <div key={item.stage} className="flex items-center gap-3">
-                    <span className="text-xs text-muted-foreground w-28 text-right">{item.stage}</span>
-                    <div className="flex-1 bg-muted rounded-full h-8 overflow-hidden">
-                      <div className="h-full rounded-full flex items-center justify-end pr-3 transition-all" style={{ width: `${pct}%`, backgroundColor: item.fill }}>
-                        <span className="text-xs font-bold text-primary-foreground">{item.value}</span>
-                      </div>
-                    </div>
+              {students.slice(0, 5).map(s => (
+                <div key={s.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                  <div>
+                    <p className="font-medium text-sm">{s.full_name}</p>
+                    <p className="text-xs text-muted-foreground">{s.target_university} — {s.target_course}</p>
                   </div>
-                );
-              })}
+                  <Badge variant="outline" className={statusMap[s.status]?.color || ""}>
+                    {statusMap[s.status]?.label || s.status}
+                  </Badge>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Students + Documents */}
-      <Tabs defaultValue="students">
-        <TabsList>
-          <TabsTrigger value="students"><Users className="h-4 w-4 mr-1.5" /> Student Management</TabsTrigger>
-          <TabsTrigger value="documents"><FileText className="h-4 w-4 mr-1.5" /> Document Vault</TabsTrigger>
-        </TabsList>
-        <TabsContent value="students">
-          <Card>
-            <CardHeader><CardTitle>Your Referred Students</CardTitle></CardHeader>
-            <CardContent>
-              <div className="rounded-xl border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Student Name</TableHead>
-                      <TableHead>Desired Course</TableHead>
-                      <TableHead>University</TableHead>
-                      <TableHead>Stage</TableHead>
-                      <TableHead className="text-right">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {partnerStudents.map((s) => (
-                      <TableRow key={s.id}>
-                        <TableCell className="font-medium">{s.name}</TableCell>
-                        <TableCell>{courses.find((c) => c.id === s.target_course_id)?.title}</TableCell>
-                        <TableCell>{universities.find((u) => u.id === s.target_university_id)?.name}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className={stageColors[s.status] || ""}>{s.status}</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm">View Details</Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="documents">
-          <DocumentVault />
-        </TabsContent>
-      </Tabs>
+      )}
     </div>
   );
 }

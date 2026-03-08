@@ -1,4 +1,4 @@
-import { LayoutDashboard, GraduationCap, BookOpen, Home, Users, Settings, Award, Languages, FileText, Calendar } from "lucide-react";
+import { LayoutDashboard, GraduationCap, BookOpen, Home, Users, Settings, Award, Languages, FileText, Calendar, UserCheck } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -15,6 +15,7 @@ const items = [
   { title: "Blog Posts", url: "/admin/blogs", icon: FileText },
   { title: "Events", url: "/admin/events", icon: Calendar },
   { title: "B2B Partners", url: "/admin/partners", icon: Users },
+  { title: "Students", url: "/admin/students", icon: UserCheck },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];
 

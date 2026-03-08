@@ -46,9 +46,9 @@ import AdminPartners from "./pages/admin/AdminPartners";
 import AdminSettings from "./pages/admin/AdminSettings";
 import PartnerLayout from "./pages/partner/PartnerLayout";
 import PartnerOverview from "./pages/partner/PartnerOverview";
-import PartnerWallet from "./pages/partner/PartnerWallet";
 import PartnerMarketing from "./pages/partner/PartnerMarketing";
-import PartnerTeam from "./pages/partner/PartnerTeam";
+import PartnerStudents from "./pages/partner/PartnerStudents";
+import AdminStudents from "./pages/admin/AdminStudents";
 
 const queryClient = new QueryClient();
 
@@ -106,9 +106,8 @@ const App = () => (
               }
             >
               <Route index element={<PartnerOverview />} />
-              <Route path="wallet" element={<PartnerWallet />} />
+              <Route path="students" element={<PartnerStudents />} />
               <Route path="marketing" element={<PartnerMarketing />} />
-              <Route path="team" element={<PartnerTeam />} />
             </Route>
 
             {/* Redirects for old routes */}
@@ -144,6 +143,7 @@ const App = () => (
               <Route path="blogs" element={<AdminBlogs />} />
               <Route path="events" element={<AdminEvents />} />
               <Route path="partners" element={<AdminPartners />} />
+              <Route path="students" element={<AdminStudents />} />
               <Route path="settings" element={<AdminSettings />} />
             </Route>
 

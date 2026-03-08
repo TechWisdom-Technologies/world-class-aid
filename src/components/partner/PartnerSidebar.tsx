@@ -1,4 +1,4 @@
-import { LayoutDashboard, Wallet, Megaphone, Users, FileText } from "lucide-react";
+import { LayoutDashboard, Users, Megaphone } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -15,9 +15,8 @@ import {
 
 const items = [
   { title: "Overview", url: "/partner-dashboard", icon: LayoutDashboard },
-  { title: "Financials & Wallet", url: "/partner-dashboard/wallet", icon: Wallet },
+  { title: "Students", url: "/partner-dashboard/students", icon: Users },
   { title: "Marketing Hub", url: "/partner-dashboard/marketing", icon: Megaphone },
-  { title: "Team Management", url: "/partner-dashboard/team", icon: Users },
 ];
 
 export function PartnerSidebar() {

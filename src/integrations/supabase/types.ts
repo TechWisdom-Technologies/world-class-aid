@@ -408,6 +408,96 @@ export type Database = {
           },
         ]
       }
+      students: {
+        Row: {
+          academic_transcript_url: string | null
+          admin_notes: string | null
+          created_at: string
+          date_of_birth: string | null
+          degree_level: string | null
+          email: string
+          full_name: string
+          gender: string | null
+          gpa: number | null
+          id: string
+          ielts_certificate_url: string | null
+          ielts_score: number | null
+          intake_month: string | null
+          nationality: string | null
+          other_documents: Json | null
+          partner_id: string
+          passport_number: string | null
+          passport_url: string | null
+          personal_statement_url: string | null
+          phone: string | null
+          previous_degree: string | null
+          previous_institution: string | null
+          recommendation_letter_url: string | null
+          status: string
+          target_course: string | null
+          target_university: string | null
+          updated_at: string
+        }
+        Insert: {
+          academic_transcript_url?: string | null
+          admin_notes?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          degree_level?: string | null
+          email?: string
+          full_name: string
+          gender?: string | null
+          gpa?: number | null
+          id?: string
+          ielts_certificate_url?: string | null
+          ielts_score?: number | null
+          intake_month?: string | null
+          nationality?: string | null
+          other_documents?: Json | null
+          partner_id: string
+          passport_number?: string | null
+          passport_url?: string | null
+          personal_statement_url?: string | null
+          phone?: string | null
+          previous_degree?: string | null
+          previous_institution?: string | null
+          recommendation_letter_url?: string | null
+          status?: string
+          target_course?: string | null
+          target_university?: string | null
+          updated_at?: string
+        }
+        Update: {
+          academic_transcript_url?: string | null
+          admin_notes?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          degree_level?: string | null
+          email?: string
+          full_name?: string
+          gender?: string | null
+          gpa?: number | null
+          id?: string
+          ielts_certificate_url?: string | null
+          ielts_score?: number | null
+          intake_month?: string | null
+          nationality?: string | null
+          other_documents?: Json | null
+          partner_id?: string
+          passport_number?: string | null
+          passport_url?: string | null
+          personal_statement_url?: string | null
+          phone?: string | null
+          previous_degree?: string | null
+          previous_institution?: string | null
+          recommendation_letter_url?: string | null
+          status?: string
+          target_course?: string | null
+          target_university?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       universities: {
         Row: {
           about_text: string | null
