@@ -327,7 +327,12 @@ export function MegaMenu() {
                     </SheetClose>
                   </>
                 )}
-                {user?.role === "admin" && (
+                {user && !hasRole("admin") && !hasRole("partner") && (
+                  <SheetClose asChild>
+                    <Button variant="ghost" className="w-full gap-1.5" onClick={handleLogout}><LogOut className="h-4 w-4" /> Log Out</Button>
+                  </SheetClose>
+                )}
+                {hasRole("admin") && (
                   <>
                     <SheetClose asChild>
                       <Link to="/admin" className="block">
@@ -339,7 +344,7 @@ export function MegaMenu() {
                     </SheetClose>
                   </>
                 )}
-                {user?.role === "partner" && (
+                {hasRole("partner") && (
                   <>
                     <SheetClose asChild>
                       <Link to="/partner-dashboard" className="block">
