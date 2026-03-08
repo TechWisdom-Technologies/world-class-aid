@@ -45,8 +45,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session?.user) {
-        const r = await fetchUserRoles(session.user.id);
-        setRoles(r);
+        try {
+          const r = await fetchUserRoles(session.user.id);
+          setRoles(r);
+        } catch (e) {
+          console.error("Failed to fetch roles:", e);
+          setRoles([]);
+        }
       } else {
         setRoles([]);
       }
@@ -56,8 +61,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        const r = await fetchUserRoles(session.user.id);
-        setRoles(r);
+        try {
+          const r = await fetchUserRoles(session.user.id);
+          setRoles(r);
+        } catch (e) {
+          console.error("Failed to fetch roles:", e);
+          setRoles([]);
+        }
       }
       setLoading(false);
     });
