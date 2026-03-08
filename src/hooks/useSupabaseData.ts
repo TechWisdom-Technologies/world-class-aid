@@ -8,11 +8,14 @@ export function useTableData(table: TableName, options?: { select?: string; orde
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
+      console.log(`[useTableData] Fetching ${table}...`);
       const orderCol = options?.orderBy || "created_at";
       const ascending = options?.orderBy ? true : false;
-      let q = supabase.from(table).select(options?.select || "*");
-      q = q.order(orderCol, { ascending });
-      const { data, error } = await q;
+      const { data, error } = await supabase
+        .from(table)
+        .select(options?.select || "*")
+        .order(orderCol, { ascending });
+      console.log(`[useTableData] ${table} result:`, { data: data?.length, error });
       if (error) throw error;
       return (data || []) as any[];
     },
