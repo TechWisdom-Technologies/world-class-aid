@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { countries, universities } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
