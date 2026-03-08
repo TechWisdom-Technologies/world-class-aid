@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Countries from "./pages/Countries";
+import Universities from "./pages/Universities";
+import CoursesPage from "./pages/Courses";
 import CountryHub from "./pages/CountryHub";
 import UniversityDetail from "./pages/UniversityDetail";
 import EligibilityWizard from "./pages/EligibilityWizard";
