@@ -140,6 +140,7 @@ const App = () => (
               }
             >
               <Route index element={<AdminDashboard />} />
+              <Route path="countries" element={<AdminCountries />} />
               <Route path="universities" element={<AdminUniversities />} />
               <Route path="courses" element={<AdminCourses />} />
               <Route path="accommodations" element={<AdminAccommodations />} />

@@ -7,6 +7,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
+  { title: "Countries", url: "/admin/countries", icon: Globe },
   { title: "Universities", url: "/admin/universities", icon: GraduationCap },
   { title: "Courses", url: "/admin/courses", icon: BookOpen },
   { title: "Accommodations", url: "/admin/accommodations", icon: Home },
