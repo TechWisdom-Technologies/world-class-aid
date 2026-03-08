@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone } from "lucide-react";
+import {
+  GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
+  Calculator, RefreshCw, FolderOpen, Handshake, Headphones, Sparkles, ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import {
@@ -9,8 +12,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -20,6 +31,14 @@ const resourceLinks = [
   { label: "Accommodation", to: "/housing" },
   { label: "Visa Guide", to: "/visa-guide" },
   { label: "Events & Webinars", to: "/events" },
+];
+
+const toolsLinks = [
+  { label: "Cost of Living Calculator", to: "/calculator", icon: Calculator },
+  { label: "GPA Converter", to: "/gpa-converter", icon: RefreshCw },
+  { label: "Student Document Vault", to: "/student-dashboard/documents", icon: FolderOpen },
+  { label: "B2B Partner Portal", to: "/partner", icon: Handshake },
+  { label: "Virtual Campus Tours", to: "/virtual-tours", icon: Headphones },
 ];
 
 export function MegaMenu() {
@@ -76,6 +95,51 @@ export function MegaMenu() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Tools & Hubs Mega Menu */}
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-accent">
+                  Tools & Hubs
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid w-[560px] grid-cols-5 p-4 gap-4">
+                    {/* Left Column: Featured Tool */}
+                    <div className="col-span-2 rounded-lg bg-secondary/10 p-5 flex flex-col justify-between">
+                      <div>
+                        <Sparkles className="h-8 w-8 text-secondary mb-3" />
+                        <p className="font-bold text-base text-foreground leading-tight">AI Eligibility Matcher</p>
+                        <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                          Find out your acceptance chances at top universities in 60 seconds.
+                        </p>
+                      </div>
+                      <Link to="/eligibility-test" className="mt-4 inline-flex items-center text-xs font-semibold text-secondary hover:underline">
+                        Try it Now <ChevronRight className="h-3 w-3 ml-0.5" />
+                      </Link>
+                    </div>
+
+                    {/* Right Column: Links */}
+                    <div className="col-span-3 space-y-0.5">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 pb-2">
+                        Interactive Features
+                      </p>
+                      {toolsLinks.map((item) => (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+                        >
+                          <item.icon className="h-4 w-4 text-muted-foreground" />
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
           <Link to="/b2b">
             <Button variant="ghost" size="sm" className="text-sm font-medium">For Agencies</Button>
@@ -165,11 +229,30 @@ export function MegaMenu() {
                   ))}
                 </div>
 
+                {/* Tools & Hubs collapsible */}
+                <div className="pt-3 pb-1">
+                  <Collapsible>
+                    <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
+                      Tools & Hubs
+                      <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-0.5">
+                      <MobileNavLink to="/eligibility-test">
+                        <span className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-secondary" /> AI Eligibility Matcher</span>
+                      </MobileNavLink>
+                      {toolsLinks.map((item) => (
+                        <MobileNavLink key={item.to} to={item.to}>
+                          <span className="flex items-center gap-2"><item.icon className="h-4 w-4 text-muted-foreground" /> {item.label}</span>
+                        </MobileNavLink>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+
                 <div className="pt-3 pb-1">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">More</p>
                   <MobileNavLink to="/b2b">For Agencies</MobileNavLink>
                   <MobileNavLink to="/countries">Study Destinations</MobileNavLink>
-                  <MobileNavLink to="/cost-calculator">Cost Calculator</MobileNavLink>
                   <MobileNavLink to="/careers">Career Hub</MobileNavLink>
                   <MobileNavLink to="/help">Help Center</MobileNavLink>
                 </div>
