@@ -29,10 +29,12 @@ function getAmenityIcon(amenity: string) {
 
 export default function Housing() {
   const { data: accommodations = [], isLoading } = useTableData("accommodations");
+  const { data: universities = [] } = useTableData("universities");
   const [typeFilter, setTypeFilter] = useState("All");
   const [propertyFilter, setPropertyFilter] = useState("All");
   const [maxPrice, setMaxPrice] = useState([2000]);
   const [selected, setSelected] = useState<any | null>(null);
+  const [viewMode, setViewMode] = useState<string>("grid");
 
   const filtered = useMemo(() => accommodations.filter((a: any) => {
     if (typeFilter !== "All" && a.type !== typeFilter) return false;
