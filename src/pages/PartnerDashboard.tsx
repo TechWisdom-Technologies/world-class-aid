@@ -50,24 +50,29 @@ export default function PartnerDashboard() {
                 </div>
               </div>
             </div>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                  <UserPlus className="h-4 w-4 mr-2" />Submit New Student Referral
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Submit New Student Referral</DialogTitle></DialogHeader>
-                <div className="space-y-4 pt-2">
-                  <div><Label>Student Name</Label><Input placeholder="Full name" /></div>
-                  <div><Label>Target University</Label><Input placeholder="University" /></div>
-                  <div><Label>Target Course</Label><Input placeholder="Course" /></div>
-                  <div><Label>Student Email</Label><Input placeholder="email@example.com" /></div>
-                  <div><Label>Student Phone</Label><Input placeholder="+60..." /></div>
-                  <Button className="w-full" onClick={() => setDialogOpen(false)}>Submit Referral</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <div className="flex items-center gap-3">
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                    <UserPlus className="h-4 w-4 mr-2" />Submit New Student Referral
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>Submit New Student Referral</DialogTitle></DialogHeader>
+                  <div className="space-y-4 pt-2">
+                    <div><Label>Student Name</Label><Input placeholder="Full name" /></div>
+                    <div><Label>Target University</Label><Input placeholder="University" /></div>
+                    <div><Label>Target Course</Label><Input placeholder="Course" /></div>
+                    <div><Label>Student Email</Label><Input placeholder="email@example.com" /></div>
+                    <div><Label>Student Phone</Label><Input placeholder="+60..." /></div>
+                    <Button className="w-full" onClick={() => setDialogOpen(false)}>Submit Referral</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" size="sm" className="text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/10" onClick={signOut}>
+                <LogOut className="h-4 w-4 mr-1" />Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </header>
