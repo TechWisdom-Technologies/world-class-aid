@@ -14,6 +14,281 @@ export type Database = {
   }
   public: {
     Tables: {
+      accommodations: {
+        Row: {
+          amenities: Json | null
+          city: string
+          created_at: string
+          id: string
+          name: string
+          near_university_ids: Json | null
+          price_per_month: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          amenities?: Json | null
+          city?: string
+          created_at?: string
+          id?: string
+          name: string
+          near_university_ids?: Json | null
+          price_per_month?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          amenities?: Json | null
+          city?: string
+          created_at?: string
+          id?: string
+          name?: string
+          near_university_ids?: Json | null
+          price_per_month?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      blogs: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string | null
+          cover_image: string | null
+          created_at: string
+          date: string | null
+          excerpt: string | null
+          id: string
+          image: string | null
+          read_time: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string
+          date?: string | null
+          excerpt?: string | null
+          id?: string
+          image?: string | null
+          read_time?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string
+          date?: string | null
+          excerpt?: string | null
+          id?: string
+          image?: string | null
+          read_time?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      countries: {
+        Row: {
+          about_text: string | null
+          banner_image: string | null
+          capital: string | null
+          code: string
+          cost_of_living: Json | null
+          created_at: string
+          currency: string | null
+          flag_icon: string | null
+          id: string
+          language: string | null
+          name: string
+          population: string | null
+          post_study_work_rights: string | null
+          reasons_to_study: Json | null
+          updated_at: string
+        }
+        Insert: {
+          about_text?: string | null
+          banner_image?: string | null
+          capital?: string | null
+          code: string
+          cost_of_living?: Json | null
+          created_at?: string
+          currency?: string | null
+          flag_icon?: string | null
+          id?: string
+          language?: string | null
+          name: string
+          population?: string | null
+          post_study_work_rights?: string | null
+          reasons_to_study?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          about_text?: string | null
+          banner_image?: string | null
+          capital?: string | null
+          code?: string
+          cost_of_living?: Json | null
+          created_at?: string
+          currency?: string | null
+          flag_icon?: string | null
+          id?: string
+          language?: string | null
+          name?: string
+          population?: string | null
+          post_study_work_rights?: string | null
+          reasons_to_study?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          career_outcomes: Json | null
+          created_at: string
+          curriculum: Json | null
+          degree_level: string
+          duration: string | null
+          entry_requirements: Json | null
+          id: string
+          intake_months: Json | null
+          overview: string | null
+          title: string
+          tuition_fee: number
+          university_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          career_outcomes?: Json | null
+          created_at?: string
+          curriculum?: Json | null
+          degree_level?: string
+          duration?: string | null
+          entry_requirements?: Json | null
+          id?: string
+          intake_months?: Json | null
+          overview?: string | null
+          title: string
+          tuition_fee?: number
+          university_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          career_outcomes?: Json | null
+          created_at?: string
+          curriculum?: Json | null
+          degree_level?: string
+          duration?: string | null
+          entry_requirements?: Json | null
+          id?: string
+          intake_months?: Json | null
+          overview?: string | null
+          title?: string
+          tuition_fee?: number
+          university_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          date: string | null
+          description: string | null
+          id: string
+          spots_left: number | null
+          time: string | null
+          title: string
+          type: string
+          university_ids: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          spots_left?: number | null
+          time?: string | null
+          title: string
+          type?: string
+          university_ids?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          spots_left?: number | null
+          time?: string | null
+          title?: string
+          type?: string
+          university_ids?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      language_centers: {
+        Row: {
+          city: string
+          created_at: string
+          curriculum: Json | null
+          duration: string | null
+          id: string
+          institute: string | null
+          intake_months: Json | null
+          level: string
+          name: string
+          overview: string | null
+          tuition_fee: number
+          updated_at: string
+        }
+        Insert: {
+          city?: string
+          created_at?: string
+          curriculum?: Json | null
+          duration?: string | null
+          id?: string
+          institute?: string | null
+          intake_months?: Json | null
+          level?: string
+          name: string
+          overview?: string | null
+          tuition_fee?: number
+          updated_at?: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          curriculum?: Json | null
+          duration?: string | null
+          id?: string
+          institute?: string | null
+          intake_months?: Json | null
+          level?: string
+          name?: string
+          overview?: string | null
+          tuition_fee?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -40,6 +315,118 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      scholarships: {
+        Row: {
+          coverage_amount: string
+          created_at: string
+          criteria: string | null
+          id: string
+          name: string
+          university_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          coverage_amount?: string
+          created_at?: string
+          criteria?: string | null
+          id?: string
+          name: string
+          university_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          coverage_amount?: string
+          created_at?: string
+          criteria?: string | null
+          id?: string
+          name?: string
+          university_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scholarships_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      universities: {
+        Row: {
+          about_text: string | null
+          campus_size: string | null
+          city: string
+          country_id: string | null
+          created_at: string
+          description: string | null
+          established: number | null
+          faqs: Json | null
+          global_score: number | null
+          hero_image: string | null
+          id: string
+          international_ratio: number | null
+          logo_url: string | null
+          name: string
+          ranking: number | null
+          registration_steps: Json | null
+          study_reasons: Json | null
+          total_students: number | null
+          updated_at: string
+        }
+        Insert: {
+          about_text?: string | null
+          campus_size?: string | null
+          city?: string
+          country_id?: string | null
+          created_at?: string
+          description?: string | null
+          established?: number | null
+          faqs?: Json | null
+          global_score?: number | null
+          hero_image?: string | null
+          id?: string
+          international_ratio?: number | null
+          logo_url?: string | null
+          name: string
+          ranking?: number | null
+          registration_steps?: Json | null
+          study_reasons?: Json | null
+          total_students?: number | null
+          updated_at?: string
+        }
+        Update: {
+          about_text?: string | null
+          campus_size?: string | null
+          city?: string
+          country_id?: string | null
+          created_at?: string
+          description?: string | null
+          established?: number | null
+          faqs?: Json | null
+          global_score?: number | null
+          hero_image?: string | null
+          id?: string
+          international_ratio?: number | null
+          logo_url?: string | null
+          name?: string
+          ranking?: number | null
+          registration_steps?: Json | null
+          study_reasons?: Json | null
+          total_students?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "universities_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

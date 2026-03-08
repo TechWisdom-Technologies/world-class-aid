@@ -1,16 +1,8 @@
-import { LayoutDashboard, GraduationCap, BookOpen, Home, Users, Settings } from "lucide-react";
+import { LayoutDashboard, GraduationCap, BookOpen, Home, Users, Settings, Award, Languages, FileText, Calendar } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
+  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
 } from "@/components/ui/sidebar";
 
 const items = [
@@ -18,6 +10,10 @@ const items = [
   { title: "Universities", url: "/admin/universities", icon: GraduationCap },
   { title: "Courses", url: "/admin/courses", icon: BookOpen },
   { title: "Accommodations", url: "/admin/accommodations", icon: Home },
+  { title: "Scholarships", url: "/admin/scholarships", icon: Award },
+  { title: "Language Centers", url: "/admin/language-centers", icon: Languages },
+  { title: "Blog Posts", url: "/admin/blogs", icon: FileText },
+  { title: "Events", url: "/admin/events", icon: Calendar },
   { title: "B2B Partners", url: "/admin/partners", icon: Users },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];

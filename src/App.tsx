@@ -38,6 +38,10 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUniversities from "./pages/admin/AdminUniversities";
 import AdminCourses from "./pages/admin/AdminCourses";
 import AdminAccommodations from "./pages/admin/AdminAccommodations";
+import AdminScholarships from "./pages/admin/AdminScholarships";
+import AdminLanguageCenters from "./pages/admin/AdminLanguageCenters";
+import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminEvents from "./pages/admin/AdminEvents";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminSettings from "./pages/admin/AdminSettings";
 import PartnerLayout from "./pages/partner/PartnerLayout";
@@ -135,6 +139,10 @@ const App = () => (
               <Route path="universities" element={<AdminUniversities />} />
               <Route path="courses" element={<AdminCourses />} />
               <Route path="accommodations" element={<AdminAccommodations />} />
+              <Route path="scholarships" element={<AdminScholarships />} />
+              <Route path="language-centers" element={<AdminLanguageCenters />} />
+              <Route path="blogs" element={<AdminBlogs />} />
+              <Route path="events" element={<AdminEvents />} />
               <Route path="partners" element={<AdminPartners />} />
               <Route path="settings" element={<AdminSettings />} />
             </Route>
