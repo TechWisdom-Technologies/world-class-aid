@@ -7,78 +7,82 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 213 32% 16%;
+    --foreground: 220 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 213 32% 16%;
+    --card-foreground: 220 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 213 32% 16%;
+    --popover-foreground: 220 30% 12%;
 
-    --primary: 213 55% 24%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 220 60% 18%;
+    --primary-foreground: 40 100% 97%;
 
-    --secondary: 199 89% 48%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 38 92% 50%;
+    --secondary-foreground: 220 60% 10%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 20% 96%;
+    --muted-foreground: 220 12% 50%;
 
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 45% 92%;
+    --accent-foreground: 220 60% 18%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 213 55% 24%;
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 220 60% 18%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 213 55% 18%;
-    --sidebar-foreground: 210 40% 92%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 213 55% 24%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 213 40% 28%;
-    --sidebar-ring: 199 89% 48%;
+    --sidebar-background: 220 60% 12%;
+    --sidebar-foreground: 220 20% 90%;
+    --sidebar-primary: 38 92% 50%;
+    --sidebar-primary-foreground: 220 60% 10%;
+    --sidebar-accent: 220 60% 18%;
+    --sidebar-accent-foreground: 40 100% 97%;
+    --sidebar-border: 220 40% 22%;
+    --sidebar-ring: 38 92% 50%;
 
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
+    --warning: 25 95% 53%;
     --warning-foreground: 0 0% 100%;
+    --gold: 38 92% 50%;
+    --gold-foreground: 220 60% 10%;
   }
 
   .dark {
-    --background: 213 32% 8%;
-    --foreground: 210 40% 98%;
-    --card: 213 32% 12%;
-    --card-foreground: 210 40% 98%;
-    --popover: 213 32% 12%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 199 89% 48%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 213 55% 24%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 199 89% 48%;
-    --sidebar-background: 213 32% 6%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 213 32% 12%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 213 32% 16%;
-    --sidebar-ring: 199 89% 48%;
+    --background: 220 30% 6%;
+    --foreground: 220 20% 96%;
+    --card: 220 30% 10%;
+    --card-foreground: 220 20% 96%;
+    --popover: 220 30% 10%;
+    --popover-foreground: 220 20% 96%;
+    --primary: 38 92% 50%;
+    --primary-foreground: 220 60% 10%;
+    --secondary: 220 60% 18%;
+    --secondary-foreground: 220 20% 96%;
+    --muted: 220 25% 15%;
+    --muted-foreground: 220 15% 60%;
+    --accent: 220 30% 16%;
+    --accent-foreground: 220 20% 96%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 25% 15%;
+    --input: 220 25% 15%;
+    --ring: 38 92% 50%;
+    --sidebar-background: 220 30% 5%;
+    --sidebar-foreground: 220 20% 92%;
+    --sidebar-primary: 38 92% 50%;
+    --sidebar-primary-foreground: 220 60% 10%;
+    --sidebar-accent: 220 30% 10%;
+    --sidebar-accent-foreground: 220 20% 92%;
+    --sidebar-border: 220 30% 12%;
+    --sidebar-ring: 38 92% 50%;
+    --gold: 38 92% 50%;
+    --gold-foreground: 220 60% 10%;
   }
 }
 
