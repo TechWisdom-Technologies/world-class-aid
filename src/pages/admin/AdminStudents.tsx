@@ -116,18 +116,26 @@ export default function AdminStudents() {
     if (!selected || !session) return;
     setSaving(true);
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/students?id=eq.${selected.id}`, {
-        method: "PATCH",
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify({ status: newStatus, admin_notes: adminNotes }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      toast.success("Student status updated!");
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID || "kelwzcacbnrrioophnzh";
+      const res = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/notify-student-status`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            student_id: selected.id,
+            new_status: newStatus,
+            admin_notes: adminNotes,
+          }),
+        }
+      );
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Update failed");
+      const emailNote = result.emailSent ? " Email notification sent to partner!" : "";
+      toast.success(`Student status updated to ${newStatus}!${emailNote}`);
       setDetailOpen(false);
       fetchData();
     } catch (e: any) {
