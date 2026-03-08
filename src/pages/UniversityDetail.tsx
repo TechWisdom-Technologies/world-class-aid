@@ -299,7 +299,7 @@ export default function UniversityDetail() {
       {similarUnis.length > 0 && (
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-8 text-center">Similar Universities in {country?.name}</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-8 text-center">Similar Universities in Malaysia</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {similarUnis.map((su) => {
                 const sc = countries.find((c) => c.id === su.country_id);
