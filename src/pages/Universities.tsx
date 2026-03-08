@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { useTableData } from "@/hooks/useSupabaseData";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,7 +13,20 @@ import { Search, MapPin, ChevronLeft, ChevronRight, Loader2 } from "lucide-react
 const ITEMS_PER_PAGE = 9;
 
 export default function Universities() {
-  const { data: universities = [], isLoading } = useTableData("universities", { orderBy: "ranking" });
+  const [universities, setUniversities] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    async function fetchData() {
+      console.log("[Universities] Fetching directly from supabase...");
+      console.log("[Universities] Supabase URL:", (supabase as any).supabaseUrl);
+      const { data, error } = await supabase.from("universities").select("*").order("ranking", { ascending: true });
+      console.log("[Universities] Direct fetch result:", { data: data?.length, error });
+      if (data) setUniversities(data);
+      setIsLoading(false);
+    }
+    fetchData();
+  }, []);
   const [search, setSearch] = useState("");
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [maxTuition, setMaxTuition] = useState(50000);
