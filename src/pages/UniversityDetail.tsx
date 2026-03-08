@@ -24,7 +24,7 @@ const sectionLabels = { about: "About", study: "Why Study Here", courses: "Cours
 export default function UniversityDetail() {
   const { universityId } = useParams();
   const uni = universities.find((u) => u.id === Number(universityId));
-  const country = uni ? countries.find((c) => c.id === uni.country_id) : null;
+  const countryName = "Malaysia";
   const uniCourses = courses.filter((c) => c.university_id === Number(universityId));
   const similarUnis = uni ? universities.filter((u) => u.country_id === uni.country_id && u.id !== uni.id).slice(0, 3) : [];
   const { toast } = useToast();

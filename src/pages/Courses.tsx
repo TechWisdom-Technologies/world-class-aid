@@ -55,7 +55,7 @@ export default function Courses() {
       <div className="bg-primary text-primary-foreground py-14">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Course Directory</h1>
-          <p className="text-primary-foreground/70 max-w-xl mx-auto">Search through {courses.length}+ programs across all partner universities.</p>
+          <p className="text-primary-foreground/70 max-w-xl mx-auto">Search through {courses.length}+ programs across Malaysian universities.</p>
         </div>
       </div>
 

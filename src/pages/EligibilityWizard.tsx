@@ -173,7 +173,6 @@ export default function EligibilityWizard() {
               ) : (
                 <div className="space-y-4">
                   {filteredResults().map(({ uni, courses: matchedCourses, chance }) => {
-                    const country = countries.find((c) => c.id === uni.country_id);
                     return (
                       <Card key={uni.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
@@ -181,7 +180,7 @@ export default function EligibilityWizard() {
                             <div>
                               <Link to={`/university/${uni.id}`} className="font-bold text-lg hover:text-secondary transition-colors">{uni.name}</Link>
                               <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                                <MapPin className="h-3.5 w-3.5" /> {uni.city}, {country?.name}
+                                <MapPin className="h-3.5 w-3.5" /> {uni.city}, Malaysia
                                 <Trophy className="h-3.5 w-3.5 ml-2" /> #{uni.ranking}
                               </div>
                             </div>
