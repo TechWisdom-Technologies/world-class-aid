@@ -24,6 +24,7 @@ const statusColors: Record<string, string> = {
 
 export default function PartnerDashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { signOut, user } = useAuth();
 
   const metrics = [
     { label: "Total Students Sent", value: partner.total_referrals, icon: Users, color: "text-secondary" },
