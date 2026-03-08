@@ -88,7 +88,7 @@ export default function EligibilityWizard() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1 bg-muted/30">
         <div className="bg-primary text-primary-foreground py-12 text-center">
           <GraduationCap className="h-12 w-12 mx-auto mb-3 text-secondary" />

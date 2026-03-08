@@ -50,7 +50,7 @@ export default function Compare() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1 bg-muted/30">
         {/* Hero */}
         <div className="bg-primary text-primary-foreground py-12 text-center">

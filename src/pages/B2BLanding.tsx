@@ -30,7 +30,7 @@ export default function B2BLanding() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1">
         {/* Hero */}
         <div className="bg-primary text-primary-foreground py-20">
