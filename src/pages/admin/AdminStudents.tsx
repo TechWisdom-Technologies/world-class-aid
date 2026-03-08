@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Eye, Loader2, Search, FileText, ExternalLink, Users, Filter } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Eye, Loader2, Search, FileText, ExternalLink, Users, Filter, X, Download, Image, File } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
@@ -83,6 +84,7 @@ export default function AdminStudents() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [newStatus, setNewStatus] = useState("");
   const [adminNotes, setAdminNotes] = useState("");
+  const [previewDoc, setPreviewDoc] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
   const [filterPartner, setFilterPartner] = useState("all");
@@ -301,7 +303,7 @@ export default function AdminStudents() {
                 </div>
               </div>
 
-              {/* Documents */}
+              {/* Documents with Inline Preview */}
               <div className="border-t pt-4">
                 <h3 className="font-semibold mb-3">Documents</h3>
                 <div className="space-y-2">
@@ -312,17 +314,45 @@ export default function AdminStudents() {
                     { field: "personal_statement_url", label: "Personal Statement" },
                     { field: "recommendation_letter_url", label: "Recommendation Letter" },
                   ].map(doc => {
-                    const url = (selected as any)[doc.field];
+                    const url = (selected as any)[doc.field] as string | undefined;
+                    const isImage = url && /\.(jpg|jpeg|png|gif|webp|svg)(\?|$)/i.test(url);
+                    const isPdf = url && /\.pdf(\?|$)/i.test(url);
                     return (
-                      <div key={doc.field} className="flex items-center gap-3 p-2 rounded-lg border">
-                        <FileText className={`h-4 w-4 ${url ? "text-green-600" : "text-muted-foreground/40"}`} />
-                        <span className="text-sm flex-1">{doc.label}</span>
-                        {url ? (
-                          <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1">
-                            View <ExternalLink className="h-3 w-3" />
-                          </a>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">Not uploaded</span>
+                      <div key={doc.field} className="rounded-lg border overflow-hidden">
+                        <div className="flex items-center gap-3 p-2">
+                          {isImage ? <Image className="h-4 w-4 text-primary" /> : isPdf ? <File className="h-4 w-4 text-destructive" /> : <FileText className={`h-4 w-4 ${url ? "text-green-600" : "text-muted-foreground/40"}`} />}
+                          <span className="text-sm flex-1 font-medium">{doc.label}</span>
+                          {url ? (
+                            <div className="flex items-center gap-1">
+                              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setPreviewDoc(previewDoc === doc.field ? null : doc.field)}>
+                                <Eye className="h-3 w-3 mr-1" /> {previewDoc === doc.field ? "Hide" : "Preview"}
+                              </Button>
+                              <a href={url} target="_blank" rel="noopener noreferrer">
+                                <Button variant="ghost" size="sm" className="h-7 text-xs">
+                                  <ExternalLink className="h-3 w-3 mr-1" /> Open
+                                </Button>
+                              </a>
+                              <a href={url} download>
+                                <Button variant="ghost" size="icon" className="h-7 w-7">
+                                  <Download className="h-3 w-3" />
+                                </Button>
+                              </a>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Not uploaded</span>
+                          )}
+                        </div>
+                        {/* Inline preview */}
+                        {previewDoc === doc.field && url && (
+                          <div className="border-t bg-muted/30 p-3">
+                            {isImage ? (
+                              <img src={url} alt={doc.label} className="max-h-[400px] w-auto mx-auto rounded-md object-contain" />
+                            ) : isPdf ? (
+                              <iframe src={url} className="w-full h-[500px] rounded-md border" title={doc.label} />
+                            ) : (
+                              <iframe src={url} className="w-full h-[400px] rounded-md border" title={doc.label} />
+                            )}
+                          </div>
                         )}
                       </div>
                     );
