@@ -1,12 +1,27 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
+import { HeroSection } from "@/components/public/HeroSection";
+import { ServicesGrid } from "@/components/public/ServicesGrid";
+import { StatsBanner } from "@/components/public/StatsBanner";
+import { UniversitiesSection } from "@/components/public/UniversitiesSection";
+import { AccommodationsSection } from "@/components/public/AccommodationsSection";
+import { TestimonialsSection } from "@/components/public/TestimonialsSection";
+import { BlogSection } from "@/components/public/BlogSection";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen">
+      <PublicHeader />
+      <main>
+        <HeroSection />
+        <ServicesGrid />
+        <StatsBanner />
+        <UniversitiesSection />
+        <AccommodationsSection />
+        <TestimonialsSection />
+        <BlogSection />
+      </main>
+      <PublicFooter />
     </div>
   );
 };
