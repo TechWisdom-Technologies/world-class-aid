@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
-  BookOpen, FileText, Calendar, Building2,
+  BookOpen, FileText, Calendar, Building2, Languages, PenTool,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -34,6 +34,7 @@ const resourceToolsLinks = [
   { label: "Scholarships", to: "/scholarships", icon: Award },
   { label: "Visa Guide", to: "/visa-guide", icon: FileText },
   { label: "Events & Webinars", to: "/events", icon: Calendar },
+  { label: "Blog", to: "/blog", icon: PenTool },
 ];
 
 export function MegaMenu() {
@@ -121,6 +122,12 @@ export function MegaMenu() {
 
           <Link to="/courses">
             <Button variant="ghost" size="sm" className="text-sm font-medium">Courses</Button>
+          </Link>
+
+          <Link to="/language-centers">
+            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
+              <Languages className="h-3.5 w-3.5" /> Language Centers
+            </Button>
           </Link>
 
           {/* Accommodations */}
@@ -272,6 +279,9 @@ export function MegaMenu() {
 
                 <MobileNavLink to="/universities">Universities</MobileNavLink>
                 <MobileNavLink to="/courses">Courses</MobileNavLink>
+                <MobileNavLink to="/language-centers">
+                  <span className="flex items-center gap-2"><Languages className="h-4 w-4 text-muted-foreground" /> Language Centers</span>
+                </MobileNavLink>
                 <MobileNavLink to="/housing">
                   <span className="flex items-center gap-2"><Building2 className="h-4 w-4 text-muted-foreground" /> Accommodations</span>
                 </MobileNavLink>
