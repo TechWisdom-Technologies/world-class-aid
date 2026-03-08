@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { universities, courses } from "@/data/mockData";
+import { useTableData } from "@/hooks/useSupabaseData";
 import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 
 const tabs = ["University", "Course", "Country"];
@@ -21,6 +21,8 @@ export function HeroSection() {
   const [leadOpen, setLeadOpen] = useState(false);
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
+  const { data: universities = [] } = useTableData("universities", { orderBy: "name" });
+  const { data: courses = [] } = useTableData("courses", { orderBy: "title" });
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
@@ -31,10 +33,10 @@ export function HeroSection() {
     if (!query.trim()) return;
     const q = query.toLowerCase();
     if (activeTab === "University") {
-      const uni = universities.find((u) => u.name.toLowerCase().includes(q));
+      const uni = universities.find((u: any) => u.name.toLowerCase().includes(q));
       navigate(uni ? `/universities/${uni.id}` : "/universities");
     } else if (activeTab === "Course") {
-      const course = courses.find((c) => c.title.toLowerCase().includes(q));
+      const course = courses.find((c: any) => c.title.toLowerCase().includes(q));
       navigate(course ? `/courses/${course.id}` : "/courses");
     } else {
       navigate("/destinations/malaysia");
