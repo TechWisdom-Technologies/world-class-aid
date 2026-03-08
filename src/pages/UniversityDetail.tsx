@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
@@ -14,20 +14,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MapPin, Trophy, Download, Users, Globe, CalendarDays, Landmark,
   BookOpen, FlaskConical, Sparkles, ArrowRight, CheckCircle, Building,
-  GraduationCap, HelpCircle, Send, Loader2
+  GraduationCap, HelpCircle, Send, Loader2, Home, BedDouble, Clock
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { AccommodationMap } from "@/components/public/AccommodationMap";
 
-const sectionIds = ["about", "study", "courses", "steps", "faq"] as const;
-const sectionLabels = { about: "About", study: "Why Study Here", courses: "Courses & Fees", steps: "How to Apply", faq: "FAQ" };
+const sectionIds = ["about", "study", "courses", "location", "steps", "faq"] as const;
+const sectionLabels: Record<string, string> = { about: "About", study: "Why Study Here", courses: "Courses & Fees", location: "Location & Housing", steps: "How to Apply", faq: "FAQ" };
 
 export default function UniversityDetail() {
   const { universityId } = useParams();
   const { data: universities = [], isLoading } = useTableData("universities");
   const { data: courses = [] } = useTableData("courses");
+  const { data: accommodations = [] } = useTableData("accommodations");
   const uni = universities.find((u: any) => u.id === universityId);
   const uniCourses = courses.filter((c: any) => c.university_id === universityId);
   const similarUnis = uni ? universities.filter((u: any) => u.id !== uni.id).slice(0, 3) : [];
+
+  // Find accommodations in the same city as this university
+  const nearbyAccommodations = useMemo(() => {
+    if (!uni) return [];
+    return accommodations.filter((a: any) => a.city?.toLowerCase() === uni.city?.toLowerCase());
+  }, [uni, accommodations]);
   const { toast } = useToast();
   const [leadForm, setLeadForm] = useState({ name: "", email: "", phone: "", course: "" });
 
@@ -219,6 +227,57 @@ export default function UniversityDetail() {
               </Table>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* LOCATION & NEARBY HOUSING */}
+      <section id="location" className="py-16 bg-muted/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">Location & Nearby Housing</h2>
+          <p className="text-muted-foreground mb-8">Explore accommodations near {uni.name}</p>
+
+          <AccommodationMap
+            accommodations={nearbyAccommodations as any}
+            universities={[uni] as any}
+            onSelect={() => {}}
+          />
+
+          {nearbyAccommodations.length > 0 && (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              {nearbyAccommodations.slice(0, 6).map((a: any) => (
+                <Card key={a.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Home className="h-4 w-4 text-secondary" />
+                      <h4 className="font-bold text-sm">{a.name}</h4>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <MapPin className="h-3 w-3" /> {a.city}
+                    </div>
+                    {a.travel_distance && (
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3 text-secondary" /> {a.travel_distance}
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between pt-1">
+                      <Badge variant="outline" className="text-[11px]">{a.type}</Badge>
+                      <span className="font-bold text-secondary text-sm">RM {Number(a.price_per_month).toLocaleString()}/mo</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {nearbyAccommodations.length === 0 && !uni.latitude && (
+            <p className="text-sm text-muted-foreground text-center mt-4">No location data available. Add coordinates in the admin panel to enable the map.</p>
+          )}
+
+          <div className="text-center mt-6">
+            <Link to="/housing">
+              <Button variant="outline" className="gap-1.5">View All Accommodations <ArrowRight className="h-4 w-4" /></Button>
+            </Link>
+          </div>
         </div>
       </section>
 
