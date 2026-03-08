@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { universities, courses, countries } from "@/data/mockData";
+import { universities, courses } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ const sectionLabels = { about: "About", study: "Why Study Here", courses: "Cours
 export default function UniversityDetail() {
   const { universityId } = useParams();
   const uni = universities.find((u) => u.id === Number(universityId));
-  const country = uni ? countries.find((c) => c.id === uni.country_id) : null;
+  const countryName = "Malaysia";
   const uniCourses = courses.filter((c) => c.university_id === Number(universityId));
   const similarUnis = uni ? universities.filter((u) => u.country_id === uni.country_id && u.id !== uni.id).slice(0, 3) : [];
   const { toast } = useToast();
@@ -75,7 +75,7 @@ export default function UniversityDetail() {
             </Avatar>
             <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-2">{uni.name}</h1>
             <div className="flex items-center justify-center gap-3 text-primary-foreground/80 text-sm mb-4">
-              <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {uni.city}, {country?.name}</span>
+              <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {uni.city}, Malaysia</span>
               <Badge className="bg-secondary text-secondary-foreground"><Trophy className="h-3 w-3 mr-1" /> #{uni.ranking} World</Badge>
             </div>
             <div className="flex items-center justify-center gap-3">
@@ -299,11 +299,9 @@ export default function UniversityDetail() {
       {similarUnis.length > 0 && (
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-8 text-center">Similar Universities in {country?.name}</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-8 text-center">Similar Universities in Malaysia</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {similarUnis.map((su) => {
-                const sc = countries.find((c) => c.id === su.country_id);
-                return (
+              {similarUnis.map((su) => (
                   <Link key={su.id} to={`/universities/${su.id}`}>
                     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                       <CardContent className="p-0">
@@ -313,7 +311,7 @@ export default function UniversityDetail() {
                         <div className="p-4 space-y-2">
                           <h3 className="font-bold text-sm leading-tight">{su.name}</h3>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" /> {su.city}, {sc?.name}
+                            <MapPin className="h-3 w-3" /> {su.city}, Malaysia
                           </div>
                           <div className="flex items-center justify-between">
                             <Badge variant="outline" className="text-xs"><Trophy className="h-3 w-3 mr-1" /> #{su.ranking}</Badge>
@@ -325,8 +323,7 @@ export default function UniversityDetail() {
                       </CardContent>
                     </Card>
                   </Link>
-                );
-              })}
+                ))}
             </div>
           </div>
         </section>

@@ -2,17 +2,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import Countries from "./pages/Countries";
 import Universities from "./pages/Universities";
 import CoursesPage from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
-import CountryHub from "./pages/CountryHub";
+import StudyInMalaysia from "./pages/StudyInMalaysia";
 import UniversityDetail from "./pages/UniversityDetail";
 import EligibilityWizard from "./pages/EligibilityWizard";
 import B2BLanding from "./pages/B2BLanding";
@@ -52,16 +51,17 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/countries" element={<Countries />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/courses/:courseId" element={<CourseDetail />} />
-            <Route path="/country/:countryId" element={<CountryHub />} />
+            <Route path="/study-in-malaysia" element={<StudyInMalaysia />} />
             <Route path="/university/:universityId" element={<UniversityDetail />} />
             <Route path="/universities/:universityId" element={<UniversityDetail />} />
             <Route path="/eligibility" element={<EligibilityWizard />} />
+            <Route path="/eligibility-test" element={<EligibilityWizard />} />
             <Route path="/b2b" element={<B2BLanding />} />
             <Route path="/cost-calculator" element={<CostCalculator />} />
+            <Route path="/calculator" element={<CostCalculator />} />
             <Route path="/compare" element={<Compare />} />
             <Route path="/events" element={<Events />} />
             <Route path="/scholarships" element={<Scholarships />} />
@@ -72,6 +72,9 @@ const App = () => (
             <Route path="/alumni" element={<Alumni />} />
             <Route path="/pre-departure" element={<PreDeparture />} />
             <Route path="/help" element={<HelpCenter />} />
+            {/* Redirect old country routes */}
+            <Route path="/countries" element={<Navigate to="/study-in-malaysia" replace />} />
+            <Route path="/country/:countryId" element={<Navigate to="/study-in-malaysia" replace />} />
             <Route
               path="/admin"
               element={

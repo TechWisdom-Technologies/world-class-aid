@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, FolderOpen, Handshake, Headphones, Sparkles, ChevronRight,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -24,7 +25,6 @@ import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 
 const resourceLinks = [
   { label: "Scholarships", to: "/scholarships" },
@@ -39,6 +39,14 @@ const toolsLinks = [
   { label: "Student Document Vault", to: "/student-dashboard/documents", icon: FolderOpen },
   { label: "B2B Partner Portal", to: "/partner", icon: Handshake },
   { label: "Virtual Campus Tours", to: "/virtual-tours", icon: Headphones },
+];
+
+const malaysianCityLinks = [
+  { label: "Study in Kuala Lumpur", to: "/universities?city=Kuala+Lumpur" },
+  { label: "Study in Cyberjaya", to: "/universities?city=Cyberjaya" },
+  { label: "Study in Penang", to: "/universities?city=Penang" },
+  { label: "Study in Subang Jaya", to: "/universities?city=Subang+Jaya" },
+  { label: "Study in Johor Bahru", to: "/universities?city=Johor+Bahru" },
 ];
 
 export function MegaMenu() {
@@ -80,6 +88,28 @@ export function MegaMenu() {
             <Button variant="ghost" size="sm" className="text-sm font-medium">Courses</Button>
           </Link>
 
+          {/* Study in Malaysia Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-sm font-medium gap-1">
+                Study in Malaysia <ChevronDown className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-56">
+              <DropdownMenuItem asChild>
+                <Link to="/study-in-malaysia" className="w-full cursor-pointer font-semibold">
+                  <MapPin className="h-3.5 w-3.5 mr-2" /> Overview — Study in Malaysia
+                </Link>
+              </DropdownMenuItem>
+              <div className="h-px bg-border my-1" />
+              {malaysianCityLinks.map((c) => (
+                <DropdownMenuItem key={c.to} asChild>
+                  <Link to={c.to} className="w-full cursor-pointer">{c.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Resources Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -105,21 +135,18 @@ export function MegaMenu() {
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="grid w-[560px] grid-cols-5 p-4 gap-4">
-                    {/* Left Column: Featured Tool */}
                     <div className="col-span-2 rounded-lg bg-secondary/10 p-5 flex flex-col justify-between">
                       <div>
                         <Sparkles className="h-8 w-8 text-secondary mb-3" />
                         <p className="font-bold text-base text-foreground leading-tight">AI Eligibility Matcher</p>
                         <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                          Find out your acceptance chances at top universities in 60 seconds.
+                          Find out your acceptance chances at top Malaysian universities in 60 seconds.
                         </p>
                       </div>
                       <Link to="/eligibility-test" className="mt-4 inline-flex items-center text-xs font-semibold text-secondary hover:underline">
                         Try it Now <ChevronRight className="h-3 w-3 ml-0.5" />
                       </Link>
                     </div>
-
-                    {/* Right Column: Links */}
                     <div className="col-span-3 space-y-0.5">
                       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 pb-2">
                         Interactive Features
@@ -206,7 +233,6 @@ export function MegaMenu() {
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] p-0">
             <div className="flex flex-col h-full">
-              {/* Mobile Header */}
               <div className="p-4 border-b">
                 <Link to="/" className="flex items-center gap-2">
                   <GraduationCap className="h-6 w-6 text-secondary" />
@@ -217,10 +243,27 @@ export function MegaMenu() {
                 </Link>
               </div>
 
-              {/* Mobile Links */}
               <nav className="flex-1 overflow-y-auto p-4 space-y-1">
                 <MobileNavLink to="/universities">Universities</MobileNavLink>
                 <MobileNavLink to="/courses">Courses</MobileNavLink>
+
+                {/* Study in Malaysia */}
+                <div className="pt-3 pb-1">
+                  <Collapsible>
+                    <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
+                      Study in Malaysia
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-0.5">
+                      <MobileNavLink to="/study-in-malaysia">
+                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-secondary" /> Overview</span>
+                      </MobileNavLink>
+                      {malaysianCityLinks.map((c) => (
+                        <MobileNavLink key={c.to} to={c.to}>{c.label}</MobileNavLink>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
 
                 <div className="pt-3 pb-1">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">Resources</p>
@@ -234,7 +277,7 @@ export function MegaMenu() {
                   <Collapsible>
                     <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
                       Tools & Hubs
-                      <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+                      <ChevronDown className="h-3.5 w-3.5" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-0.5">
                       <MobileNavLink to="/eligibility-test">
@@ -252,7 +295,6 @@ export function MegaMenu() {
                 <div className="pt-3 pb-1">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">More</p>
                   <MobileNavLink to="/b2b">For Agencies</MobileNavLink>
-                  <MobileNavLink to="/countries">Study Destinations</MobileNavLink>
                   <MobileNavLink to="/careers">Career Hub</MobileNavLink>
                   <MobileNavLink to="/help">Help Center</MobileNavLink>
                 </div>
