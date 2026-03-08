@@ -19,8 +19,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { AccommodationMap } from "@/components/public/AccommodationMap";
 
-const sectionIds = ["about", "study", "courses", "steps", "faq"] as const;
-const sectionLabels = { about: "About", study: "Why Study Here", courses: "Courses & Fees", steps: "How to Apply", faq: "FAQ" };
+const sectionIds = ["about", "study", "courses", "location", "steps", "faq"] as const;
+const sectionLabels: Record<string, string> = { about: "About", study: "Why Study Here", courses: "Courses & Fees", location: "Location & Housing", steps: "How to Apply", faq: "FAQ" };
 
 export default function UniversityDetail() {
   const { universityId } = useParams();
