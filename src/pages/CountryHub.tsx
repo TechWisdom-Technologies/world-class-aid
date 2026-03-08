@@ -26,7 +26,7 @@ export default function CountryHub() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1">
         <div className="bg-primary text-primary-foreground py-16">
           <div className="container mx-auto px-4">
