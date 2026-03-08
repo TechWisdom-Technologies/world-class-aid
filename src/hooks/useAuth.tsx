@@ -56,32 +56,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        try {
-          const r = await fetchUserRoles(session.user.id);
-          setRoles(r);
-        } catch (e) {
-          console.error("Failed to fetch roles:", e);
-          setRoles([]);
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, sess) => {
+      setSession(sess);
+      if (sess?.user) {
+        const r = await fetchUserRoles(sess.user.id, sess.access_token);
+        setRoles(r);
       } else {
         setRoles([]);
       }
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        try {
-          const r = await fetchUserRoles(session.user.id);
-          setRoles(r);
-        } catch (e) {
-          console.error("Failed to fetch roles:", e);
-          setRoles([]);
-        }
+    supabase.auth.getSession().then(async ({ data: { session: sess } }) => {
+      setSession(sess);
+      if (sess?.user) {
+        const r = await fetchUserRoles(sess.user.id, sess.access_token);
+        setRoles(r);
       }
       setLoading(false);
     });
@@ -92,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { success: false, error: error.message };
-    const r = await fetchUserRoles(data.user.id);
+    const r = await fetchUserRoles(data.user.id, data.session?.access_token);
     setRoles(r);
     const redirectTo = r.includes("admin") ? "/admin" : r.includes("partner") ? "/partner-dashboard" : "/";
     return { success: true, redirectTo };
