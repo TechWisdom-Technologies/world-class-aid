@@ -23,17 +23,21 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminAccommodations from "./pages/admin/AdminAccommodations";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminSettings from "./pages/admin/AdminSettings";
-import PartnerDashboard from "./pages/PartnerDashboard";
+import PartnerLayout from "./pages/partner/PartnerLayout";
+import PartnerOverview from "./pages/partner/PartnerOverview";
+import PartnerWallet from "./pages/partner/PartnerWallet";
+import PartnerMarketing from "./pages/partner/PartnerMarketing";
+import PartnerTeam from "./pages/partner/PartnerTeam";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
@@ -64,15 +68,20 @@ const App = () => (
               path="/partner-dashboard"
               element={
                 <ProtectedRoute requiredRole="partner">
-                  <PartnerDashboard />
+                  <PartnerLayout />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<PartnerOverview />} />
+              <Route path="wallet" element={<PartnerWallet />} />
+              <Route path="marketing" element={<PartnerMarketing />} />
+              <Route path="team" element={<PartnerTeam />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+        </TooltipProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
