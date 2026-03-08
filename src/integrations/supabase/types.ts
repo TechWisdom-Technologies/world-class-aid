@@ -18,34 +18,58 @@ export type Database = {
         Row: {
           amenities: Json | null
           city: string
+          contact_email: string | null
+          contact_phone: string | null
           created_at: string
+          description: string | null
           id: string
+          image_url: string | null
           name: string
           near_university_ids: Json | null
           price_per_month: number
+          property_type: string
+          room_types: Json | null
+          travel_distance: string | null
           type: string
+          unit_types: Json | null
           updated_at: string
         }
         Insert: {
           amenities?: Json | null
           city?: string
+          contact_email?: string | null
+          contact_phone?: string | null
           created_at?: string
+          description?: string | null
           id?: string
+          image_url?: string | null
           name: string
           near_university_ids?: Json | null
           price_per_month?: number
+          property_type?: string
+          room_types?: Json | null
+          travel_distance?: string | null
           type?: string
+          unit_types?: Json | null
           updated_at?: string
         }
         Update: {
           amenities?: Json | null
           city?: string
+          contact_email?: string | null
+          contact_phone?: string | null
           created_at?: string
+          description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           near_university_ids?: Json | null
           price_per_month?: number
+          property_type?: string
+          room_types?: Json | null
+          travel_distance?: string | null
           type?: string
+          unit_types?: Json | null
           updated_at?: string
         }
         Relationships: []
