@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { universities, courses, countries } from "@/data/mockData";
+import { universities, courses } from "@/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
