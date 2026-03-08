@@ -18,6 +18,7 @@ const trustPoints = [
 export function HeroSection() {
   const [activeTab, setActiveTab] = useState("University");
   const [query, setQuery] = useState("");
+  const [leadOpen, setLeadOpen] = useState(false);
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
 
