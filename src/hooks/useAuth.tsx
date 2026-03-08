@@ -1,80 +1,83 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 type AppRole = "admin" | "partner" | "user";
 
+interface MockUser {
+  email: string;
+  role: AppRole;
+  name: string;
+}
+
 interface AuthContextType {
-  session: Session | null;
-  user: User | null;
+  session: { user: MockUser } | null;
+  user: MockUser | null;
   roles: AppRole[];
   loading: boolean;
   hasRole: (role: AppRole) => boolean;
-  signOut: () => Promise<void>;
+  signOut: () => void;
+  signIn: (email: string, password: string) => { success: boolean; error?: string; redirectTo?: string };
 }
+
+const MOCK_USERS: Record<string, { password: string; user: MockUser }> = {
+  "admin@youruni.com": {
+    password: "admin123",
+    user: { email: "admin@youruni.com", role: "admin", name: "Admin User" },
+  },
+  "partner@agency.com": {
+    password: "partner123",
+    user: { email: "partner@agency.com", role: "partner", name: "Global Education Hub" },
+  },
+};
 
 const AuthContext = createContext<AuthContextType>({
   session: null,
   user: null,
   roles: [],
-  loading: true,
+  loading: false,
   hasRole: () => false,
-  signOut: async () => {},
+  signOut: () => {},
+  signIn: () => ({ success: false }),
 });
 
 export const useAuth = () => useContext(AuthContext);
 
-async function fetchUserRoles(userId: string): Promise<AppRole[]> {
-  const { data, error } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId);
-  if (error || !data) return [];
-  return data.map((r) => r.role as AppRole);
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [roles, setRoles] = useState<AppRole[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<MockUser | null>(() => {
+    const stored = localStorage.getItem("mock_user");
+    return stored ? JSON.parse(stored) : null;
+  });
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        if (session?.user) {
-          const userRoles = await fetchUserRoles(session.user.id);
-          setRoles(userRoles);
-        } else {
-          setRoles([]);
-        }
-        setLoading(false);
-      }
-    );
-
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        const userRoles = await fetchUserRoles(session.user.id);
-        setRoles(userRoles);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+  const signIn = useCallback((email: string, password: string) => {
+    const entry = MOCK_USERS[email.toLowerCase()];
+    if (!entry) return { success: false, error: "No account found with this email." };
+    if (entry.password !== password) return { success: false, error: "Incorrect password." };
+    setCurrentUser(entry.user);
+    localStorage.setItem("mock_user", JSON.stringify(entry.user));
+    const redirectTo = entry.user.role === "admin" ? "/admin" : "/partner-dashboard";
+    return { success: true, redirectTo };
   }, []);
 
-  const hasRole = (role: AppRole) => roles.includes(role);
+  const signOut = useCallback(() => {
+    setCurrentUser(null);
+    localStorage.removeItem("mock_user");
+  }, []);
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-    setRoles([]);
-  };
+  const hasRole = useCallback((role: AppRole) => currentUser?.role === role, [currentUser]);
+
+  const session = currentUser ? { user: currentUser } : null;
 
   return (
     <AuthContext.Provider
-      value={{ session, user: session?.user ?? null, roles, loading, hasRole, signOut }}
+      value={{
+        session,
+        user: currentUser,
+        roles: currentUser ? [currentUser.role] : [],
+        loading: false,
+        hasRole,
+        signOut,
+        signIn,
+      }}
     >
       {children}
     </AuthContext.Provider>
