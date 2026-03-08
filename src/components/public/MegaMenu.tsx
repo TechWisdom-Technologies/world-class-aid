@@ -34,6 +34,7 @@ const resourceToolsLinks = [
   { label: "Scholarships", to: "/scholarships", icon: Award },
   { label: "Visa Guide", to: "/visa-guide", icon: FileText },
   { label: "Events & Webinars", to: "/events", icon: Calendar },
+  { label: "Blog", to: "/blog", icon: PenTool },
 ];
 
 export function MegaMenu() {
