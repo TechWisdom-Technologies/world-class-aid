@@ -60,9 +60,10 @@ export function PublicHeader() {
               {l.label}
             </Link>
           ))}
-          <div className="flex gap-2 pt-2">
-            <Link to="/admin" onClick={() => setMobileOpen(false)}><Button variant="outline" size="sm">Admin</Button></Link>
-            <Link to="/partner-dashboard" onClick={() => setMobileOpen(false)}><Button size="sm" className="bg-secondary text-secondary-foreground">Partner Portal</Button></Link>
+          <div className="flex flex-col gap-2 pt-2">
+            <Link to="/login" onClick={() => setMobileOpen(false)}><Button variant="ghost" size="sm" className="w-full justify-start gap-1.5"><LogIn className="h-4 w-4" />Sign In</Button></Link>
+            <Link to="/admin" onClick={() => setMobileOpen(false)}><Button variant="outline" size="sm" className="w-full">Admin</Button></Link>
+            <Link to="/partner-dashboard" onClick={() => setMobileOpen(false)}><Button size="sm" className="w-full bg-secondary text-secondary-foreground">Partner Portal</Button></Link>
           </div>
         </div>
       )}
