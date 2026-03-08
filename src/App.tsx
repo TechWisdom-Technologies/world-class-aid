@@ -43,6 +43,7 @@ import AdminLanguageCenters from "./pages/admin/AdminLanguageCenters";
 import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminPartners from "./pages/admin/AdminPartners";
+import AdminCountries from "./pages/admin/AdminCountries";
 import AdminSettings from "./pages/admin/AdminSettings";
 import PartnerLayout from "./pages/partner/PartnerLayout";
 import PartnerOverview from "./pages/partner/PartnerOverview";
