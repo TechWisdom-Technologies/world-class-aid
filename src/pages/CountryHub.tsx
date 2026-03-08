@@ -15,7 +15,7 @@ export default function CountryHub() {
   if (!country) {
     return (
       <div className="min-h-screen flex flex-col">
-        <PublicHeader />
+        <MegaMenu />
         <main className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">Country not found.</p>
         </main>
