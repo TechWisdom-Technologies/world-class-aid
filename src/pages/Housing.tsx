@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Home, MapPin, Loader2, Wifi, Dumbbell, ShieldCheck, Car, BedDouble, Building2, Clock, Phone, Mail, ChevronRight } from "lucide-react";
-import { useState, useMemo } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Home, MapPin, Loader2, Wifi, Dumbbell, ShieldCheck, Car, BedDouble, Building2, Clock, Phone, Mail, ChevronRight, LayoutGrid, Map } from "lucide-react";
+import { useState, useMemo, lazy, Suspense } from "react";
+import { AccommodationMap } from "@/components/public/AccommodationMap";
 
 const accommodationTypes = ["All", "Apartment", "Hostel", "Condominium", "Studio", "Shared House", "Dormitory"];
 const propertyTypes = ["All", "Residential", "Commercial", "Mixed-Use", "Student Housing"];
