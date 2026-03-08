@@ -17,6 +17,7 @@ const items = [
   { title: "Events", url: "/admin/events", icon: Calendar },
   { title: "B2B Partners", url: "/admin/partners", icon: Users },
   { title: "Students", url: "/admin/students", icon: UserCheck },
+  { title: "Leads", url: "/admin/leads", icon: Target },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];
 

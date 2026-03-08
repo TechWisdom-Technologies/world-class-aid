@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Bell } from "lucide-react";
-import { toast } from "sonner";
+import { ReminderModal } from "@/components/public/ReminderModal";
 
 function getDaysLeft(deadline: string): number {
   const now = new Date();
@@ -26,6 +26,8 @@ const semesterColors: Record<string, string> = {
 
 export function IntakeCalendar() {
   const [, setTick] = useState(0);
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [selectedDeadline, setSelectedDeadline] = useState<any>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setTick((t) => t + 1), 60000);
@@ -38,9 +40,12 @@ export function IntakeCalendar() {
 
   const handleReminder = (deadline: typeof intakeDeadlines[0]) => {
     const uni = universities.find((u) => u.id === deadline.university_id);
-    toast.success("Reminder set!", {
-      description: `We'll remind you about ${uni?.name} ${deadline.intake} deadline.`,
+    setSelectedDeadline({
+      universityName: uni?.name || "University",
+      intakeLabel: deadline.intake,
+      deadlineDate: new Date(deadline.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
     });
+    setReminderOpen(true);
   };
 
   return (
@@ -80,6 +85,16 @@ export function IntakeCalendar() {
           })}
         </div>
       </div>
+
+      {selectedDeadline && (
+        <ReminderModal
+          open={reminderOpen}
+          onOpenChange={setReminderOpen}
+          universityName={selectedDeadline.universityName}
+          intakeLabel={selectedDeadline.intakeLabel}
+          deadlineDate={selectedDeadline.deadlineDate}
+        />
+      )}
     </section>
   );
 }
