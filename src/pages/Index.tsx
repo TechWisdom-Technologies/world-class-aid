@@ -1,4 +1,4 @@
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { HeroSection } from "@/components/public/HeroSection";
 import { ServicesGrid } from "@/components/public/ServicesGrid";
@@ -11,22 +11,22 @@ import { IntakeCalendar } from "@/components/public/IntakeCalendar";
 import { ResourcesSection } from "@/components/public/ResourcesSection";
 import { LeadBanner } from "@/components/public/LeadBanner";
 import { AmbassadorChat } from "@/components/public/AmbassadorChat";
+import { VideoExpertWidget } from "@/components/public/VideoExpertWidget";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { GraduationCap, Calculator, Handshake, Globe, Trophy, Calendar } from "lucide-react";
+import { GraduationCap, Calculator, Globe, Trophy, Calendar, Award } from "lucide-react";
 
 const quickLinks = [
   { icon: Globe, title: "Explore Countries", desc: "Browse universities by country", href: "/countries" },
   { icon: Trophy, title: "Compare Universities", desc: "Side-by-side comparison", href: "/compare" },
   { icon: GraduationCap, title: "Eligibility Test", desc: "Find your best-fit university", href: "/eligibility" },
-  { icon: Calendar, title: "Events & Webinars", desc: "Register for free events", href: "/events" },
+  { icon: Award, title: "Scholarships", desc: "Find funding opportunities", href: "/scholarships" },
 ];
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      <PublicHeader />
+      <MegaMenu />
       <main>
         <HeroSection />
 
@@ -63,6 +63,7 @@ const Index = () => {
       <PublicFooter />
       <LeadBanner />
       <AmbassadorChat />
+      <VideoExpertWidget />
     </div>
   );
 };

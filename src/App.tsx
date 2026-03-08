@@ -16,6 +16,14 @@ import B2BLanding from "./pages/B2BLanding";
 import CostCalculator from "./pages/CostCalculator";
 import Compare from "./pages/Compare";
 import Events from "./pages/Events";
+import Scholarships from "./pages/Scholarships";
+import VisaGuide from "./pages/VisaGuide";
+import Housing from "./pages/Housing";
+import LanguagePrep from "./pages/LanguagePrep";
+import Careers from "./pages/Careers";
+import Alumni from "./pages/Alumni";
+import PreDeparture from "./pages/PreDeparture";
+import HelpCenter from "./pages/HelpCenter";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUniversities from "./pages/admin/AdminUniversities";
@@ -49,6 +57,14 @@ const App = () => (
             <Route path="/cost-calculator" element={<CostCalculator />} />
             <Route path="/compare" element={<Compare />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/scholarships" element={<Scholarships />} />
+            <Route path="/visa-guide" element={<VisaGuide />} />
+            <Route path="/housing" element={<Housing />} />
+            <Route path="/language-prep" element={<LanguagePrep />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/alumni" element={<Alumni />} />
+            <Route path="/pre-departure" element={<PreDeparture />} />
+            <Route path="/help" element={<HelpCenter />} />
             <Route
               path="/admin"
               element={
