@@ -1,13 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { Link } from "react-router-dom";
 import { ArrowLeft, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminLayout() {
   const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/login");
+  };
 
   return (
     <SidebarProvider>
@@ -25,7 +31,7 @@ export default function AdminLayout() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-sm text-muted-foreground">{user?.email}</span>
-              <Button variant="ghost" size="sm" onClick={signOut}>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-1" />Sign Out
               </Button>
             </div>
