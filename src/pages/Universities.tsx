@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { universities, countries } from "@/data/mockData";
+import { universities, malaysianCities } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,28 +14,26 @@ const ITEMS_PER_PAGE = 9;
 
 export default function Universities() {
   const [search, setSearch] = useState("");
-  const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [maxTuition, setMaxTuition] = useState(50000);
   const [currentPage, setCurrentPage] = useState(1);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Reset page on filter change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedCountries, maxTuition]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedCities, maxTuition]);
 
-  const toggleCountry = (id: number) => {
-    setSelectedCountries((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+  const toggleCity = (city: string) => {
+    setSelectedCities((prev) =>
+      prev.includes(city) ? prev.filter((c) => c !== city) : [...prev, city]
     );
   };
 
   const filtered = useMemo(() => {
     return universities.filter((u) => {
       if (search && !u.name.toLowerCase().includes(search.toLowerCase())) return false;
-      if (selectedCountries.length > 0 && !selectedCountries.includes(u.country_id)) return false;
-      // Use ranking as proxy for tuition range (since University doesn't have tuition directly)
+      if (selectedCities.length > 0 && !selectedCities.includes(u.city)) return false;
       return true;
     });
-  }, [search, selectedCountries, maxTuition]);
+  }, [search, selectedCities, maxTuition]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -50,8 +48,8 @@ export default function Universities() {
       <MegaMenu />
       <div className="bg-primary text-primary-foreground py-14">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">University Directory</h1>
-          <p className="text-primary-foreground/70 max-w-xl mx-auto">Browse and compare {universities.length}+ universities across 4 countries.</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Universities in Malaysia</h1>
+          <p className="text-primary-foreground/70 max-w-xl mx-auto">Browse and compare {universities.length}+ partner universities across Malaysia.</p>
         </div>
       </div>
 
@@ -63,11 +61,11 @@ export default function Universities() {
               <CardContent className="p-5 space-y-6">
                 {/* Search */}
                 <div>
-                  <label className="text-sm font-semibold text-foreground mb-2 block">Search by Name</label>
+                  <label className="text-sm font-semibold text-foreground mb-2 block">Search Universities</label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="e.g. Monash, Oxford…"
+                      placeholder="Search for Universities in Malaysia…"
                       className="pl-9"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
@@ -75,17 +73,17 @@ export default function Universities() {
                   </div>
                 </div>
 
-                {/* Country */}
+                {/* City / Region */}
                 <div>
-                  <label className="text-sm font-semibold text-foreground mb-3 block">Country</label>
+                  <label className="text-sm font-semibold text-foreground mb-3 block">City / Region</label>
                   <div className="space-y-2">
-                    {countries.map((c) => (
-                      <label key={c.id} className="flex items-center gap-2 cursor-pointer text-sm">
+                    {malaysianCities.map((city) => (
+                      <label key={city} className="flex items-center gap-2 cursor-pointer text-sm">
                         <Checkbox
-                          checked={selectedCountries.includes(c.id)}
-                          onCheckedChange={() => toggleCountry(c.id)}
+                          checked={selectedCities.includes(city)}
+                          onCheckedChange={() => toggleCity(city)}
                         />
-                        <span>{c.flag_icon} {c.name}</span>
+                        <span>{city}</span>
                       </label>
                     ))}
                   </div>
@@ -105,7 +103,7 @@ export default function Universities() {
                   />
                 </div>
 
-                <Button variant="outline" className="w-full" onClick={() => { setSearch(""); setSelectedCountries([]); setMaxTuition(50000); }}>
+                <Button variant="outline" className="w-full" onClick={() => { setSearch(""); setSelectedCities([]); setMaxTuition(50000); }}>
                   Clear Filters
                 </Button>
               </CardContent>
@@ -120,31 +118,28 @@ export default function Universities() {
               <div className="text-center py-20 text-muted-foreground">No universities match your filters.</div>
             ) : (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {paged.map((u) => {
-                  const country = countries.find((c) => c.id === u.country_id);
-                  return (
-                    <Card key={u.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                      <CardContent className="p-0">
-                        <div className="h-32 bg-muted flex items-center justify-center overflow-hidden">
-                          <img src={u.logo_url} alt={u.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                {paged.map((u) => (
+                  <Card key={u.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                    <CardContent className="p-0">
+                      <div className="h-32 bg-muted flex items-center justify-center overflow-hidden">
+                        <img src={u.logo_url} alt={u.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      </div>
+                      <div className="p-4 space-y-2">
+                        <h3 className="font-bold text-sm leading-tight line-clamp-2">{u.name}</h3>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin className="h-3 w-3" />
+                          {u.city}, Malaysia
                         </div>
-                        <div className="p-4 space-y-2">
-                          <h3 className="font-bold text-sm leading-tight line-clamp-2">{u.name}</h3>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            {u.city}, {country?.name}
-                          </div>
-                          <div className="flex items-center justify-between pt-1">
-                            <span className="text-xs font-semibold text-secondary">Rank #{u.ranking}</span>
-                            <Link to={`/university/${u.id}`}>
-                              <Button size="sm" variant="outline" className="text-xs h-7">View Details</Button>
-                            </Link>
-                          </div>
+                        <div className="flex items-center justify-between pt-1">
+                          <span className="text-xs font-semibold text-secondary">Rank #{u.ranking}</span>
+                          <Link to={`/universities/${u.id}`}>
+                            <Button size="sm" variant="outline" className="text-xs h-7">View Details</Button>
+                          </Link>
                         </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             )}
 
