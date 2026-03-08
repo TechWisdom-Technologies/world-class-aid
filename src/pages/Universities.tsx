@@ -6,7 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Search, MapPin, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
@@ -15,27 +14,42 @@ const ITEMS_PER_PAGE = 9;
 export default function Universities() {
   const [universities, setUniversities] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    async function fetchData() {
-      console.log("[Universities] Fetching directly from supabase...");
-      console.log("[Universities] Supabase URL:", (supabase as any).supabaseUrl);
-      const { data, error } = await supabase.from("universities").select("*").order("ranking", { ascending: true });
-      console.log("[Universities] Direct fetch result:", { data: data?.length, error });
-      if (data) setUniversities(data);
-      setIsLoading(false);
-    }
-    fetchData();
-  }, []);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
-  const [maxTuition, setMaxTuition] = useState(50000);
   const [currentPage, setCurrentPage] = useState(1);
   const gridRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const url = import.meta.env.VITE_SUPABASE_URL;
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    
+    if (!url || !key) {
+      setError(`Missing env vars: URL=${!!url}, KEY=${!!key}`);
+      setIsLoading(false);
+      return;
+    }
+
+    fetch(`${url}/rest/v1/universities?select=*&order=ranking.asc`, {
+      headers: {
+        'apikey': key,
+        'Authorization': `Bearer ${key}`,
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUniversities(Array.isArray(data) ? data : []);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setIsLoading(false);
+      });
+  }, []);
+
   const cities = useMemo(() => [...new Set(universities.map((u: any) => u.city).filter(Boolean))].sort(), [universities]);
 
-  useEffect(() => { setCurrentPage(1); }, [search, selectedCities, maxTuition]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedCities]);
 
   const toggleCity = (city: string) => {
     setSelectedCities((prev) => prev.includes(city) ? prev.filter((c) => c !== city) : [...prev, city]);
@@ -47,7 +61,7 @@ export default function Universities() {
       if (selectedCities.length > 0 && !selectedCities.includes(u.city)) return false;
       return true;
     });
-  }, [universities, search, selectedCities, maxTuition]);
+  }, [universities, search, selectedCities]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -68,7 +82,9 @@ export default function Universities() {
       </div>
 
       <div className="container mx-auto px-4 py-10">
-        {isLoading ? (
+        {error ? (
+          <div className="text-center py-20 text-destructive font-mono text-sm">{error}</div>
+        ) : isLoading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8" ref={gridRef}>
