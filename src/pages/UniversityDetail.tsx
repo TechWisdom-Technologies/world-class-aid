@@ -30,6 +30,12 @@ export default function UniversityDetail() {
   const uni = universities.find((u: any) => u.id === universityId);
   const uniCourses = courses.filter((c: any) => c.university_id === universityId);
   const similarUnis = uni ? universities.filter((u: any) => u.id !== uni.id).slice(0, 3) : [];
+
+  // Find accommodations in the same city as this university
+  const nearbyAccommodations = useMemo(() => {
+    if (!uni) return [];
+    return accommodations.filter((a: any) => a.city?.toLowerCase() === uni.city?.toLowerCase());
+  }, [uni, accommodations]);
   const { toast } = useToast();
   const [leadForm, setLeadForm] = useState({ name: "", email: "", phone: "", course: "" });
 
