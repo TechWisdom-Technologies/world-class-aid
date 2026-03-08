@@ -22,6 +22,8 @@ export default function AdminUniversities() {
     { key: "campus_size", label: "Campus Size", showInTable: false, placeholder: "e.g. 100 acres" },
     { key: "logo_url", label: "Logo URL", showInTable: false },
     { key: "hero_image", label: "Hero Image URL", showInTable: false },
+    { key: "latitude", label: "Latitude", type: "number", showInTable: false, placeholder: "e.g. 3.1390" },
+    { key: "longitude", label: "Longitude", type: "number", showInTable: false, placeholder: "e.g. 101.6869" },
     { key: "study_reasons", label: "Reasons to Study Here", type: "json_array", showInTable: false, helpText: 'JSON array of objects: [{"title":"...","description":"..."}]', placeholder: '[{"title":"World-class Faculty","description":"Top professors..."}]' },
     { key: "registration_steps", label: "Registration Steps", type: "json_array", showInTable: false, helpText: 'JSON array of objects: [{"step":1,"title":"...","description":"..."}]', placeholder: '[{"step":1,"title":"Apply Online","description":"Submit your application..."}]' },
     { key: "faqs", label: "FAQs", type: "json_array", showInTable: false, helpText: 'JSON array: [{"question":"...","answer":"..."}]', placeholder: '[{"question":"How to apply?","answer":"Visit our portal..."}]' },
