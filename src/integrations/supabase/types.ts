@@ -289,6 +289,47 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          partner_id: string
+          read: boolean
+          student_id: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string
+          partner_id: string
+          read?: boolean
+          student_id?: string | null
+          title: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          partner_id?: string
+          read?: boolean
+          student_id?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_notifications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_registrations: {
         Row: {
           admin_notes: string | null
