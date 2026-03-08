@@ -56,6 +56,29 @@ serve(async (req) => {
       .eq("user_id", student.partner_id)
       .single();
 
+    // Insert in-app notification for the partner
+    const statusLabelsForNotif: Record<string, string> = {
+      document_review: "Document Review",
+      documents_verified: "Documents Verified",
+      applied: "Applied",
+      offer_received: "Offer Received",
+      visa_processing: "Visa Processing",
+      visa_approved: "Visa Approved",
+      enrolled: "Enrolled",
+      rejected: "Rejected",
+    };
+    const notifType = ["rejected"].includes(new_status) ? "warning" : ["visa_approved", "enrolled", "offer_received", "documents_verified"].includes(new_status) ? "success" : "info";
+    const notifTitle = `${student.full_name} — ${statusLabelsForNotif[new_status] || new_status}`;
+    const notifMessage = `Status updated from ${statusLabelsForNotif[oldStatus] || oldStatus} to ${statusLabelsForNotif[new_status] || new_status}.${admin_notes ? ` Note: ${admin_notes}` : ""}`;
+
+    await supabase.from("partner_notifications").insert({
+      partner_id: student.partner_id,
+      student_id: student_id,
+      title: notifTitle,
+      message: notifMessage,
+      type: notifType,
+    });
+
     // Try to send email
     const resendKey = Deno.env.get("RESEND_API_KEY");
     let emailSent = false;
