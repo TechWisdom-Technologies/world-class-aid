@@ -301,9 +301,7 @@ export default function UniversityDetail() {
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-8 text-center">Similar Universities in Malaysia</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {similarUnis.map((su) => {
-                const sc = countries.find((c) => c.id === su.country_id);
-                return (
+              {similarUnis.map((su) => (
                   <Link key={su.id} to={`/universities/${su.id}`}>
                     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                       <CardContent className="p-0">
@@ -313,7 +311,7 @@ export default function UniversityDetail() {
                         <div className="p-4 space-y-2">
                           <h3 className="font-bold text-sm leading-tight">{su.name}</h3>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" /> {su.city}, {sc?.name}
+                            <MapPin className="h-3 w-3" /> {su.city}, Malaysia
                           </div>
                           <div className="flex items-center justify-between">
                             <Badge variant="outline" className="text-xs"><Trophy className="h-3 w-3 mr-1" /> #{su.ranking}</Badge>
