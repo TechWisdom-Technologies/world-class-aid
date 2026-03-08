@@ -2,22 +2,33 @@ import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminLayout() {
+  const { signOut, user } = useAuth();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AdminSidebar />
         <div className="flex-1 flex flex-col">
-          <header className="h-14 flex items-center border-b px-4 gap-3 bg-background">
-            <SidebarTrigger />
-            <Link to="/">
-              <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <ArrowLeft className="h-4 w-4 mr-1" />Back to Site
+          <header className="h-14 flex items-center border-b px-4 gap-3 bg-background justify-between">
+            <div className="flex items-center gap-3">
+              <SidebarTrigger />
+              <Link to="/">
+                <Button variant="ghost" size="sm" className="text-muted-foreground">
+                  <ArrowLeft className="h-4 w-4 mr-1" />Back to Site
+                </Button>
+              </Link>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">{user?.email}</span>
+              <Button variant="ghost" size="sm" onClick={signOut}>
+                <LogOut className="h-4 w-4 mr-1" />Sign Out
               </Button>
-            </Link>
+            </div>
           </header>
           <main className="flex-1 p-6 bg-muted/20">
             <Outlet />
