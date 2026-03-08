@@ -5,6 +5,11 @@ export interface Country {
   flag_icon: string;
 }
 
+export interface UniversityFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface University {
   id: number;
   name: string;
@@ -14,6 +19,15 @@ export interface University {
   description: string;
   ranking: number;
   global_score: number;
+  aboutText?: string;
+  studyReasons?: string[];
+  faqs?: UniversityFAQ[];
+  registrationSteps?: string[];
+  totalStudents?: number;
+  internationalRatio?: number;
+  established?: number;
+  campusSize?: string;
+  heroImage?: string;
 }
 
 export interface CurriculumYear {
