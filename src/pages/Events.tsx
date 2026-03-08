@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { events, universities } from "@/data/mockData";
+import { useTableData } from "@/hooks/useSupabaseData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, Clock, Users, Video, BookOpen, Presentation } from "lucide-react";
+import { Calendar, Clock, Users, Video, BookOpen, Presentation, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const typeIcons: Record<string, typeof Video> = {
@@ -19,130 +18,70 @@ const typeIcons: Record<string, typeof Video> = {
   "Info Session": Users,
 };
 
-const typeColors: Record<string, string> = {
-  "Open Day": "bg-secondary/10 text-secondary",
-  Workshop: "bg-success/10 text-success",
-  Webinar: "bg-primary/10 text-primary",
-  "Info Session": "bg-warning/10 text-warning",
-};
-
 export default function Events() {
-  const [regEvent, setRegEvent] = useState<typeof events[0] | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [level, setLevel] = useState("");
+  const { data: events = [], isLoading } = useTableData("events");
+  const [regEvent, setRegEvent] = useState<any | null>(null);
 
-  const handleRegister = () => {
-    if (!name || !email) return;
-    toast.success("Registration confirmed!", {
-      description: `You're registered for "${regEvent?.title}". Check your email for details.`,
-    });
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Registration successful! Check your email for confirmation.");
     setRegEvent(null);
-    setName("");
-    setEmail("");
-    setLevel("");
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <MegaMenu />
-      <main className="flex-1 bg-muted/30">
-        <div className="bg-primary text-primary-foreground py-12 text-center">
-          <Calendar className="h-12 w-12 mx-auto mb-3 text-secondary" />
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Events & Webinars</h1>
-          <p className="text-primary-foreground/70 max-w-xl mx-auto">Join our virtual open days, workshops, and webinars to learn more about studying abroad</p>
+      <section className="bg-primary text-primary-foreground py-16">
+        <div className="container mx-auto px-4 text-center">
+          <Badge variant="secondary" className="mb-4">Events</Badge>
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Upcoming Events</h1>
+          <p className="text-primary-foreground/70 max-w-xl mx-auto">Open days, workshops, webinars, and more.</p>
         </div>
+      </section>
 
-        <div className="container mx-auto px-4 py-10">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event, i) => {
-              const Icon = typeIcons[event.type] || Calendar;
-              const eventUnis = event.university_ids.map((id) => universities.find((u) => u.id === id)).filter(Boolean);
+      <main className="flex-1 container mx-auto px-4 py-10">
+        {isLoading ? (
+          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        ) : events.length === 0 ? (
+          <div className="text-center py-20 text-muted-foreground">No events yet. Add some from the admin panel!</div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {events.map((ev: any) => {
+              const Icon = typeIcons[ev.type] || Calendar;
               return (
-                <Card key={event.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in overflow-hidden" style={{ animationDelay: `${i * 80}ms` }}>
-                  <div className="h-2 bg-gradient-to-r from-primary to-secondary" />
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge variant="outline" className={typeColors[event.type]}>
-                        <Icon className="h-3 w-3 mr-1" /> {event.type}
-                      </Badge>
-                      <Badge variant="outline" className="text-muted-foreground">
-                        <Users className="h-3 w-3 mr-1" /> {event.spots_left} spots
-                      </Badge>
+                <Card key={ev.id} className="hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-5 w-5 text-secondary" />
+                      <Badge variant="outline">{ev.type}</Badge>
                     </div>
-                    <h3 className="font-bold text-lg mb-2 group-hover:text-secondary transition-colors">{event.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{event.description}</p>
-
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5 text-secondary" />
-                        {new Date(event.date).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-3.5 w-3.5 text-secondary" /> {event.time}
-                      </div>
+                    <h3 className="font-bold">{ev.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{ev.description}</p>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{ev.date}</span>
+                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{ev.time}</span>
                     </div>
-
-                    {eventUnis.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {eventUnis.map((u) => (
-                          <Badge key={u!.id} variant="secondary" className="text-xs">{u!.name}</Badge>
-                        ))}
-                      </div>
-                    )}
-
-                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors" onClick={() => setRegEvent(event)}>
-                      Register for Free
-                    </Button>
+                    {ev.spots_left > 0 && <p className="text-xs text-secondary font-semibold">{ev.spots_left} spots left</p>}
+                    <Button size="sm" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={() => setRegEvent(ev)}>Register</Button>
                   </CardContent>
                 </Card>
               );
             })}
           </div>
-        </div>
-
-        {/* Registration Modal */}
-        <Dialog open={!!regEvent} onOpenChange={(o) => !o && setRegEvent(null)}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Register for Event</DialogTitle>
-            </DialogHeader>
-            {regEvent && (
-              <div className="space-y-4 pt-2">
-                <div className="bg-muted/50 rounded-xl p-4">
-                  <h3 className="font-bold text-sm">{regEvent.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(regEvent.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} • {regEvent.time}
-                  </p>
-                </div>
-                <div>
-                  <Label>Full Name</Label>
-                  <Input placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />
-                </div>
-                <div>
-                  <Label>Email Address</Label>
-                  <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div>
-                  <Label>Desired Study Level</Label>
-                  <Select value={level} onValueChange={setLevel}>
-                    <SelectTrigger><SelectValue placeholder="Select level..." /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="diploma">Diploma</SelectItem>
-                      <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
-                      <SelectItem value="master">Master's Degree</SelectItem>
-                      <SelectItem value="phd">PhD</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={handleRegister} disabled={!name || !email}>
-                  Confirm Registration
-                </Button>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
+        )}
       </main>
+
+      <Dialog open={!!regEvent} onOpenChange={() => setRegEvent(null)}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Register for {regEvent?.title}</DialogTitle></DialogHeader>
+          <form onSubmit={handleRegister} className="space-y-4 pt-2">
+            <div><Label>Full Name</Label><Input required placeholder="Your name" /></div>
+            <div><Label>Email</Label><Input type="email" required placeholder="you@example.com" /></div>
+            <Button type="submit" className="w-full bg-secondary text-secondary-foreground">Confirm Registration</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <PublicFooter />
     </div>
   );
