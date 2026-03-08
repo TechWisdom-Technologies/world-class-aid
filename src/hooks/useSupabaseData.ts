@@ -4,19 +4,32 @@ import { useToast } from "@/hooks/use-toast";
 
 type TableName = "countries" | "universities" | "courses" | "accommodations" | "scholarships" | "language_centers" | "blogs" | "events";
 
+const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
+
 export function useTableData(table: TableName, options?: { select?: string; orderBy?: string }) {
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
-      let query = (supabase.from(table) as any).select(options?.select || "*");
       const orderCol = options?.orderBy || "created_at";
       const ascending = !!options?.orderBy;
-      query = query.order(orderCol, { ascending });
-      const { data, error } = await query;
-      if (error) throw error;
-      return data as any[];
+      const dir = ascending ? "asc" : "desc";
+      const selectParam = options?.select || "*";
+
+      const url = `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(selectParam)}&order=${orderCol}.${dir}`;
+      const res = await fetch(url, {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+        },
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || res.statusText);
+      }
+      return (await res.json()) as any[];
     },
-    retry: 1,
+    retry: 2,
   });
 }
 
