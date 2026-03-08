@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { universities, courses } from "@/data/mockData";
+import { useTableData } from "@/hooks/useSupabaseData";
 import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 
 const tabs = ["University", "Course", "Country"];
