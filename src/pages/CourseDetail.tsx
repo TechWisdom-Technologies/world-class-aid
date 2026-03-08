@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { courses, universities, countries } from "@/data/mockData";
+import { useTableData } from "@/hooks/useSupabaseData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,27 +10,36 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import {
   CheckCircle, Clock, GraduationCap, MapPin, DollarSign,
-  CalendarDays, FileText, Download, Briefcase, BookOpen
+  CalendarDays, FileText, Download, Briefcase, BookOpen, Loader2
 } from "lucide-react";
 
 export default function CourseDetail() {
   const { courseId } = useParams();
-  const course = courses.find((c) => c.id === Number(courseId));
-  const uni = course ? universities.find((u) => u.id === course.university_id) : null;
-  const country = uni ? countries.find((c) => c.id === uni.country_id) : null;
+  const { data: courses = [], isLoading: loadingC } = useTableData("courses");
+  const { data: universities = [] } = useTableData("universities");
 
-  if (!course || !uni) {
+  const course = courses.find((c: any) => c.id === courseId);
+  const uni = course ? universities.find((u: any) => u.id === course.university_id) : null;
+
+  if (loadingC) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <MegaMenu />
+        <div className="flex-1 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        <PublicFooter />
+      </div>
+    );
+  }
+
+  if (!course) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <MegaMenu />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center space-y-4">
             <BookOpen className="h-16 w-16 text-muted-foreground mx-auto" />
-            <h1 className="text-2xl font-bold text-foreground">404 — Course Not Found</h1>
-            <p className="text-muted-foreground">The course you're looking for doesn't exist or has been removed.</p>
-            <Link to="/courses">
-              <Button>Browse All Courses</Button>
-            </Link>
+            <h1 className="text-2xl font-bold text-foreground">Course Not Found</h1>
+            <Link to="/courses"><Button>Browse All Courses</Button></Link>
           </div>
         </div>
         <PublicFooter />
@@ -38,13 +47,16 @@ export default function CourseDetail() {
     );
   }
 
-  const nextIntake = course.intake_months[0] ? `${course.intake_months[0]} 2026` : "TBA";
+  const curriculum = Array.isArray(course.curriculum) ? course.curriculum : [];
+  const careerOutcomes = Array.isArray(course.career_outcomes) ? course.career_outcomes : [];
+  const intakeMonths = Array.isArray(course.intake_months) ? course.intake_months : [];
+  const entryReqs = course.entry_requirements && typeof course.entry_requirements === "object" ? course.entry_requirements : null;
+  const nextIntake = intakeMonths[0] ? `${intakeMonths[0]} 2026` : "TBA";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <MegaMenu />
 
-      {/* Hero Banner */}
       <div className="bg-primary text-primary-foreground py-10 md:py-14">
         <div className="container mx-auto px-4">
           <Breadcrumb className="mb-5">
@@ -56,34 +68,27 @@ export default function CourseDetail() {
               <BreadcrumbItem><BreadcrumbPage className="text-primary-foreground">{course.title}</BreadcrumbPage></BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-
           <div className="flex items-start gap-4">
-            <div className="h-14 w-14 rounded-lg bg-primary-foreground/10 overflow-hidden shrink-0 hidden sm:block">
-              <img src={uni.logo_url} alt={uni.name} className="w-full h-full object-cover" />
-            </div>
+            {uni?.logo_url && (
+              <div className="h-14 w-14 rounded-lg bg-primary-foreground/10 overflow-hidden shrink-0 hidden sm:block">
+                <img src={uni.logo_url} alt={uni.name} className="w-full h-full object-cover" />
+              </div>
+            )}
             <div>
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight">{course.title}</h1>
-              <p className="text-primary-foreground/70 mt-1 text-sm md:text-base">{uni.name}</p>
+              <p className="text-primary-foreground/70 mt-1 text-sm md:text-base">{uni?.name || "University"}</p>
               <div className="flex flex-wrap gap-2 mt-3">
-                <Badge variant="secondary" className="bg-secondary/20 text-secondary border-0">
-                  <GraduationCap className="h-3 w-3 mr-1" /> {course.degree_level}
-                </Badge>
-                <Badge variant="outline" className="border-primary-foreground/30 text-primary-foreground">
-                  <Clock className="h-3 w-3 mr-1" /> {course.duration}
-                </Badge>
-                <Badge variant="outline" className="border-primary-foreground/30 text-primary-foreground">
-                  <MapPin className="h-3 w-3 mr-1" /> {uni.city}, {country?.name}
-                </Badge>
+                <Badge variant="secondary" className="bg-secondary/20 text-secondary border-0"><GraduationCap className="h-3 w-3 mr-1" /> {course.degree_level}</Badge>
+                <Badge variant="outline" className="border-primary-foreground/30 text-primary-foreground"><Clock className="h-3 w-3 mr-1" /> {course.duration}</Badge>
+                {uni && <Badge variant="outline" className="border-primary-foreground/30 text-primary-foreground"><MapPin className="h-3 w-3 mr-1" /> {uni.city}, Malaysia</Badge>}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Column */}
           <div className="flex-1 min-w-0">
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-auto p-0 gap-0">
@@ -99,13 +104,13 @@ export default function CourseDetail() {
                     <p className="text-muted-foreground leading-relaxed">{course.overview}</p>
                   </div>
                 )}
-                {course.curriculum && course.curriculum.length > 0 && (
+                {curriculum.length > 0 && (
                   <div>
                     <h2 className="text-xl font-bold text-foreground mb-4">What You Will Learn</h2>
                     <div className="grid sm:grid-cols-2 gap-3">
-                      {course.curriculum.flatMap((y) => y.modules).slice(0, 8).map((mod, i) => (
+                      {curriculum.flatMap((y: any) => y.modules || []).slice(0, 8).map((mod: string, i: number) => (
                         <div key={i} className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-[hsl(var(--success))] mt-0.5 shrink-0" />
+                          <CheckCircle className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
                           <span className="text-sm text-foreground">{mod}</span>
                         </div>
                       ))}
@@ -116,17 +121,16 @@ export default function CourseDetail() {
 
               <TabsContent value="curriculum" className="mt-6">
                 <h2 className="text-xl font-bold text-foreground mb-4">Program Structure</h2>
-                {course.curriculum && course.curriculum.length > 0 ? (
-                  <Accordion type="multiple" defaultValue={[course.curriculum[0].year]} className="space-y-2">
-                    {course.curriculum.map((cy) => (
+                {curriculum.length > 0 ? (
+                  <Accordion type="multiple" defaultValue={[curriculum[0]?.year]} className="space-y-2">
+                    {curriculum.map((cy: any) => (
                       <AccordionItem key={cy.year} value={cy.year} className="border rounded-lg px-4">
                         <AccordionTrigger className="text-sm font-semibold hover:no-underline">{cy.year} Core Modules</AccordionTrigger>
                         <AccordionContent>
                           <ul className="space-y-2 pb-2">
-                            {cy.modules.map((mod, i) => (
+                            {(cy.modules || []).map((mod: string, i: number) => (
                               <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
-                                {mod}
+                                <FileText className="h-3.5 w-3.5 text-primary shrink-0" />{mod}
                               </li>
                             ))}
                           </ul>
@@ -141,9 +145,9 @@ export default function CourseDetail() {
 
               <TabsContent value="careers" className="mt-6">
                 <h2 className="text-xl font-bold text-foreground mb-4">Where This Degree Takes You</h2>
-                {course.careerOutcomes && course.careerOutcomes.length > 0 ? (
+                {careerOutcomes.length > 0 ? (
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {course.careerOutcomes.map((role, i) => (
+                    {careerOutcomes.map((role: string, i: number) => (
                       <Card key={i} className="hover:shadow-md transition-shadow">
                         <CardContent className="p-4 flex items-center gap-3">
                           <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center shrink-0">
@@ -161,64 +165,35 @@ export default function CourseDetail() {
             </Tabs>
           </div>
 
-          {/* Right Sticky Sidebar */}
           <aside className="lg:w-[340px] shrink-0">
             <div className="lg:sticky lg:top-6">
               <Card className="shadow-lg border-2 border-border">
                 <CardContent className="p-6 space-y-5">
                   <h3 className="font-bold text-foreground text-lg">Key Information</h3>
-
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0">
-                        <DollarSign className="h-4 w-4 text-secondary" />
+                    {[
+                      { icon: DollarSign, label: "Tuition Fee", value: `USD ${Number(course.tuition_fee).toLocaleString()} / year` },
+                      { icon: CalendarDays, label: "Next Intake", value: nextIntake },
+                      { icon: Clock, label: "Duration", value: `${course.duration} Full-Time` },
+                    ].map(({ icon: Icon, label, value }) => (
+                      <div key={label} className="flex items-center gap-3">
+                        <div className="h-9 w-9 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0"><Icon className="h-4 w-4 text-secondary" /></div>
+                        <div><p className="text-xs text-muted-foreground">{label}</p><p className="text-sm font-semibold text-foreground">{value}</p></div>
                       </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Tuition Fee</p>
-                        <p className="text-sm font-semibold text-foreground">USD {course.tuition_fee.toLocaleString()} / year</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0">
-                        <CalendarDays className="h-4 w-4 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Next Intake</p>
-                        <p className="text-sm font-semibold text-foreground">{nextIntake}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0">
-                        <Clock className="h-4 w-4 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Duration</p>
-                        <p className="text-sm font-semibold text-foreground">{course.duration} Full-Time</p>
-                      </div>
-                    </div>
-
-                    {course.entryRequirements && (
+                    ))}
+                    {entryReqs && (
                       <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0">
-                          <GraduationCap className="h-4 w-4 text-secondary" />
-                        </div>
+                        <div className="h-9 w-9 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0"><GraduationCap className="h-4 w-4 text-secondary" /></div>
                         <div>
                           <p className="text-xs text-muted-foreground">Entry Requirements</p>
-                          <p className="text-sm font-semibold text-foreground">IELTS {course.entryRequirements.ielts}, Min GPA {course.entryRequirements.gpa}</p>
+                          <p className="text-sm font-semibold text-foreground">IELTS {(entryReqs as any).ielts}, Min GPA {(entryReqs as any).gpa}</p>
                         </div>
                       </div>
                     )}
                   </div>
-
                   <div className="pt-2 space-y-3">
-                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 text-base font-bold">
-                      Apply Now
-                    </Button>
-                    <Button variant="outline" className="w-full h-10">
-                      <Download className="h-4 w-4 mr-2" /> Download Syllabus (PDF)
-                    </Button>
+                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 text-base font-bold">Apply Now</Button>
+                    <Button variant="outline" className="w-full h-10"><Download className="h-4 w-4 mr-2" /> Download Syllabus</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -226,7 +201,6 @@ export default function CourseDetail() {
           </aside>
         </div>
       </div>
-
       <PublicFooter />
     </div>
   );
