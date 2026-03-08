@@ -323,8 +323,8 @@ export default function UniversityDetail() {
                       </CardContent>
                     </Card>
                   </Link>
-                );
-              })}
+                ))}
+            </div>
             </div>
           </div>
         </section>
