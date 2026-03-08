@@ -14,9 +14,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MapPin, Trophy, Download, Users, Globe, CalendarDays, Landmark,
   BookOpen, FlaskConical, Sparkles, ArrowRight, CheckCircle, Building,
-  GraduationCap, HelpCircle, Send, Loader2
+  GraduationCap, HelpCircle, Send, Loader2, Home, BedDouble, Clock
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { AccommodationMap } from "@/components/public/AccommodationMap";
 
 const sectionIds = ["about", "study", "courses", "steps", "faq"] as const;
 const sectionLabels = { about: "About", study: "Why Study Here", courses: "Courses & Fees", steps: "How to Apply", faq: "FAQ" };
