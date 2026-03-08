@@ -38,7 +38,7 @@ const resourceToolsLinks = [
 ];
 
 export function MegaMenu() {
-  const { user, signOut } = useAuth();
+  const { user, hasRole, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [consultOpen, setConsultOpen] = useState(false);

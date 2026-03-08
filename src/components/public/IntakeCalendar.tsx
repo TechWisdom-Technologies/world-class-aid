@@ -27,7 +27,6 @@ const semesterColors: Record<string, string> = {
 export function IntakeCalendar() {
   const [, setTick] = useState(0);
 
-  // Re-render every minute for countdowns
   useEffect(() => {
     const timer = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(timer);
@@ -53,34 +52,32 @@ export function IntakeCalendar() {
           <p className="text-muted-foreground max-w-lg mx-auto">Don't miss your chance — apply before these deadlines close</p>
         </div>
 
-        <div className="overflow-x-auto pb-4 -mx-4 px-4">
-          <div className="flex gap-4 min-w-max">
-            {sorted.map((d, i) => {
-              const uni = universities.find((u) => u.id === d.university_id);
-              const days = getDaysLeft(d.deadline);
-              return (
-                <Card key={d.id} className="w-72 flex-shrink-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: `${i * 80}ms` }}>
-                  <CardContent className="p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge variant="outline" className={semesterColors[d.semester]}>{d.semester}</Badge>
-                      <Badge variant="outline" className={getUrgencyClass(days)}>
-                        <Clock className="h-3 w-3 mr-1" />
-                        {days === 0 ? "Today!" : `${days} days left`}
-                      </Badge>
-                    </div>
-                    <h3 className="font-bold text-sm mb-1">{uni?.name}</h3>
-                    <p className="text-xs text-muted-foreground mb-1">{d.intake} Intake</p>
-                    <p className="text-xs text-muted-foreground mb-4">
-                      Deadline: {new Date(d.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                    </p>
-                    <Button variant="outline" size="sm" className="w-full gap-1.5 hover:bg-secondary/10 hover:text-secondary hover:border-secondary/30 transition-colors" onClick={() => handleReminder(d)}>
-                      <Bell className="h-3.5 w-3.5" /> Set Reminder
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {sorted.map((d, i) => {
+            const uni = universities.find((u) => u.id === d.university_id);
+            const days = getDaysLeft(d.deadline);
+            return (
+              <Card key={d.id} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: `${i * 80}ms` }}>
+                <CardContent className="p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="outline" className={semesterColors[d.semester]}>{d.semester}</Badge>
+                    <Badge variant="outline" className={getUrgencyClass(days)}>
+                      <Clock className="h-3 w-3 mr-1" />
+                      {days === 0 ? "Today!" : `${days} days left`}
+                    </Badge>
+                  </div>
+                  <h3 className="font-bold text-sm mb-1">{uni?.name}</h3>
+                  <p className="text-xs text-muted-foreground mb-1">{d.intake} Intake</p>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    Deadline: {new Date(d.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full gap-1.5 hover:bg-secondary/10 hover:text-secondary hover:border-secondary/30 transition-colors" onClick={() => handleReminder(d)}>
+                    <Bell className="h-3.5 w-3.5" /> Set Reminder
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>
