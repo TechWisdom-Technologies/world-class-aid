@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { events, universities } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,7 +45,7 @@ export default function Events() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1 bg-muted/30">
         <div className="bg-primary text-primary-foreground py-12 text-center">
           <Calendar className="h-12 w-12 mx-auto mb-3 text-secondary" />

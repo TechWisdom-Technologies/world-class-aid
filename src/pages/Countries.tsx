@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { countries, universities } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 export default function Countries() {
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1">
         <div className="bg-primary text-primary-foreground py-16">
           <div className="container mx-auto px-4 text-center">

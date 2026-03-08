@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { countries, universities } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,7 +15,7 @@ export default function CountryHub() {
   if (!country) {
     return (
       <div className="min-h-screen flex flex-col">
-        <PublicHeader />
+        <MegaMenu />
         <main className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">Country not found.</p>
         </main>
@@ -26,7 +26,7 @@ export default function CountryHub() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1">
         <div className="bg-primary text-primary-foreground py-16">
           <div className="container mx-auto px-4">

@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
+import { VirtualTourSection } from "@/components/public/VirtualTourSection";
 import { universities, courses, accommodations, scholarships, countries } from "@/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,7 @@ export default function UniversityDetail() {
   if (!uni) {
     return (
       <div className="min-h-screen flex flex-col">
-        <PublicHeader />
+        <MegaMenu />
         <main className="flex-1 flex items-center justify-center"><p className="text-muted-foreground">University not found.</p></main>
         <PublicFooter />
       </div>
@@ -29,7 +30,7 @@ export default function UniversityDetail() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1">
         {/* Hero */}
         <div className="relative h-64 md:h-80 overflow-hidden">
@@ -55,8 +56,8 @@ export default function UniversityDetail() {
 
           <Tabs defaultValue="courses">
             <TabsList className="mb-6">
-              <TabsTrigger value="courses" className="gap-1.5"><GraduationCap className="h-4 w-4" /> Available Courses ({uniCourses.length})</TabsTrigger>
-              <TabsTrigger value="accommodation" className="gap-1.5"><Home className="h-4 w-4" /> Nearby Accommodation ({nearbyAccom.length})</TabsTrigger>
+              <TabsTrigger value="courses" className="gap-1.5"><GraduationCap className="h-4 w-4" /> Courses ({uniCourses.length})</TabsTrigger>
+              <TabsTrigger value="accommodation" className="gap-1.5"><Home className="h-4 w-4" /> Accommodation ({nearbyAccom.length})</TabsTrigger>
               <TabsTrigger value="scholarships" className="gap-1.5"><Award className="h-4 w-4" /> Scholarships ({uniScholarships.length})</TabsTrigger>
             </TabsList>
 
@@ -135,6 +136,9 @@ export default function UniversityDetail() {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* Virtual Tour */}
+          <VirtualTourSection universityName={uni.name} />
         </div>
       </main>
       <PublicFooter />

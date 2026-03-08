@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { costOfLivingData, countries } from "@/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +27,7 @@ export default function CostCalculator() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1 bg-muted/30">
         <div className="bg-primary text-primary-foreground py-12 text-center">
           <Calculator className="h-12 w-12 mx-auto mb-3 text-secondary" />

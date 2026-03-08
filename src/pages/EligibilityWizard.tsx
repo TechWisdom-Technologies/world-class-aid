@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { universities, courses, countries } from "@/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -88,7 +88,7 @@ export default function EligibilityWizard() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader />
+      <MegaMenu />
       <main className="flex-1 bg-muted/30">
         <div className="bg-primary text-primary-foreground py-12 text-center">
           <GraduationCap className="h-12 w-12 mx-auto mb-3 text-secondary" />
