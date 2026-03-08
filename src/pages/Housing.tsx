@@ -95,10 +95,23 @@ export default function Housing() {
               </Card>
             </aside>
 
-            {/* Listings */}
+            {/* Listings / Map */}
             <div className="flex-1">
+              <Tabs value={viewMode} onValueChange={setViewMode} className="mb-4">
+                <TabsList className="grid w-[200px] grid-cols-2">
+                  <TabsTrigger value="grid" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" /> Grid</TabsTrigger>
+                  <TabsTrigger value="map" className="gap-1.5"><Map className="h-3.5 w-3.5" /> Map</TabsTrigger>
+                </TabsList>
+              </Tabs>
+
               {isLoading ? (
                 <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+              ) : viewMode === "map" ? (
+                <AccommodationMap
+                  accommodations={filtered as any}
+                  universities={universities as any}
+                  onSelect={setSelected}
+                />
               ) : filtered.length === 0 ? (
                 <div className="text-center py-20 text-muted-foreground">No accommodations found matching your filters.</div>
               ) : (
