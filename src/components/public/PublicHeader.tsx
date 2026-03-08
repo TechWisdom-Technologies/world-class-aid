@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, Search, Globe, Menu, X, ChevronDown } from "lucide-react";
+import { GraduationCap, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const navLinks = [
   { label: "Universities", href: "/countries" },
+  { label: "Compare", href: "/compare" },
   { label: "Eligibility Test", href: "/eligibility" },
+  { label: "Events", href: "/events" },
   { label: "Cost Calculator", href: "/cost-calculator" },
   { label: "Partner With Us", href: "/b2b" },
 ];
@@ -24,7 +26,7 @@ export function PublicHeader() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-5">
           {navLinks.map((l) => (
             <Link key={l.label} to={l.href} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
               {l.label}
@@ -34,27 +36,27 @@ export function PublicHeader() {
 
         <div className="flex items-center gap-2">
           <Link to="/admin">
-            <Button variant="outline" size="sm" className="hidden md:inline-flex">Admin</Button>
+            <Button variant="outline" size="sm" className="hidden lg:inline-flex">Admin</Button>
           </Link>
           <Link to="/partner-dashboard">
-            <Button size="sm" className="hidden md:inline-flex bg-secondary text-secondary-foreground hover:bg-secondary/90">Partner Portal</Button>
+            <Button size="sm" className="hidden lg:inline-flex bg-secondary text-secondary-foreground hover:bg-secondary/90">Partner Portal</Button>
           </Link>
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t bg-background p-4 space-y-3">
+        <div className="lg:hidden border-t bg-background p-4 space-y-3 animate-fade-in">
           {navLinks.map((l) => (
-            <Link key={l.label} to={l.href} className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>
+            <Link key={l.label} to={l.href} className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors" onClick={() => setMobileOpen(false)}>
               {l.label}
             </Link>
           ))}
           <div className="flex gap-2 pt-2">
-            <Link to="/admin"><Button variant="outline" size="sm">Admin</Button></Link>
-            <Link to="/partner-dashboard"><Button size="sm" className="bg-secondary text-secondary-foreground">Partner Portal</Button></Link>
+            <Link to="/admin" onClick={() => setMobileOpen(false)}><Button variant="outline" size="sm">Admin</Button></Link>
+            <Link to="/partner-dashboard" onClick={() => setMobileOpen(false)}><Button size="sm" className="bg-secondary text-secondary-foreground">Partner Portal</Button></Link>
           </div>
         </div>
       )}
