@@ -8,6 +8,12 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Countries from "./pages/Countries";
+import CountryHub from "./pages/CountryHub";
+import UniversityDetail from "./pages/UniversityDetail";
+import EligibilityWizard from "./pages/EligibilityWizard";
+import B2BLanding from "./pages/B2BLanding";
+import CostCalculator from "./pages/CostCalculator";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUniversities from "./pages/admin/AdminUniversities";
@@ -29,6 +35,12 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/countries" element={<Countries />} />
+            <Route path="/country/:countryId" element={<CountryHub />} />
+            <Route path="/university/:universityId" element={<UniversityDetail />} />
+            <Route path="/eligibility" element={<EligibilityWizard />} />
+            <Route path="/b2b" element={<B2BLanding />} />
+            <Route path="/cost-calculator" element={<CostCalculator />} />
             <Route
               path="/admin"
               element={
