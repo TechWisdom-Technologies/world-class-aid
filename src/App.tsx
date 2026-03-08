@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Countries from "./pages/Countries";
 import Universities from "./pages/Universities";
 import CoursesPage from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import CountryHub from "./pages/CountryHub";
 import UniversityDetail from "./pages/UniversityDetail";
 import EligibilityWizard from "./pages/EligibilityWizard";
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/countries" element={<Countries />} />
             <Route path="/universities" element={<Universities />} />
             <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/:courseId" element={<CourseDetail />} />
             <Route path="/country/:countryId" element={<CountryHub />} />
             <Route path="/university/:universityId" element={<UniversityDetail />} />
             <Route path="/eligibility" element={<EligibilityWizard />} />
