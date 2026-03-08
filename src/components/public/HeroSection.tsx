@@ -174,6 +174,8 @@ export function HeroSection() {
           <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 60 1440 40V80H0Z" fill="hsl(var(--background))" />
         </svg>
       </div>
+
+      <LeadCaptureModal open={leadOpen} onOpenChange={setLeadOpen} source="homepage_hero" />
     </section>
   );
 }
