@@ -46,9 +46,9 @@ import AdminPartners from "./pages/admin/AdminPartners";
 import AdminSettings from "./pages/admin/AdminSettings";
 import PartnerLayout from "./pages/partner/PartnerLayout";
 import PartnerOverview from "./pages/partner/PartnerOverview";
-import PartnerWallet from "./pages/partner/PartnerWallet";
 import PartnerMarketing from "./pages/partner/PartnerMarketing";
-import PartnerTeam from "./pages/partner/PartnerTeam";
+import PartnerStudents from "./pages/partner/PartnerStudents";
+import AdminStudents from "./pages/admin/AdminStudents";
 
 const queryClient = new QueryClient();
 
