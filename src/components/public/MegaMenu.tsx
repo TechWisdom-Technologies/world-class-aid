@@ -279,6 +279,9 @@ export function MegaMenu() {
 
                 <MobileNavLink to="/universities">Universities</MobileNavLink>
                 <MobileNavLink to="/courses">Courses</MobileNavLink>
+                <MobileNavLink to="/language-centers">
+                  <span className="flex items-center gap-2"><Languages className="h-4 w-4 text-muted-foreground" /> Language Centers</span>
+                </MobileNavLink>
                 <MobileNavLink to="/housing">
                   <span className="flex items-center gap-2"><Building2 className="h-4 w-4 text-muted-foreground" /> Accommodations</span>
                 </MobileNavLink>
