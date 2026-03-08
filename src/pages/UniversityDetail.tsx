@@ -26,6 +26,7 @@ export default function UniversityDetail() {
   const { universityId } = useParams();
   const { data: universities = [], isLoading } = useTableData("universities");
   const { data: courses = [] } = useTableData("courses");
+  const { data: accommodations = [] } = useTableData("accommodations");
   const uni = universities.find((u: any) => u.id === universityId);
   const uniCourses = courses.filter((c: any) => c.university_id === universityId);
   const similarUnis = uni ? universities.filter((u: any) => u.id !== uni.id).slice(0, 3) : [];
