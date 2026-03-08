@@ -6,7 +6,6 @@ import { useTableData } from "@/hooks/useSupabaseData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Search, MapPin, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
@@ -16,13 +15,12 @@ export default function Universities() {
   const { data: universities = [], isLoading } = useTableData("universities", { orderBy: "ranking" });
   const [search, setSearch] = useState("");
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
-  const [maxTuition, setMaxTuition] = useState(50000);
   const [currentPage, setCurrentPage] = useState(1);
   const gridRef = useRef<HTMLDivElement>(null);
 
   const cities = useMemo(() => [...new Set(universities.map((u: any) => u.city).filter(Boolean))].sort(), [universities]);
 
-  useEffect(() => { setCurrentPage(1); }, [search, selectedCities, maxTuition]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedCities]);
 
   const toggleCity = (city: string) => {
     setSelectedCities((prev) => prev.includes(city) ? prev.filter((c) => c !== city) : [...prev, city]);
@@ -34,7 +32,7 @@ export default function Universities() {
       if (selectedCities.length > 0 && !selectedCities.includes(u.city)) return false;
       return true;
     });
-  }, [universities, search, selectedCities, maxTuition]);
+  }, [universities, search, selectedCities]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paged = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
