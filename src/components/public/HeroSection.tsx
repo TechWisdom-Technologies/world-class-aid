@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Search, ArrowRight, Sparkles, Star, ChevronRight } from "lucide-react";
+import { Search, ArrowRight, Sparkles, Star, ChevronRight, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { universities, courses } from "@/data/mockData";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 
 const tabs = ["University", "Course", "Country"];
 
@@ -17,6 +18,7 @@ const trustPoints = [
 export function HeroSection() {
   const [activeTab, setActiveTab] = useState("University");
   const [query, setQuery] = useState("");
+  const [leadOpen, setLeadOpen] = useState(false);
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
 
@@ -133,7 +135,23 @@ export function HeroSection() {
               </Button>
             </div>
           </div>
-        </div>
+          </div>
+
+          {/* CTA Button */}
+          <div
+            className={`mt-6 transition-all duration-700 delay-[520ms] ${
+              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            <Button
+              size="lg"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold text-base px-8 h-13 shadow-lg hover:shadow-xl transition-all"
+              onClick={() => setLeadOpen(true)}
+            >
+              <GraduationCap className="h-5 w-5 mr-2" />
+              Get Free Consultation
+            </Button>
+          </div>
 
         {/* Trust points */}
         <div
@@ -156,6 +174,8 @@ export function HeroSection() {
           <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 60 1440 40V80H0Z" fill="hsl(var(--background))" />
         </svg>
       </div>
+
+      <LeadCaptureModal open={leadOpen} onOpenChange={setLeadOpen} source="homepage_hero" />
     </section>
   );
 }

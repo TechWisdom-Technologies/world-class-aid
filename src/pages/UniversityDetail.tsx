@@ -3,20 +3,18 @@ import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { useTableData } from "@/hooks/useSupabaseData";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MapPin, Trophy, Download, Users, Globe, CalendarDays, Landmark,
   BookOpen, FlaskConical, Sparkles, ArrowRight, CheckCircle, Building,
-  GraduationCap, HelpCircle, Send, Loader2, Home, BedDouble, Clock
+  GraduationCap, HelpCircle, Loader2, Home, Clock
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { AccommodationMap } from "@/components/public/AccommodationMap";
 
 const sectionIds = ["about", "study", "courses", "location", "steps", "faq"] as const;
@@ -30,14 +28,12 @@ export default function UniversityDetail() {
   const uni = universities.find((u: any) => u.id === universityId);
   const uniCourses = courses.filter((c: any) => c.university_id === universityId);
   const similarUnis = uni ? universities.filter((u: any) => u.id !== uni.id).slice(0, 3) : [];
+  const [leadOpen, setLeadOpen] = useState(false);
 
-  // Find accommodations in the same city as this university
   const nearbyAccommodations = useMemo(() => {
     if (!uni) return [];
     return accommodations.filter((a: any) => a.city?.toLowerCase() === uni.city?.toLowerCase());
   }, [uni, accommodations]);
-  const { toast } = useToast();
-  const [leadForm, setLeadForm] = useState({ name: "", email: "", phone: "", course: "" });
 
   if (isLoading) {
     return (
@@ -67,12 +63,6 @@ export default function UniversityDetail() {
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const handleLeadSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({ title: "Application Started!", description: "Our counselor will contact you within 24 hours." });
-    setLeadForm({ name: "", email: "", phone: "", course: "" });
-  };
-
   const studyReasons = Array.isArray(uni.study_reasons) ? uni.study_reasons : [];
   const faqs = Array.isArray(uni.faqs) ? uni.faqs : [];
   const registrationSteps = Array.isArray(uni.registration_steps) ? uni.registration_steps : [];
@@ -98,21 +88,7 @@ export default function UniversityDetail() {
               <Badge className="bg-secondary text-secondary-foreground"><Trophy className="h-3 w-3 mr-1" /> #{uni.ranking} World</Badge>
             </div>
             <div className="flex items-center justify-center gap-3">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold">Apply Now</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader><DialogTitle>Start Your Application at {uni.name}</DialogTitle></DialogHeader>
-                  <form onSubmit={handleLeadSubmit} className="space-y-4 pt-2">
-                    <Input placeholder="Full Name" value={leadForm.name} onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })} required />
-                    <Input type="email" placeholder="Email Address" value={leadForm.email} onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })} required />
-                    <Input placeholder="Phone Number" value={leadForm.phone} onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })} required />
-                    <Input placeholder="Desired Course" value={leadForm.course} onChange={(e) => setLeadForm({ ...leadForm, course: e.target.value })} />
-                    <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"><Send className="h-4 w-4 mr-2" /> Submit Application</Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold" onClick={() => setLeadOpen(true)}>Apply Now</Button>
               <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
                 <Download className="h-4 w-4 mr-2" /> Download Prospectus
               </Button>
@@ -326,20 +302,7 @@ export default function UniversityDetail() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold text-secondary-foreground mb-3">Register Now & Secure Your Spot!</h2>
           <p className="text-secondary-foreground/80 max-w-xl mx-auto mb-8">Don't miss the upcoming intake.</p>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-base px-10 h-14">Start Your Application</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>Apply to {uni.name}</DialogTitle></DialogHeader>
-              <form onSubmit={handleLeadSubmit} className="space-y-4 pt-2">
-                <Input placeholder="Full Name" value={leadForm.name} onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })} required />
-                <Input type="email" placeholder="Email Address" value={leadForm.email} onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })} required />
-                <Input placeholder="Phone Number" value={leadForm.phone} onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })} required />
-                <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"><Send className="h-4 w-4 mr-2" /> Submit</Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-base px-10 h-14" onClick={() => setLeadOpen(true)}>Start Your Application</Button>
         </div>
       </section>
 
@@ -369,6 +332,13 @@ export default function UniversityDetail() {
           </div>
         </section>
       )}
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        defaultUniversity={uni.name}
+        source="university_apply"
+      />
 
       <PublicFooter />
     </div>
