@@ -35,6 +35,12 @@ export function PublicHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link to="/login">
+            <Button variant="ghost" size="sm" className="hidden lg:inline-flex gap-1.5">
+              <LogIn className="h-4 w-4" />
+              Sign In
+            </Button>
+          </Link>
           <Link to="/admin">
             <Button variant="outline" size="sm" className="hidden lg:inline-flex">Admin</Button>
           </Link>
