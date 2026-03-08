@@ -209,7 +209,12 @@ export function MegaMenu() {
               </Dialog>
             </>
           )}
-          {user?.role === "admin" && (
+          {user && !hasRole("admin") && !hasRole("partner") && (
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
+              <LogOut className="h-3.5 w-3.5" /> Log Out
+            </Button>
+          )}
+          {hasRole("admin") && (
             <>
               <Link to="/admin">
                 <Button variant="outline" size="sm" className="gap-1.5">
@@ -221,7 +226,7 @@ export function MegaMenu() {
               </Button>
             </>
           )}
-          {user?.role === "partner" && (
+          {hasRole("partner") && (
             <>
               <Link to="/partner-dashboard">
                 <Button variant="outline" size="sm" className="gap-1.5">
