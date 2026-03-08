@@ -75,7 +75,7 @@ export default function UniversityDetail() {
             </Avatar>
             <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-2">{uni.name}</h1>
             <div className="flex items-center justify-center gap-3 text-primary-foreground/80 text-sm mb-4">
-              <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {uni.city}, {country?.name}</span>
+              <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {uni.city}, Malaysia</span>
               <Badge className="bg-secondary text-secondary-foreground"><Trophy className="h-3 w-3 mr-1" /> #{uni.ranking} World</Badge>
             </div>
             <div className="flex items-center justify-center gap-3">
