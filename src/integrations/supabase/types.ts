@@ -24,6 +24,8 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          latitude: number | null
+          longitude: number | null
           name: string
           near_university_ids: Json | null
           price_per_month: number
@@ -43,6 +45,8 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
           name: string
           near_university_ids?: Json | null
           price_per_month?: number
@@ -62,6 +66,8 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
           name?: string
           near_university_ids?: Json | null
           price_per_month?: number
