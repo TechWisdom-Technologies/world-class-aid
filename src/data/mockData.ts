@@ -16,6 +16,16 @@ export interface University {
   global_score: number;
 }
 
+export interface CurriculumYear {
+  year: string;
+  modules: string[];
+}
+
+export interface EntryRequirements {
+  gpa: number;
+  ielts: number;
+}
+
 export interface Course {
   id: number;
   title: string;
@@ -24,6 +34,10 @@ export interface Course {
   tuition_fee: number;
   duration: string;
   intake_months: string[];
+  overview?: string;
+  curriculum?: CurriculumYear[];
+  entryRequirements?: EntryRequirements;
+  careerOutcomes?: string[];
 }
 
 export interface Accommodation {
