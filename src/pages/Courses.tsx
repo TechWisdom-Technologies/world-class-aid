@@ -141,9 +141,11 @@ export default function Courses() {
                         </div>
 
                         {/* Action */}
-                        <Button size="sm" className="shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                          Apply Now
-                        </Button>
+                        <Link to={`/courses/${c.id}`}>
+                          <Button size="sm" className="shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                            Apply Now
+                          </Button>
+                        </Link>
                       </CardContent>
                     </Card>
                   );
