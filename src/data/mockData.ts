@@ -1,8 +1,29 @@
+export interface CountryReason {
+  title: string;
+  description: string;
+  iconName: string;
+}
+
+export interface CountryCostOfLiving {
+  housing: string;
+  food: string;
+  transport: string;
+}
+
 export interface Country {
   id: number;
   name: string;
   code: string;
   flag_icon: string;
+  bannerImage?: string;
+  capital?: string;
+  currency?: string;
+  language?: string;
+  population?: string;
+  aboutText?: string;
+  reasonsToStudy?: CountryReason[];
+  costOfLiving?: CountryCostOfLiving;
+  postStudyWorkRights?: string;
 }
 
 export interface UniversityFAQ {
