@@ -40,7 +40,7 @@ export function useUpdateRow(table: TableName) {
   const { toast } = useToast();
   return useMutation({
     mutationFn: async ({ id, ...row }: Record<string, any>) => {
-      const { data, error } = await supabase.from(table).update(row).eq("id", id).select().single();
+      const { data, error } = await (supabase.from(table) as any).update(row).eq("id", id).select().single();
       if (error) throw error;
       return data;
     },
