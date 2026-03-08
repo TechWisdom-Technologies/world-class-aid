@@ -269,3 +269,51 @@ export const funnelData = [
   { stage: "Visa Approved", value: 180, fill: "hsl(142, 76%, 36%)" },
   { stage: "Enrolled", value: 150, fill: "hsl(142, 76%, 28%)" },
 ];
+
+export const universityComparisons: UniversityComparison[] = [
+  { university_id: 1, academic_difficulty: 82, affordability: 78, campus_life: 85, min_ielts: 6.0, min_toefl: 80, avg_living_cost: 1160 },
+  { university_id: 2, academic_difficulty: 75, affordability: 82, campus_life: 70, min_ielts: 5.5, min_toefl: 70, avg_living_cost: 820 },
+  { university_id: 3, academic_difficulty: 90, affordability: 55, campus_life: 88, min_ielts: 6.5, min_toefl: 90, avg_living_cost: 960 },
+  { university_id: 4, academic_difficulty: 68, affordability: 65, campus_life: 92, min_ielts: 5.5, min_toefl: 70, avg_living_cost: 960 },
+  { university_id: 5, academic_difficulty: 65, affordability: 72, campus_life: 75, min_ielts: 5.5, min_toefl: 68, avg_living_cost: 1160 },
+  { university_id: 6, academic_difficulty: 78, affordability: 80, campus_life: 72, min_ielts: 5.5, min_toefl: 72, avg_living_cost: 860 },
+  { university_id: 7, academic_difficulty: 98, affordability: 20, campus_life: 95, min_ielts: 7.5, min_toefl: 110, avg_living_cost: 2220 },
+  { university_id: 8, academic_difficulty: 92, affordability: 30, campus_life: 90, min_ielts: 7.0, min_toefl: 100, avg_living_cost: 1910 },
+  { university_id: 9, academic_difficulty: 93, affordability: 25, campus_life: 91, min_ielts: 7.0, min_toefl: 100, avg_living_cost: 2070 },
+];
+
+export const intakeDeadlines: IntakeDeadline[] = [
+  { id: 1, university_id: 1, intake: "September 2026", deadline: "2026-06-15", semester: "Fall" },
+  { id: 2, university_id: 2, intake: "September 2026", deadline: "2026-05-30", semester: "Fall" },
+  { id: 3, university_id: 3, intake: "March 2027", deadline: "2026-11-30", semester: "Spring" },
+  { id: 4, university_id: 4, intake: "September 2026", deadline: "2026-06-01", semester: "Fall" },
+  { id: 5, university_id: 5, intake: "September 2026", deadline: "2026-07-15", semester: "Fall" },
+  { id: 6, university_id: 1, intake: "March 2027", deadline: "2026-12-01", semester: "Spring" },
+  { id: 7, university_id: 7, intake: "October 2026", deadline: "2026-01-15", semester: "Fall" },
+  { id: 8, university_id: 8, intake: "February 2027", deadline: "2026-10-31", semester: "Spring" },
+  { id: 9, university_id: 9, intake: "September 2026", deadline: "2026-04-01", semester: "Fall" },
+  { id: 10, university_id: 6, intake: "February 2027", deadline: "2026-09-30", semester: "Spring" },
+];
+
+export const events: Event[] = [
+  { id: 1, title: "Malaysia Virtual Open Day 2026", type: "Open Day", date: "2026-04-15", time: "10:00 AM GMT+8", university_ids: [1, 2, 6], description: "Explore top Malaysian universities from the comfort of your home. Live campus tours and Q&A sessions.", spots_left: 120 },
+  { id: 2, title: "Student Visa Workshop — Malaysia", type: "Workshop", date: "2026-04-22", time: "2:00 PM GMT+8", university_ids: [], description: "Step-by-step visa application walkthrough with our immigration experts. Bring your documents!", spots_left: 45 },
+  { id: 3, title: "Scholarship Application Masterclass", type: "Webinar", date: "2026-05-05", time: "11:00 AM GMT+8", university_ids: [1, 3, 4], description: "Learn insider tips to craft winning scholarship applications from previous recipients.", spots_left: 200 },
+  { id: 4, title: "Engineering Careers Info Session", type: "Info Session", date: "2026-05-12", time: "3:00 PM GMT+8", university_ids: [2], description: "Discover engineering career paths in Malaysia with UTM faculty and industry partners.", spots_left: 80 },
+  { id: 5, title: "Study in the UK — Oxford Showcase", type: "Open Day", date: "2026-05-20", time: "4:00 PM GMT", university_ids: [7], description: "An exclusive virtual showcase of Oxford's international programs and campus life.", spots_left: 60 },
+  { id: 6, title: "Pre-Departure Briefing — Fall 2026", type: "Workshop", date: "2026-07-10", time: "10:00 AM GMT+8", university_ids: [1, 2, 3, 4, 5, 6], description: "Everything you need to know before arriving in Malaysia. Accommodation, banking, transport tips.", spots_left: 150 },
+];
+
+export const ambassadors: Ambassador[] = [
+  { id: 1, name: "Abeer Rahman", country: "Bangladesh", university: "University of Malaya", course: "BSc Computer Science", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", bio: "3rd year CS student. Love hackathons and Malaysian food!", icebreakers: ["What's campus life really like?", "How's the food in KL?", "Any tips for new students?"] },
+  { id: 2, name: "Chiamaka Obi", country: "Nigeria", university: "Taylor's University", course: "BBA Hospitality", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", bio: "Passionate about hospitality. Former student council president.", icebreakers: ["How did you choose Taylor's?", "What's the social scene like?", "Is it hard to make friends?"] },
+  { id: 3, name: "Liam Chen", country: "Singapore", university: "Monash University Malaysia", course: "MBBS Medicine", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", bio: "Future doctor who also plays guitar. Happy to help!", icebreakers: ["How intense is the med program?", "What about accommodation?", "Any scholarship advice?"] },
+  { id: 4, name: "Sara Al-Mutairi", country: "Kuwait", university: "UCSI University", course: "BPharm Pharmacy", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", bio: "Pharmacy nerd and travel enthusiast. KL is amazing!", icebreakers: ["Is Malaysia safe for women?", "How's the pharmacy program?", "Cost of living tips?"] },
+];
+
+export const resources: Resource[] = [
+  { id: 1, title: "Pre-Departure Checklist 2026", description: "The complete checklist of everything to do before flying to Malaysia.", type: "checklist", icon: "✈️" },
+  { id: 2, title: "SOP Writing Guide", description: "Step-by-step guide to writing a compelling Statement of Purpose.", type: "guide", icon: "📝" },
+  { id: 3, title: "Ultimate Study in Malaysia Guide", description: "The definitive 50-page guide covering universities, visas, and student life.", type: "ebook", icon: "📚" },
+  { id: 4, title: "Scholarship Application Template", description: "Ready-to-use templates for scholarship applications with examples.", type: "guide", icon: "🏆" },
+];
