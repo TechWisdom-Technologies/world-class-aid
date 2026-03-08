@@ -17,6 +17,7 @@ const items = [
   { title: "Overview", url: "/partner-dashboard", icon: LayoutDashboard },
   { title: "Students", url: "/partner-dashboard/students", icon: Users },
   { title: "Marketing Hub", url: "/partner-dashboard/marketing", icon: Megaphone },
+  { title: "Notifications", url: "/partner-dashboard/notifications", icon: Bell },
   { title: "My Profile", url: "/partner-dashboard/profile", icon: UserCircle },
 ];
 

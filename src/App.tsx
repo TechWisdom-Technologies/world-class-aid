@@ -110,6 +110,7 @@ const App = () => (
               <Route index element={<PartnerOverview />} />
               <Route path="students" element={<PartnerStudents />} />
               <Route path="marketing" element={<PartnerMarketing />} />
+              <Route path="notifications" element={<PartnerNotifications />} />
               <Route path="profile" element={<PartnerProfile />} />
             </Route>
 
