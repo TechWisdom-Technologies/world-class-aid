@@ -49,6 +49,7 @@ import PartnerOverview from "./pages/partner/PartnerOverview";
 import PartnerMarketing from "./pages/partner/PartnerMarketing";
 import PartnerStudents from "./pages/partner/PartnerStudents";
 import PartnerProfile from "./pages/partner/PartnerProfile";
+import PartnerNotifications from "./pages/partner/PartnerNotifications";
 import AdminStudents from "./pages/admin/AdminStudents";
 
 const queryClient = new QueryClient();
