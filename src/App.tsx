@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Countries from "./pages/Countries";
+import Universities from "./pages/Universities";
+import CoursesPage from "./pages/Courses";
 import CountryHub from "./pages/CountryHub";
 import UniversityDetail from "./pages/UniversityDetail";
 import EligibilityWizard from "./pages/EligibilityWizard";
@@ -50,6 +52,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/countries" element={<Countries />} />
+            <Route path="/universities" element={<Universities />} />
+            <Route path="/courses" element={<CoursesPage />} />
             <Route path="/country/:countryId" element={<CountryHub />} />
             <Route path="/university/:universityId" element={<UniversityDetail />} />
             <Route path="/eligibility" element={<EligibilityWizard />} />
