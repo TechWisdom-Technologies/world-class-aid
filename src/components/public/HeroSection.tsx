@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Search, ArrowRight, Sparkles, Star, ChevronRight } from "lucide-react";
+import { Search, ArrowRight, Sparkles, Star, ChevronRight, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { universities, courses } from "@/data/mockData";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 
 const tabs = ["University", "Course", "Country"];
 
