@@ -136,9 +136,26 @@ export interface BlogPost {
   id: number;
   title: string;
   excerpt: string;
+  content: string;
+  author: string;
   date: string;
   image: string;
+  coverImage: string;
   category: string;
+  readTime: string;
+}
+
+export interface LanguageCenter {
+  id: number;
+  name: string;
+  institute: string;
+  city: string;
+  duration: string;
+  tuitionFee: number;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  overview: string;
+  curriculum?: string[];
+  intakeMonths?: string[];
 }
 
 export interface CostOfLivingData {
