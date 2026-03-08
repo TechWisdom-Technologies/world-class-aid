@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Megaphone } from "lucide-react";
+import { LayoutDashboard, Users, Megaphone, UserCircle } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -17,6 +17,7 @@ const items = [
   { title: "Overview", url: "/partner-dashboard", icon: LayoutDashboard },
   { title: "Students", url: "/partner-dashboard/students", icon: Users },
   { title: "Marketing Hub", url: "/partner-dashboard/marketing", icon: Megaphone },
+  { title: "My Profile", url: "/partner-dashboard/profile", icon: UserCircle },
 ];
 
 export function PartnerSidebar() {

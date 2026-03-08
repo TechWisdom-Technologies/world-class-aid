@@ -48,6 +48,7 @@ import PartnerLayout from "./pages/partner/PartnerLayout";
 import PartnerOverview from "./pages/partner/PartnerOverview";
 import PartnerMarketing from "./pages/partner/PartnerMarketing";
 import PartnerStudents from "./pages/partner/PartnerStudents";
+import PartnerProfile from "./pages/partner/PartnerProfile";
 import AdminStudents from "./pages/admin/AdminStudents";
 
 const queryClient = new QueryClient();
@@ -108,6 +109,7 @@ const App = () => (
               <Route index element={<PartnerOverview />} />
               <Route path="students" element={<PartnerStudents />} />
               <Route path="marketing" element={<PartnerMarketing />} />
+              <Route path="profile" element={<PartnerProfile />} />
             </Route>
 
             {/* Redirects for old routes */}

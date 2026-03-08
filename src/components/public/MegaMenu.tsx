@@ -38,7 +38,7 @@ const resourceToolsLinks = [
 ];
 
 export function MegaMenu() {
-  const { user, signOut } = useAuth();
+  const { user, hasRole, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [consultOpen, setConsultOpen] = useState(false);
@@ -209,7 +209,12 @@ export function MegaMenu() {
               </Dialog>
             </>
           )}
-          {user?.role === "admin" && (
+          {user && !hasRole("admin") && !hasRole("partner") && (
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
+              <LogOut className="h-3.5 w-3.5" /> Log Out
+            </Button>
+          )}
+          {hasRole("admin") && (
             <>
               <Link to="/admin">
                 <Button variant="outline" size="sm" className="gap-1.5">
@@ -221,7 +226,7 @@ export function MegaMenu() {
               </Button>
             </>
           )}
-          {user?.role === "partner" && (
+          {hasRole("partner") && (
             <>
               <Link to="/partner-dashboard">
                 <Button variant="outline" size="sm" className="gap-1.5">
@@ -322,7 +327,12 @@ export function MegaMenu() {
                     </SheetClose>
                   </>
                 )}
-                {user?.role === "admin" && (
+                {user && !hasRole("admin") && !hasRole("partner") && (
+                  <SheetClose asChild>
+                    <Button variant="ghost" className="w-full gap-1.5" onClick={handleLogout}><LogOut className="h-4 w-4" /> Log Out</Button>
+                  </SheetClose>
+                )}
+                {hasRole("admin") && (
                   <>
                     <SheetClose asChild>
                       <Link to="/admin" className="block">
@@ -334,7 +344,7 @@ export function MegaMenu() {
                     </SheetClose>
                   </>
                 )}
-                {user?.role === "partner" && (
+                {hasRole("partner") && (
                   <>
                     <SheetClose asChild>
                       <Link to="/partner-dashboard" className="block">
