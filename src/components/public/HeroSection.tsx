@@ -21,6 +21,8 @@ export function HeroSection() {
   const [leadOpen, setLeadOpen] = useState(false);
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
+  const { data: universities = [] } = useTableData("universities", { orderBy: "name" });
+  const { data: courses = [] } = useTableData("courses", { orderBy: "title" });
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
