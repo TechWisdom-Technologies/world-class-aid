@@ -5,24 +5,21 @@ import { useToast } from "@/hooks/use-toast";
 type TableName = "countries" | "universities" | "courses" | "accommodations" | "scholarships" | "language_centers" | "blogs" | "events";
 
 export function useTableData(table: TableName, options?: { select?: string; orderBy?: string }) {
-  console.log(`[useTableData] Hook called for: ${table}`);
-  const result = useQuery({
+  return useQuery({
     queryKey: [table],
     queryFn: async () => {
-      console.log(`[useTableData] queryFn executing for ${table}`);
       const orderCol = options?.orderBy || "created_at";
       const ascending = options?.orderBy ? true : false;
       const { data, error } = await supabase
         .from(table)
         .select(options?.select || "*")
         .order(orderCol, { ascending });
-      console.log(`[useTableData] ${table} result:`, { dataLen: data?.length, error });
       if (error) throw error;
       return (data || []) as any[];
     },
+    retry: 1,
+    staleTime: 0,
   });
-  console.log(`[useTableData] ${table} status:`, result.status, 'isLoading:', result.isLoading, 'error:', result.error);
-  return result;
 }
 
 export function useInsertRow(table: TableName) {
