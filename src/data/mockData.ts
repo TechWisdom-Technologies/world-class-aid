@@ -103,6 +103,54 @@ export interface CostOfLivingData {
   entertainment: number;
 }
 
+export interface UniversityComparison {
+  university_id: number;
+  academic_difficulty: number;
+  affordability: number;
+  campus_life: number;
+  min_ielts: number;
+  min_toefl: number;
+  avg_living_cost: number;
+}
+
+export interface IntakeDeadline {
+  id: number;
+  university_id: number;
+  intake: string;
+  deadline: string;
+  semester: "Fall" | "Spring" | "Summer";
+}
+
+export interface Event {
+  id: number;
+  title: string;
+  type: "Open Day" | "Workshop" | "Webinar" | "Info Session";
+  date: string;
+  time: string;
+  university_ids: number[];
+  description: string;
+  spots_left: number;
+}
+
+export interface Ambassador {
+  id: number;
+  name: string;
+  country: string;
+  university: string;
+  course: string;
+  avatar: string;
+  bio: string;
+  icebreakers: string[];
+}
+
+export interface Resource {
+  id: number;
+  title: string;
+  description: string;
+  type: "checklist" | "guide" | "ebook";
+  icon: string;
+}
+
 export const countries: Country[] = [
   { id: 1, name: "Malaysia", code: "MY", flag_icon: "🇲🇾" },
   { id: 2, name: "United Kingdom", code: "GB", flag_icon: "🇬🇧" },
