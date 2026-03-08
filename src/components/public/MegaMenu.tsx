@@ -124,6 +124,12 @@ export function MegaMenu() {
             <Button variant="ghost" size="sm" className="text-sm font-medium">Courses</Button>
           </Link>
 
+          <Link to="/language-centers">
+            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
+              <Languages className="h-3.5 w-3.5" /> Language Centers
+            </Button>
+          </Link>
+
           {/* Accommodations */}
           <Link to="/housing">
             <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
