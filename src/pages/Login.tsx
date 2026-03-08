@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GraduationCap, ArrowLeft, LogIn, UserPlus } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { GraduationCap, ArrowLeft, LogIn, UserPlus, Clock, XCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,14 +21,37 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [regStatus, setRegStatus] = useState<{ status: string; admin_notes: string } | null>(null);
+
+  // After login attempt, check partner registration status
+  const checkPartnerRegistration = async (userEmail: string) => {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/partner_registrations?select=status,admin_notes&email=eq.${encodeURIComponent(userEmail)}&order=created_at.desc&limit=1`,
+        { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.length > 0) return data[0];
+      }
+    } catch { /* ignore */ }
+    return null;
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setRegStatus(null);
     const result = await signIn(email, password);
     setLoading(false);
     if (!result.success) {
-      toast({ title: "Login failed", description: result.error, variant: "destructive" });
+      // Check if this is a partner with pending/rejected registration
+      const reg = await checkPartnerRegistration(email);
+      if (reg && (reg.status === "pending" || reg.status === "rejected")) {
+        setRegStatus(reg);
+      } else {
+        toast({ title: "Login failed", description: result.error, variant: "destructive" });
+      }
     } else {
       toast({ title: "Welcome back!" });
       navigate(result.redirectTo || "/");
@@ -59,6 +86,30 @@ export default function Login() {
           </div>
           <p className="text-muted-foreground text-sm">Sign in to access your dashboard</p>
         </div>
+
+        {/* Partner registration status alerts */}
+        {regStatus?.status === "pending" && (
+          <Alert className="border-warning/50 bg-warning/10">
+            <Clock className="h-4 w-4 text-warning" />
+            <AlertTitle className="text-warning">Registration Pending</AlertTitle>
+            <AlertDescription className="text-sm">
+              Your partner registration is being reviewed by our team. You'll receive an email once it's approved. Please check back later.
+            </AlertDescription>
+          </Alert>
+        )}
+        {regStatus?.status === "rejected" && (
+          <Alert variant="destructive">
+            <XCircle className="h-4 w-4" />
+            <AlertTitle>Registration Rejected</AlertTitle>
+            <AlertDescription className="text-sm">
+              Unfortunately, your partner registration was not approved.
+              {regStatus.admin_notes && (
+                <span className="block mt-1 font-medium">Reason: {regStatus.admin_notes}</span>
+              )}
+              <span className="block mt-1">Please contact support or re-apply at the <Link to="/partner" className="underline font-medium">partner page</Link>.</span>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card>
           <CardContent className="pt-6">
