@@ -8,12 +8,13 @@ export function useTableData(table: TableName, options?: { select?: string; orde
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
-      let q = (supabase.from(table) as any).select(options?.select || "*");
-      if (options?.orderBy) q = q.order(options.orderBy);
-      else q = q.order("created_at", { ascending: false });
+      const orderCol = options?.orderBy || "created_at";
+      const ascending = options?.orderBy ? true : false;
+      let q = supabase.from(table).select(options?.select || "*");
+      q = q.order(orderCol, { ascending });
       const { data, error } = await q;
       if (error) throw error;
-      return data as any[];
+      return (data || []) as any[];
     },
   });
 }
