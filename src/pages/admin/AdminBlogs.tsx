@@ -7,6 +7,7 @@ const fields: FieldConfig[] = [
   { key: "content", label: "Content (Markdown)", type: "textarea", showInTable: false },
   { key: "author", label: "Author", showInTable: true },
   { key: "category", label: "Category", showInTable: true },
+  { key: "date", label: "Publish Date", showInTable: true, placeholder: "2026-03-08" },
   { key: "read_time", label: "Read Time", showInTable: true, placeholder: "5 min read" },
   { key: "image", label: "Thumbnail URL", showInTable: false },
   { key: "cover_image", label: "Cover Image URL", showInTable: false },

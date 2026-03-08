@@ -6,6 +6,8 @@ const fields: FieldConfig[] = [
   { key: "city", label: "City", showInTable: true },
   { key: "type", label: "Type", type: "select", options: ["Apartment", "Hostel", "Condominium", "Studio", "Shared House"], showInTable: true },
   { key: "price_per_month", label: "Price/Month (MYR)", type: "number", showInTable: true },
+  { key: "amenities", label: "Amenities", type: "tag_input", showInTable: false, placeholder: "e.g. WiFi, Gym, Pool" },
+  { key: "near_university_ids", label: "Nearby University IDs", type: "json_array", showInTable: false, helpText: 'JSON array of university UUIDs', placeholder: '["uuid-1","uuid-2"]' },
 ];
 
 export default function AdminAccommodations() {
