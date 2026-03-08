@@ -35,18 +35,22 @@ export function LeadCaptureModal({ open, onOpenChange, defaultCourse = "", defau
       return;
     }
     setLoading(true);
-    const { error } = await supabase.from("leads" as any).insert({
+    const leadData = {
       ...form,
       source,
       status: "new",
-    });
+    };
+    const { error } = await supabase.from("leads" as any).insert(leadData);
     setLoading(false);
     if (error) {
       toast.error("Something went wrong. Please try again.");
+      console.error("Lead insert error:", error);
       return;
     }
     setSuccess(true);
     toast.success("Application submitted! We'll contact you soon.");
+    // Notify admin via edge function (fire and forget)
+    supabase.functions.invoke("notify-new-lead", { body: { record: leadData } }).catch(() => {});
   };
 
   const handleClose = () => {
