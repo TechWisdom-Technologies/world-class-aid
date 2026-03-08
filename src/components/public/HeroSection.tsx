@@ -135,7 +135,23 @@ export function HeroSection() {
               </Button>
             </div>
           </div>
-        </div>
+          </div>
+
+          {/* CTA Button */}
+          <div
+            className={`mt-6 transition-all duration-700 delay-[520ms] ${
+              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            <Button
+              size="lg"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold text-base px-8 h-13 shadow-lg hover:shadow-xl transition-all"
+              onClick={() => setLeadOpen(true)}
+            >
+              <GraduationCap className="h-5 w-5 mr-2" />
+              Get Free Consultation
+            </Button>
+          </div>
 
         {/* Trust points */}
         <div
