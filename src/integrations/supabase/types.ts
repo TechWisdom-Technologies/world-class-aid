@@ -586,7 +586,9 @@ export type Database = {
           hero_image: string | null
           id: string
           international_ratio: number | null
+          latitude: number | null
           logo_url: string | null
+          longitude: number | null
           name: string
           ranking: number | null
           registration_steps: Json | null
@@ -607,7 +609,9 @@ export type Database = {
           hero_image?: string | null
           id?: string
           international_ratio?: number | null
+          latitude?: number | null
           logo_url?: string | null
+          longitude?: number | null
           name: string
           ranking?: number | null
           registration_steps?: Json | null
@@ -628,7 +632,9 @@ export type Database = {
           hero_image?: string | null
           id?: string
           international_ratio?: number | null
+          latitude?: number | null
           logo_url?: string | null
+          longitude?: number | null
           name?: string
           ranking?: number | null
           registration_steps?: Json | null
