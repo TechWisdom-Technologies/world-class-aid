@@ -84,6 +84,7 @@ export default function AdminStudents() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [newStatus, setNewStatus] = useState("");
   const [adminNotes, setAdminNotes] = useState("");
+  const [previewDoc, setPreviewDoc] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
   const [filterPartner, setFilterPartner] = useState("all");
