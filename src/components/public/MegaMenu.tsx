@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
-  BookOpen, FileText, Calendar, Building2,
+  BookOpen, FileText, Calendar, Building2, Languages, PenTool,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
