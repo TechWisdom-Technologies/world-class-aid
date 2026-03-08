@@ -16,11 +16,15 @@ export function useTableData(table: TableName, options?: { select?: string; orde
       const dir = ascending ? "asc" : "desc";
       const selectParam = options?.select || "*";
 
+      // Use user's session token if available (needed for RLS-protected tables like leads)
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token || SUPABASE_KEY;
+
       const url = `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(selectParam)}&order=${orderCol}.${dir}`;
       const res = await fetch(url, {
         headers: {
           "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
       if (!res.ok) {
