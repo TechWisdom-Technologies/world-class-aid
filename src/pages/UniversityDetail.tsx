@@ -325,7 +325,6 @@ export default function UniversityDetail() {
                   </Link>
                 ))}
             </div>
-            </div>
           </div>
         </section>
       )}
