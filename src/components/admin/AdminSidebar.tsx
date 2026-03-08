@@ -1,0 +1,62 @@
+import { LayoutDashboard, GraduationCap, BookOpen, Home, Users, Settings } from "lucide-react";
+import { NavLink } from "@/components/NavLink";
+import { useLocation } from "react-router-dom";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+
+const items = [
+  { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
+  { title: "Universities", url: "/admin/universities", icon: GraduationCap },
+  { title: "Courses", url: "/admin/courses", icon: BookOpen },
+  { title: "Accommodations", url: "/admin/accommodations", icon: Home },
+  { title: "B2B Partners", url: "/admin/partners", icon: Users },
+  { title: "Settings", url: "/admin/settings", icon: Settings },
+];
+
+export function AdminSidebar() {
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
+  const location = useLocation();
+  const isActive = (url: string) => location.pathname === url;
+
+  return (
+    <Sidebar collapsible="icon" className="border-r-0">
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-3 py-4">
+            {!collapsed && (
+              <span className="text-lg font-extrabold">
+                <span className="text-sidebar-primary-foreground">Your</span>
+                <span className="text-sidebar-primary">Uni</span>
+                <span className="text-sidebar-foreground/50 text-xs ml-2 font-normal">Admin</span>
+              </span>
+            )}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url} end className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
+                      <item.icon className="mr-2 h-4 w-4" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  );
+}
