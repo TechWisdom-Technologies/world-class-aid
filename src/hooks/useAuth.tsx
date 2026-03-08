@@ -28,12 +28,26 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-async function fetchUserRoles(userId: string): Promise<AppRole[]> {
-  const { data } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId);
-  return (data || []).map((r) => r.role as AppRole);
+const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
+
+async function fetchUserRoles(userId: string, accessToken?: string): Promise<AppRole[]> {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/user_roles?select=role&user_id=eq.${userId}`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${accessToken || SUPABASE_KEY}`,
+        },
+      }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data || []).map((r: any) => r.role as AppRole);
+  } catch {
+    return [];
+  }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -42,32 +56,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        try {
-          const r = await fetchUserRoles(session.user.id);
-          setRoles(r);
-        } catch (e) {
-          console.error("Failed to fetch roles:", e);
-          setRoles([]);
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, sess) => {
+      setSession(sess);
+      if (sess?.user) {
+        const r = await fetchUserRoles(sess.user.id, sess.access_token);
+        setRoles(r);
       } else {
         setRoles([]);
       }
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        try {
-          const r = await fetchUserRoles(session.user.id);
-          setRoles(r);
-        } catch (e) {
-          console.error("Failed to fetch roles:", e);
-          setRoles([]);
-        }
+    supabase.auth.getSession().then(async ({ data: { session: sess } }) => {
+      setSession(sess);
+      if (sess?.user) {
+        const r = await fetchUserRoles(sess.user.id, sess.access_token);
+        setRoles(r);
       }
       setLoading(false);
     });
@@ -78,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { success: false, error: error.message };
-    const r = await fetchUserRoles(data.user.id);
+    const r = await fetchUserRoles(data.user.id, data.session?.access_token);
     setRoles(r);
     const redirectTo = r.includes("admin") ? "/admin" : r.includes("partner") ? "/partner-dashboard" : "/";
     return { success: true, redirectTo };
