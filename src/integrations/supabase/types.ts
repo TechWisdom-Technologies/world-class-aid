@@ -289,6 +289,60 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_registrations: {
+        Row: {
+          admin_notes: string | null
+          agency_name: string
+          annual_students: number | null
+          certificate_urls: Json | null
+          contact_person: string
+          country: string
+          created_at: string
+          email: string
+          id: string
+          nid_document_url: string | null
+          phone: string | null
+          status: string
+          trade_license_url: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          agency_name: string
+          annual_students?: number | null
+          certificate_urls?: Json | null
+          contact_person: string
+          country?: string
+          created_at?: string
+          email: string
+          id?: string
+          nid_document_url?: string | null
+          phone?: string | null
+          status?: string
+          trade_license_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          agency_name?: string
+          annual_students?: number | null
+          certificate_urls?: Json | null
+          contact_person?: string
+          country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          nid_document_url?: string | null
+          phone?: string | null
+          status?: string
+          trade_license_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
