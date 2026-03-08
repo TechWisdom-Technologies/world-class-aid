@@ -4,21 +4,35 @@ import { useToast } from "@/hooks/use-toast";
 
 type TableName = "countries" | "universities" | "courses" | "accommodations" | "scholarships" | "language_centers" | "blogs" | "events";
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
 export function useTableData(table: TableName, options?: { select?: string; orderBy?: string }) {
   return useQuery({
     queryKey: [table],
     queryFn: async () => {
       const orderCol = options?.orderBy || "created_at";
       const ascending = options?.orderBy ? true : false;
-      const { data, error } = await supabase
-        .from(table)
-        .select(options?.select || "*")
-        .order(orderCol, { ascending });
-      if (error) throw error;
-      return (data || []) as any[];
+      const dir = ascending ? "asc" : "desc";
+      const selectParam = options?.select || "*";
+      
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(selectParam)}&order=${orderCol}.${dir}`,
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: res.statusText }));
+        throw new Error(err.message || res.statusText);
+      }
+      return (await res.json()) as any[];
     },
     retry: 1,
-    staleTime: 0,
   });
 }
 
