@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import { GraduationCap, Calculator, Globe, Trophy, Calendar, Award } from "lucide-react";
 
 const quickLinks = [
-  { icon: Globe, title: "Study in Malaysia", desc: "Your complete Malaysia guide", href: "/study-in-malaysia" },
+  { icon: Globe, title: "Study in Malaysia", desc: "Your complete Malaysia guide", href: "/destinations/malaysia" },
   { icon: Trophy, title: "Compare Universities", desc: "Side-by-side comparison", href: "/compare" },
   { icon: GraduationCap, title: "Eligibility Test", desc: "Find your best-fit university", href: "/eligibility" },
   { icon: Award, title: "Scholarships", desc: "Find funding opportunities", href: "/scholarships" },

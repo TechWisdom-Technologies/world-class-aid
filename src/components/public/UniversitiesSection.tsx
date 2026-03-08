@@ -17,7 +17,7 @@ export function UniversitiesSection() {
           {universities.slice(0, 6).map((uni) => {
             const country = countries.find((c) => c.id === uni.country_id);
             return (
-              <Link key={uni.id} to={`/university/${uni.id}`}>
+              <Link key={uni.id} to={`/universities/${uni.id}`}>
                 <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <div className="h-44 overflow-hidden">
                     <img src={uni.logo_url} alt={uni.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -38,7 +38,7 @@ export function UniversitiesSection() {
           })}
         </div>
         <div className="text-center mt-10">
-          <Link to="/countries">
+          <Link to="/universities">
             <Button variant="outline" size="lg" className="gap-2">
               View All Universities <ArrowRight className="h-4 w-4" />
             </Button>

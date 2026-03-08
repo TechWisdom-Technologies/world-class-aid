@@ -14,15 +14,16 @@ export function PublicFooter() {
               </span>
             </div>
             <p className="text-sm text-primary-foreground/70">
-              Expert guidance for international students seeking quality education worldwide.
+              Expert guidance for international students seeking quality education in Malaysia.
             </p>
           </div>
 
           <div>
             <h4 className="font-semibold mb-3">Quick Links</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li><Link to="/countries" className="hover:text-secondary transition-colors">Universities</Link></li>
-              <li><Link to="/compare" className="hover:text-secondary transition-colors">Compare</Link></li>
+              <li><Link to="/universities" className="hover:text-secondary transition-colors">Universities</Link></li>
+              <li><Link to="/courses" className="hover:text-secondary transition-colors">Courses</Link></li>
+              <li><Link to="/destinations/malaysia" className="hover:text-secondary transition-colors">Study in Malaysia</Link></li>
               <li><Link to="/eligibility" className="hover:text-secondary transition-colors">Eligibility Test</Link></li>
               <li><Link to="/events" className="hover:text-secondary transition-colors">Events</Link></li>
             </ul>
@@ -31,8 +32,11 @@ export function PublicFooter() {
           <div>
             <h4 className="font-semibold mb-3">Tools & Resources</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li><Link to="/cost-calculator" className="hover:text-secondary transition-colors">Cost Calculator</Link></li>
-              <li><Link to="/b2b" className="hover:text-secondary transition-colors">Partner With Us</Link></li>
+              <li><Link to="/tools/calculator" className="hover:text-secondary transition-colors">Cost Calculator</Link></li>
+              <li><Link to="/tools/gpa-converter" className="hover:text-secondary transition-colors">GPA Converter</Link></li>
+              <li><Link to="/scholarships" className="hover:text-secondary transition-colors">Scholarships</Link></li>
+              <li><Link to="/visa-guide" className="hover:text-secondary transition-colors">Visa Guide</Link></li>
+              <li><Link to="/partner" className="hover:text-secondary transition-colors">For Agencies</Link></li>
               <li><Link to="/login" className="hover:text-secondary transition-colors">Sign In</Link></li>
             </ul>
           </div>
@@ -40,10 +44,10 @@ export function PublicFooter() {
           <div>
             <h4 className="font-semibold mb-3">Connect With Us</h4>
             <div className="flex gap-3 mb-4">
-              <a href="#" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Facebook className="h-4 w-4" /></a>
-              <a href="#" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Twitter className="h-4 w-4" /></a>
-              <a href="#" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Instagram className="h-4 w-4" /></a>
-              <a href="#" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Linkedin className="h-4 w-4" /></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Facebook className="h-4 w-4" /></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Twitter className="h-4 w-4" /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Instagram className="h-4 w-4" /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary transition-colors"><Linkedin className="h-4 w-4" /></a>
             </div>
             <p className="text-sm text-primary-foreground/70">info@youruni.com</p>
             <p className="text-sm text-primary-foreground/70">+60 12-345 6789</p>

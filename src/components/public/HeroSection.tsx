@@ -18,13 +18,14 @@ export function HeroSection() {
 
     if (activeTab === "University") {
       const uni = universities.find((u) => u.name.toLowerCase().includes(q));
-      if (uni) navigate(`/university/${uni.id}`);
+      if (uni) navigate(`/universities/${uni.id}`);
+      else navigate(`/universities`);
     } else if (activeTab === "Course") {
       const course = courses.find((c) => c.title.toLowerCase().includes(q));
-      if (course) navigate(`/university/${course.university_id}`);
+      if (course) navigate(`/courses/${course.id}`);
+      else navigate(`/courses`);
     } else {
-      const country = countries.find((c) => c.name.toLowerCase().includes(q));
-      if (country) navigate(`/country/${country.id}`);
+      navigate(`/destinations/malaysia`);
     }
   };
 
