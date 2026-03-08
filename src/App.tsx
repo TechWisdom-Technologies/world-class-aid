@@ -58,6 +58,7 @@ const App = () => (
             <Route path="/courses/:courseId" element={<CourseDetail />} />
             <Route path="/country/:countryId" element={<CountryHub />} />
             <Route path="/university/:universityId" element={<UniversityDetail />} />
+            <Route path="/universities/:universityId" element={<UniversityDetail />} />
             <Route path="/eligibility" element={<EligibilityWizard />} />
             <Route path="/b2b" element={<B2BLanding />} />
             <Route path="/cost-calculator" element={<CostCalculator />} />
