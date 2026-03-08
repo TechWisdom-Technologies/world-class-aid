@@ -9,6 +9,8 @@ const fields: FieldConfig[] = [
   { key: "price_per_month", label: "Price/Month (MYR)", type: "number", showInTable: true },
   { key: "description", label: "Description", type: "textarea", showInTable: false, placeholder: "Brief description of the property..." },
   { key: "image_url", label: "Image URL", showInTable: false },
+  { key: "latitude", label: "Latitude", type: "number", showInTable: false, placeholder: "e.g. 3.1390" },
+  { key: "longitude", label: "Longitude", type: "number", showInTable: false, placeholder: "e.g. 101.6869" },
   { key: "unit_types", label: "Unit Types", type: "tag_input", showInTable: false, placeholder: "e.g. Single, Double, Twin, Suite" },
   { key: "room_types", label: "Available Room Types", type: "tag_input", showInTable: false, placeholder: "e.g. En-suite, Shared Bathroom, Master" },
   { key: "travel_distance", label: "Travel Distance (from nearest uni)", showInTable: false, placeholder: "e.g. 5 min walk / 15 min bus" },
