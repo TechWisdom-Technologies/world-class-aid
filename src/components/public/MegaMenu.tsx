@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
-  BookOpen, FileText, Calendar, Building2, Languages, PenTool,
+  BookOpen, FileText, Calendar, Building2, Languages, PenTool, X, User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -19,6 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const cityLinks = [
   { label: "Kuala Lumpur", to: "/destinations/malaysia/kuala-lumpur" },
@@ -55,320 +63,347 @@ export function MegaMenu() {
     toast({ title: "Request submitted!", description: "A counselor will contact you within 24 hours." });
   };
 
+  const userInitial = user?.email?.charAt(0).toUpperCase() || "U";
+
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <GraduationCap className="h-7 w-7 text-secondary" />
-          <span className="text-xl font-extrabold tracking-tight">
-            <span className="text-primary">Your</span>
-            <span className="text-secondary">Uni</span>
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full">
+      {/* Top accent line */}
+      <div className="h-1 w-full bg-gradient-to-r from-primary via-secondary to-primary" />
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1">
-          <Link to="/">
-            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
-              <Home className="h-3.5 w-3.5" /> Home
-            </Button>
+      <div className="bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-[0_1px_3px_0_hsl(var(--foreground)/0.04)]">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-6">
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center group-hover:shadow-md transition-shadow">
+              <GraduationCap className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="text-xl font-extrabold tracking-tight">
+              <span className="text-foreground">Your</span>
+              <span className="text-secondary">Uni</span>
+            </span>
           </Link>
 
-          {/* Destinations Dropdown */}
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-accent">
-                  Destinations
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="w-[420px] p-4">
-                    <Link
-                      to="/destinations/malaysia"
-                      className="flex items-center gap-3 rounded-lg p-3 hover:bg-accent transition-colors mb-2"
-                    >
-                      <span className="text-2xl">🇲🇾</span>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">Malaysia</p>
-                        <p className="text-xs text-muted-foreground">Your gateway to world-class, affordable education</p>
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-0.5">
+            <NavItem to="/" icon={Home}>Home</NavItem>
+
+            {/* Destinations Dropdown */}
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors">
+                    Destinations
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="w-[440px] p-5">
+                      <Link
+                        to="/destinations/malaysia"
+                        className="flex items-center gap-4 rounded-xl p-4 hover:bg-accent/60 transition-all group"
+                      >
+                        <span className="text-3xl">🇲🇾</span>
+                        <div className="flex-1">
+                          <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Malaysia</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Your gateway to world-class, affordable education</p>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+                      <div className="border-t border-border/50 pt-3 mt-3">
+                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest px-4 mb-2">
+                          Top Student Cities
+                        </p>
+                        <div className="grid grid-cols-1 gap-0.5">
+                          {cityLinks.map((c) => (
+                            <Link
+                              key={c.to}
+                              to={c.to}
+                              className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors"
+                            >
+                              <MapPin className="h-4 w-4 text-secondary" />
+                              {c.label}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-                    </Link>
-                    <div className="border-t pt-2 mt-1">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                        Top Student Cities
-                      </p>
-                      {cityLinks.map((c) => (
-                        <Link
-                          key={c.to}
-                          to={c.to}
-                          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
-                        >
-                          <MapPin className="h-4 w-4 text-muted-foreground" />
-                          {c.label}
-                        </Link>
-                      ))}
                     </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+
+            <NavItem to="/universities">Universities</NavItem>
+            <NavItem to="/courses">Courses</NavItem>
+            <NavItem to="/language-centers" icon={Languages}>Language</NavItem>
+            <NavItem to="/housing" icon={Building2}>Housing</NavItem>
+
+            {/* Resources & Tools Dropdown */}
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors">
+                    Tools
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid w-[540px] grid-cols-5 p-5 gap-5">
+                      <div className="col-span-2 rounded-xl bg-gradient-to-br from-secondary/15 to-secondary/5 p-5 flex flex-col justify-between border border-secondary/10">
+                        <div>
+                          <div className="h-10 w-10 rounded-lg bg-secondary/20 flex items-center justify-center mb-3">
+                            <Sparkles className="h-5 w-5 text-secondary" />
+                          </div>
+                          <p className="font-bold text-sm text-foreground leading-tight">AI Eligibility Matcher</p>
+                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                            Find your acceptance chances at top universities in 60 seconds.
+                          </p>
+                        </div>
+                        <Link to="/eligibility" className="mt-4 inline-flex items-center text-xs font-bold text-secondary hover:underline">
+                          Try it Now <ChevronRight className="h-3 w-3 ml-0.5" />
+                        </Link>
+                      </div>
+                      <div className="col-span-3 space-y-0.5">
+                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest px-3 pb-2">
+                          Tools & Resources
+                        </p>
+                        {resourceToolsLinks.map((item) => (
+                          <Link
+                            key={item.to}
+                            to={item.to}
+                            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors group"
+                          >
+                            <div className="h-7 w-7 rounded-md bg-muted/80 flex items-center justify-center group-hover:bg-secondary/15 transition-colors">
+                              <item.icon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-secondary transition-colors" />
+                            </div>
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </nav>
+
+          {/* Desktop Right Actions */}
+          <div className="hidden lg:flex items-center gap-2">
+            <Link to="/partner">
+              <Button variant="ghost" size="sm" className="text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg">
+                For Agencies
+              </Button>
+            </Link>
+
+            {!user && (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" size="sm" className="rounded-lg border-border/60 font-medium">
+                    Log In
+                  </Button>
+                </Link>
+                <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" className="rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm font-semibold">
+                      <Phone className="h-3.5 w-3.5 mr-1.5" /> Free Consult
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader><DialogTitle>Book a Free Consultation</DialogTitle></DialogHeader>
+                    <form onSubmit={handleConsult} className="space-y-4 pt-2">
+                      <Input placeholder="Your Name" required />
+                      <Input type="email" placeholder="Email Address" required />
+                      <Input placeholder="Phone Number" required />
+                      <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">Submit Request</Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </>
+            )}
+
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 hover:ring-2 hover:ring-secondary/30 transition-all">
+                    <Avatar className="h-9 w-9 border-2 border-secondary/30">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm font-bold">
+                        {userInitial}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-3 py-2.5">
+                    <p className="text-sm font-semibold text-foreground truncate">{user.email}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {hasRole("admin") ? "Administrator" : hasRole("partner") ? "Partner" : "Student"}
+                    </p>
                   </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+                  <DropdownMenuSeparator />
+                  {hasRole("admin") && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
+                        <ShieldCheck className="h-4 w-4" /> Admin Panel
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {hasRole("partner") && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/partner-dashboard" className="flex items-center gap-2 cursor-pointer">
+                        <LayoutDashboard className="h-4 w-4" /> Partner Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive">
+                    <LogOut className="h-4 w-4" /> Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
 
-          <Link to="/universities">
-            <Button variant="ghost" size="sm" className="text-sm font-medium">Universities</Button>
-          </Link>
+          {/* Mobile Hamburger */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden rounded-lg hover:bg-accent/60">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[320px] p-0 border-l-0 shadow-2xl">
+              <div className="flex flex-col h-full">
+                {/* Mobile Header */}
+                <div className="p-5 border-b border-border/50 flex items-center justify-between">
+                  <Link to="/" className="flex items-center gap-2.5">
+                    <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                      <GraduationCap className="h-4 w-4 text-primary-foreground" />
+                    </div>
+                    <span className="text-lg font-extrabold">
+                      <span className="text-foreground">Your</span>
+                      <span className="text-secondary">Uni</span>
+                    </span>
+                  </Link>
+                </div>
 
-          <Link to="/courses">
-            <Button variant="ghost" size="sm" className="text-sm font-medium">Courses</Button>
-          </Link>
-
-          <Link to="/language-centers">
-            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
-              <Languages className="h-3.5 w-3.5" /> Language Centers
-            </Button>
-          </Link>
-
-          {/* Accommodations */}
-          <Link to="/housing">
-            <Button variant="ghost" size="sm" className="text-sm font-medium gap-1.5">
-              <Building2 className="h-3.5 w-3.5" /> Accommodations
-            </Button>
-          </Link>
-
-          {/* Resources & Tools Dropdown */}
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium bg-transparent hover:bg-accent">
-                  Resources & Tools
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="grid w-[520px] grid-cols-5 p-4 gap-4">
-                    <div className="col-span-2 rounded-lg bg-secondary/10 p-5 flex flex-col justify-between">
-                      <div>
-                        <Sparkles className="h-8 w-8 text-secondary mb-3" />
-                        <p className="font-bold text-base text-foreground leading-tight">AI Eligibility Matcher</p>
-                        <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                          Find your acceptance chances at top Malaysian universities in 60 seconds.
+                {/* Mobile User Card */}
+                {user && (
+                  <div className="px-5 py-4 bg-muted/30 border-b border-border/50">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10 border-2 border-secondary/30">
+                        <AvatarFallback className="bg-primary text-primary-foreground font-bold">{userInitial}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold truncate">{user.email}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {hasRole("admin") ? "Administrator" : hasRole("partner") ? "Partner" : "Student"}
                         </p>
                       </div>
-                      <Link to="/eligibility" className="mt-4 inline-flex items-center text-xs font-semibold text-secondary hover:underline">
-                        Try it Now <ChevronRight className="h-3 w-3 ml-0.5" />
-                      </Link>
-                    </div>
-                    <div className="col-span-3 space-y-0.5">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 pb-2">
-                        Tools & Resources
-                      </p>
-                      {resourceToolsLinks.map((item) => (
-                        <Link
-                          key={item.to}
-                          to={item.to}
-                          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
-                        >
-                          <item.icon className="h-4 w-4 text-muted-foreground" />
-                          {item.label}
-                        </Link>
-                      ))}
                     </div>
                   </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </nav>
+                )}
 
-        {/* Desktop Right Actions */}
-        <div className="hidden lg:flex items-center gap-2">
-          <Link to="/partner">
-            <Button variant="ghost" size="sm" className="text-sm font-medium">For Agencies</Button>
-          </Link>
+                {/* Mobile Nav */}
+                <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+                  <MobileNavLink to="/" icon={Home}>Home</MobileNavLink>
 
-          {!user && (
-            <>
-              <Link to="/login">
-                <Button variant="outline" size="sm">Log In</Button>
-              </Link>
-              <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                    <Phone className="h-3.5 w-3.5 mr-1.5" /> Free Consultation
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader><DialogTitle>Book a Free Consultation</DialogTitle></DialogHeader>
-                  <form onSubmit={handleConsult} className="space-y-4 pt-2">
-                    <Input placeholder="Your Name" required />
-                    <Input type="email" placeholder="Email Address" required />
-                    <Input placeholder="Phone Number" required />
-                    <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">Submit Request</Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </>
-          )}
-          {user && !hasRole("admin") && !hasRole("partner") && (
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
-              <LogOut className="h-3.5 w-3.5" /> Log Out
-            </Button>
-          )}
-          {hasRole("admin") && (
-            <>
-              <Link to="/admin">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5" /> Admin Panel
-                </Button>
-              </Link>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
-                <LogOut className="h-3.5 w-3.5" /> Log Out
-              </Button>
-            </>
-          )}
-          {hasRole("partner") && (
-            <>
-              <Link to="/partner-dashboard">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <LayoutDashboard className="h-3.5 w-3.5" /> Partner Dashboard
-                </Button>
-              </Link>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
-                <LogOut className="h-3.5 w-3.5" /> Log Out
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Hamburger */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] p-0">
-            <div className="flex flex-col h-full">
-              <div className="p-4 border-b">
-                <Link to="/" className="flex items-center gap-2">
-                  <GraduationCap className="h-6 w-6 text-secondary" />
-                  <span className="text-lg font-extrabold">
-                    <span className="text-primary">Your</span>
-                    <span className="text-secondary">Uni</span>
-                  </span>
-                </Link>
-              </div>
-
-              <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-                <MobileNavLink to="/">Home</MobileNavLink>
-
-                {/* Destinations collapsible */}
-                <div className="pt-3 pb-1">
                   <Collapsible>
-                    <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
-                      Destinations
-                      <ChevronDown className="h-3.5 w-3.5" />
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors">
+                      <span className="flex items-center gap-2.5">
+                        <MapPin className="h-4 w-4 text-muted-foreground" /> Destinations
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="space-y-0.5">
-                      <MobileNavLink to="/destinations/malaysia">
-                        <span className="flex items-center gap-2">🇲🇾 Malaysia Overview</span>
-                      </MobileNavLink>
+                    <CollapsibleContent className="pl-4 space-y-0.5 mt-0.5">
+                      <MobileNavLink to="/destinations/malaysia">🇲🇾 Malaysia Overview</MobileNavLink>
                       {cityLinks.map((c) => (
-                        <MobileNavLink key={c.to} to={c.to}>
-                          <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-muted-foreground" /> {c.label}</span>
-                        </MobileNavLink>
+                        <MobileNavLink key={c.to} to={c.to}>{c.label}</MobileNavLink>
                       ))}
                     </CollapsibleContent>
                   </Collapsible>
-                </div>
 
-                <MobileNavLink to="/universities">Universities</MobileNavLink>
-                <MobileNavLink to="/courses">Courses</MobileNavLink>
-                <MobileNavLink to="/language-centers">
-                  <span className="flex items-center gap-2"><Languages className="h-4 w-4 text-muted-foreground" /> Language Centers</span>
-                </MobileNavLink>
-                <MobileNavLink to="/housing">
-                  <span className="flex items-center gap-2"><Building2 className="h-4 w-4 text-muted-foreground" /> Accommodations</span>
-                </MobileNavLink>
+                  <MobileNavLink to="/universities" icon={GraduationCap}>Universities</MobileNavLink>
+                  <MobileNavLink to="/courses" icon={BookOpen}>Courses</MobileNavLink>
+                  <MobileNavLink to="/language-centers" icon={Languages}>Language Centers</MobileNavLink>
+                  <MobileNavLink to="/housing" icon={Building2}>Accommodations</MobileNavLink>
 
-                {/* Resources & Tools collapsible */}
-                <div className="pt-3 pb-1">
                   <Collapsible>
-                    <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2 hover:text-foreground transition-colors">
-                      Resources & Tools
-                      <ChevronDown className="h-3.5 w-3.5" />
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors">
+                      <span className="flex items-center gap-2.5">
+                        <Sparkles className="h-4 w-4 text-muted-foreground" /> Resources & Tools
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="space-y-0.5">
+                    <CollapsibleContent className="pl-4 space-y-0.5 mt-0.5">
                       {resourceToolsLinks.map((item) => (
-                        <MobileNavLink key={item.to} to={item.to}>
-                          <span className="flex items-center gap-2"><item.icon className="h-4 w-4 text-muted-foreground" /> {item.label}</span>
-                        </MobileNavLink>
+                        <MobileNavLink key={item.to} to={item.to} icon={item.icon}>{item.label}</MobileNavLink>
                       ))}
                     </CollapsibleContent>
                   </Collapsible>
-                </div>
 
-                <MobileNavLink to="/partner">For Agencies</MobileNavLink>
-              </nav>
+                  <div className="h-px bg-border/50 my-2" />
+                  <MobileNavLink to="/partner">For Agencies</MobileNavLink>
+                </nav>
 
-              {/* Mobile Auth Footer */}
-              <div className="p-4 border-t space-y-2">
-                {!user && (
-                  <>
-                    <SheetClose asChild>
-                      <Link to="/login" className="block">
-                        <Button variant="outline" className="w-full">Log In</Button>
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link to="/eligibility" className="block">
-                        <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">Free Consultation</Button>
-                      </Link>
-                    </SheetClose>
-                  </>
-                )}
-                {user && !hasRole("admin") && !hasRole("partner") && (
-                  <SheetClose asChild>
-                    <Button variant="ghost" className="w-full gap-1.5" onClick={handleLogout}><LogOut className="h-4 w-4" /> Log Out</Button>
-                  </SheetClose>
-                )}
-                {hasRole("admin") && (
-                  <>
+                {/* Mobile Auth Footer */}
+                <div className="p-4 border-t border-border/50 bg-muted/20 space-y-2">
+                  {!user && (
+                    <>
+                      <SheetClose asChild>
+                        <Link to="/login" className="block">
+                          <Button variant="outline" className="w-full rounded-lg font-medium">Log In</Button>
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link to="/eligibility" className="block">
+                          <Button className="w-full rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-sm">
+                            <Phone className="h-4 w-4 mr-1.5" /> Free Consultation
+                          </Button>
+                        </Link>
+                      </SheetClose>
+                    </>
+                  )}
+                  {hasRole("admin") && (
                     <SheetClose asChild>
                       <Link to="/admin" className="block">
-                        <Button variant="outline" className="w-full gap-1.5"><ShieldCheck className="h-4 w-4" /> Admin Panel</Button>
+                        <Button variant="outline" className="w-full rounded-lg gap-1.5 font-medium"><ShieldCheck className="h-4 w-4" /> Admin Panel</Button>
                       </Link>
                     </SheetClose>
-                    <SheetClose asChild>
-                      <Button variant="ghost" className="w-full gap-1.5" onClick={handleLogout}><LogOut className="h-4 w-4" /> Log Out</Button>
-                    </SheetClose>
-                  </>
-                )}
-                {hasRole("partner") && (
-                  <>
+                  )}
+                  {hasRole("partner") && (
                     <SheetClose asChild>
                       <Link to="/partner-dashboard" className="block">
-                        <Button variant="outline" className="w-full gap-1.5"><LayoutDashboard className="h-4 w-4" /> Partner Dashboard</Button>
+                        <Button variant="outline" className="w-full rounded-lg gap-1.5 font-medium"><LayoutDashboard className="h-4 w-4" /> Dashboard</Button>
                       </Link>
                     </SheetClose>
+                  )}
+                  {user && (
                     <SheetClose asChild>
-                      <Button variant="ghost" className="w-full gap-1.5" onClick={handleLogout}><LogOut className="h-4 w-4" /> Log Out</Button>
+                      <Button variant="ghost" className="w-full rounded-lg gap-1.5 text-destructive hover:text-destructive font-medium" onClick={handleLogout}>
+                        <LogOut className="h-4 w-4" /> Sign Out
+                      </Button>
                     </SheetClose>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          </SheetContent>
-        </Sheet>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
 }
 
-function MobileNavLink({ to, children }: { to: string; children: React.ReactNode }) {
+function NavItem({ to, children, icon: Icon }: { to: string; children: React.ReactNode; icon?: React.ElementType }) {
+  return (
+    <Link to={to}>
+      <Button variant="ghost" size="sm" className="h-9 text-sm font-medium rounded-lg hover:bg-accent/60 gap-1.5 px-3 transition-colors">
+        {Icon && <Icon className="h-3.5 w-3.5" />}
+        {children}
+      </Button>
+    </Link>
+  );
+}
+
+function MobileNavLink({ to, children, icon: Icon }: { to: string; children: React.ReactNode; icon?: React.ElementType }) {
   return (
     <SheetClose asChild>
-      <Link to={to} className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors">
+      <Link to={to} className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors">
+        {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
         {children}
       </Link>
     </SheetClose>
