@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { HeroSection } from "@/components/public/HeroSection";
@@ -10,11 +11,10 @@ import { BlogSection } from "@/components/public/BlogSection";
 import { IntakeCalendar } from "@/components/public/IntakeCalendar";
 import { ResourcesSection } from "@/components/public/ResourcesSection";
 import { LeadBanner } from "@/components/public/LeadBanner";
-
 import { VideoExpertWidget } from "@/components/public/VideoExpertWidget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { GraduationCap, Calculator, Globe, Trophy, Calendar, Award } from "lucide-react";
+import { GraduationCap, Globe, Trophy, Award } from "lucide-react";
 
 const quickLinks = [
   { icon: Globe, title: "Study in Malaysia", desc: "Your complete Malaysia guide", href: "/destinations/malaysia" },
@@ -24,6 +24,9 @@ const quickLinks = [
 ];
 
 const Index = () => {
+  const [bannerVisible, setBannerVisible] = useState(false);
+  const handleBannerVisibility = useCallback((visible: boolean) => setBannerVisible(visible), []);
+
   return (
     <div className="min-h-screen">
       <MegaMenu />
@@ -60,10 +63,9 @@ const Index = () => {
         <TestimonialsSection />
         <BlogSection />
       </main>
-      <PublicFooter />
-      <LeadBanner />
-      
-      <VideoExpertWidget />
+      <PublicFooter bannerVisible={bannerVisible} />
+      <LeadBanner onVisibilityChange={handleBannerVisibility} />
+      <VideoExpertWidget bannerVisible={bannerVisible} />
     </div>
   );
 };
