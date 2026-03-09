@@ -62,7 +62,7 @@ const Index = () => {
       </main>
       <PublicFooter />
       <LeadBanner />
-      <AmbassadorChat />
+      
       <VideoExpertWidget />
     </div>
   );
