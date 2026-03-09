@@ -1,7 +1,12 @@
 import { GraduationCap, Facebook, Twitter, Instagram, Linkedin, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export function PublicFooter() {
+interface PublicFooterProps {
+  bannerVisible?: boolean;
+}
+
+export function PublicFooter({ bannerVisible = false }: PublicFooterProps) {
+  const bottomClass = bannerVisible ? "bottom-20" : "bottom-6";
   return (
     <>
       <footer className="bg-primary text-primary-foreground">
