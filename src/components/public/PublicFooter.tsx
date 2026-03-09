@@ -1,7 +1,12 @@
 import { GraduationCap, Facebook, Twitter, Instagram, Linkedin, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export function PublicFooter() {
+interface PublicFooterProps {
+  bannerVisible?: boolean;
+}
+
+export function PublicFooter({ bannerVisible = false }: PublicFooterProps) {
+  const bottomClass = bannerVisible ? "bottom-20" : "bottom-6";
   return (
     <>
       <footer className="bg-primary text-primary-foreground">
@@ -63,7 +68,7 @@ export function PublicFooter() {
         href="https://wa.me/60123456789"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-success text-success-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+        className={`fixed ${bottomClass} right-6 z-40 h-14 w-14 rounded-full bg-success text-success-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-all duration-300`}
       >
         <MessageCircle className="h-6 w-6" />
       </a>
