@@ -23,7 +23,8 @@ export function LeadBanner({ onVisibilityChange }: LeadBannerProps) {
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [onVisibilityChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dismiss = () => {
     setVisible(false);
