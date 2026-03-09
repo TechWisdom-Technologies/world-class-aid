@@ -35,12 +35,12 @@ export function LeadBanner() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-40 animate-slide-up">
+      <div className="fixed bottom-0 left-0 right-0 z-50 animate-slide-up">
         <div className="bg-primary text-primary-foreground shadow-2xl border-t border-primary-foreground/10">
-          <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
               <span className="text-2xl flex-shrink-0">📘</span>
-              <p className="text-sm font-medium truncate">
+              <p className="text-sm font-medium">
                 Get the <strong>Ultimate 2026 Guide to Studying in Malaysia</strong> — free!
               </p>
             </div>

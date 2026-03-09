@@ -21,7 +21,7 @@ export function VideoExpertWidget() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 left-6 z-50 group"
+          className="fixed bottom-20 left-6 z-40 group"
         >
           <div className="relative">
             <div className="h-16 w-16 rounded-full overflow-hidden border-3 border-secondary shadow-lg group-hover:scale-110 transition-transform">
@@ -43,7 +43,7 @@ export function VideoExpertWidget() {
 
       {/* Expanded Form */}
       {open && (
-        <div className="fixed bottom-6 left-6 z-50 animate-scale-in">
+        <div className="fixed bottom-20 left-6 z-40 animate-scale-in">
           <Card className="w-80 shadow-2xl">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
