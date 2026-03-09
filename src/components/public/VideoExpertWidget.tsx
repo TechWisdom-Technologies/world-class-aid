@@ -1,27 +1,56 @@
 import { useState } from "react";
-import { Video, X, Calendar, Send } from "lucide-react";
+import { Video, X, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
-export function VideoExpertWidget() {
+interface VideoExpertWidgetProps {
+  bannerVisible?: boolean;
+}
+
+export function VideoExpertWidget({ bannerVisible = false }: VideoExpertWidgetProps) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const bottomClass = bannerVisible ? "bottom-20" : "bottom-6";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({ title: "Booking Requested!", description: "We'll send you a Zoom link within 24 hours." });
-    setOpen(false);
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("leads").insert({
+        full_name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        source: "expert_call_widget",
+        status: "new",
+        interested_course: formData.message || null,
+      });
+      if (error) throw error;
+      toast.success("Request Submitted!", { description: "Our expert will contact you within 24 hours." });
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      setOpen(false);
+      // Fire-and-forget notification
+      supabase.functions.invoke("notify-new-lead", {
+        body: { record: { full_name: formData.name, email: formData.email, source: "expert_call_widget" } },
+      }).catch(() => {});
+    } catch {
+      toast.error("Something went wrong", { description: "Please try again." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {/* Floating Video Bubble */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-20 left-6 z-40 group"
+          className={`fixed ${bottomClass} left-6 z-40 group transition-all duration-300`}
         >
           <div className="relative">
             <div className="h-16 w-16 rounded-full overflow-hidden border-3 border-secondary shadow-lg group-hover:scale-110 transition-transform">
@@ -41,9 +70,8 @@ export function VideoExpertWidget() {
         </button>
       )}
 
-      {/* Expanded Form */}
       {open && (
-        <div className="fixed bottom-20 left-6 z-40 animate-scale-in">
+        <div className={`fixed ${bottomClass} left-6 z-40 animate-scale-in`}>
           <Card className="w-80 shadow-2xl">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -59,12 +87,12 @@ export function VideoExpertWidget() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-3">
-                <Input placeholder="Your name" required />
-                <Input type="email" placeholder="Email address" required />
-                <Input type="tel" placeholder="Phone (optional)" />
-                <Textarea placeholder="What would you like to discuss?" className="min-h-[60px]" />
-                <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                  <Calendar className="h-4 w-4 mr-2" /> Request a Call
+                <Input placeholder="Your name" required value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} />
+                <Input type="email" placeholder="Email address" required value={formData.email} onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))} />
+                <Input type="tel" placeholder="Phone (optional)" value={formData.phone} onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))} />
+                <Textarea placeholder="What would you like to discuss?" className="min-h-[60px]" value={formData.message} onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))} />
+                <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={loading}>
+                  <Calendar className="h-4 w-4 mr-2" /> {loading ? "Submitting..." : "Request a Call"}
                 </Button>
               </form>
             </CardContent>

@@ -5,7 +5,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { X, Download, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
-export function LeadBanner() {
+interface LeadBannerProps {
+  onVisibilityChange?: (visible: boolean) => void;
+}
+
+export function LeadBanner({ onVisibilityChange }: LeadBannerProps) {
   const [visible, setVisible] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -13,13 +17,17 @@ export function LeadBanner() {
   useEffect(() => {
     const dismissed = sessionStorage.getItem("lead-banner-dismissed");
     if (!dismissed) {
-      const timer = setTimeout(() => setVisible(true), 3000);
+      const timer = setTimeout(() => {
+        setVisible(true);
+        onVisibilityChange?.(true);
+      }, 3000);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [onVisibilityChange]);
 
   const dismiss = () => {
     setVisible(false);
+    onVisibilityChange?.(false);
     sessionStorage.setItem("lead-banner-dismissed", "true");
   };
 
