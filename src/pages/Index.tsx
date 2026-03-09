@@ -10,7 +10,7 @@ import { BlogSection } from "@/components/public/BlogSection";
 import { IntakeCalendar } from "@/components/public/IntakeCalendar";
 import { ResourcesSection } from "@/components/public/ResourcesSection";
 import { LeadBanner } from "@/components/public/LeadBanner";
-import { AmbassadorChat } from "@/components/public/AmbassadorChat";
+
 import { VideoExpertWidget } from "@/components/public/VideoExpertWidget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -62,7 +62,7 @@ const Index = () => {
       </main>
       <PublicFooter />
       <LeadBanner />
-      <AmbassadorChat />
+      
       <VideoExpertWidget />
     </div>
   );
