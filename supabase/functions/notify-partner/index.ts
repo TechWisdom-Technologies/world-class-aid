@@ -1,18 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.98.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
-    const { registration_id, action, admin_notes } = await req.json();
+    const { registration_id, action, admin_notes, email_only } = await req.json();
 
     if (!registration_id || !action) {
       return new Response(JSON.stringify({ error: "Missing registration_id or action" }), {
@@ -40,28 +42,32 @@ serve(async (req) => {
       });
     }
 
-    // Update registration status
-    const { error: updateError } = await supabase
-      .from("partner_registrations")
-      .update({ status: action, admin_notes: admin_notes || "" })
-      .eq("id", registration_id);
+    // Skip DB writes when email_only=true (frontend already did the update)
+    if (!email_only) {
+      // Update registration status
+      const { error: updateError } = await supabase
+        .from("partner_registrations")
+        .update({ status: action, admin_notes: admin_notes || "" })
+        .eq("id", registration_id);
 
-    if (updateError) throw updateError;
+      if (updateError) throw updateError;
 
-    // If approved, assign partner role
-    if (action === "approved" && reg.user_id) {
-      const { error: roleError } = await supabase
-        .from("user_roles")
-        .upsert({ user_id: reg.user_id, role: "partner" }, { onConflict: "user_id,role" });
+      // If approved, assign partner role
+      if (action === "approved" && reg.user_id) {
+        const { error: roleError } = await supabase
+          .from("user_roles")
+          .upsert({ user_id: reg.user_id, role: "partner" }, { onConflict: "user_id,role" });
 
-      if (roleError) {
-        console.error("Role assignment error:", roleError);
+        if (roleError) {
+          console.error("Role assignment error:", roleError);
+        }
       }
     }
 
     // Try to send email via Resend if API key exists
     const resendKey = Deno.env.get("RESEND_API_KEY");
     let emailSent = false;
+    let resendError = "";
 
     if (resendKey) {
       const isApproved = action === "approved";
@@ -127,7 +133,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "YourUni <noreply@youruni.com>",
+            from: "YourUni <onboarding@resend.dev>",
             to: [reg.email],
             subject,
             html: htmlBody,
@@ -138,10 +144,10 @@ serve(async (req) => {
           emailSent = true;
           console.log("Email sent successfully to", reg.email);
         } else {
-          const errText = await emailRes.text();
-          console.error("Resend error:", errText);
+          resendError = await emailRes.text();
+          console.error("Resend error:", resendError);
         }
-      } catch (emailErr) {
+      } catch (emailErr: any) {
         console.error("Email send error:", emailErr);
       }
     } else {
@@ -152,11 +158,13 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         emailSent,
+        resendError: resendError || undefined,
+        recipientEmail: reg.email,
         message: `Registration ${action} successfully${emailSent ? " and email notification sent" : ""}`,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error:", err);
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,

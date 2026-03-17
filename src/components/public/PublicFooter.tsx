@@ -59,7 +59,8 @@ export function PublicFooter({ bannerVisible = false }: PublicFooterProps) {
           </div>
         </div>
         <div className="border-t border-primary-foreground/10 py-4 text-center text-sm text-primary-foreground/50">
-          © 2026 YourUni. All rights reserved.
+          <p>© 2026 YourUni. All rights reserved.</p>
+          <p className="mt-2">Developed by TechWisdom Technologies</p>
         </div>
       </footer>
 

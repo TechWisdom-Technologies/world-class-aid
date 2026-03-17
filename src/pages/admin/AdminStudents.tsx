@@ -12,9 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, Loader2, Search, FileText, ExternalLink, Users, Filter, X, Download, Image, File } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
-const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 const statusOptions = [
   { value: "document_review", label: "Document Review" },
@@ -86,6 +87,7 @@ export default function AdminStudents() {
   const [adminNotes, setAdminNotes] = useState("");
   const [previewDoc, setPreviewDoc] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [paymentProofFile, setPaymentProofFile] = useState<File | null>(null);
   const [search, setSearch] = useState("");
   const [filterPartner, setFilterPartner] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -95,8 +97,8 @@ export default function AdminStudents() {
     const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` };
     try {
       const [studentsRes, partnersRes] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/students?select=*&order=created_at.desc`, { headers }),
-        fetch(`${SUPABASE_URL}/rest/v1/partner_registrations?select=id,agency_name,contact_person,email,user_id&status=eq.approved`, { headers }),
+        fetch(`${SUPABASE_URL}/rest/v1/students?select=id,partner_id,full_name,email,phone,passport_number,nationality,date_of_birth,gender,previous_institution,previous_degree,gpa,ielts_score,target_university,target_course,intake_month,degree_level,status,admin_notes,passport_url,academic_transcript_url,ielts_certificate_url,personal_statement_url,recommendation_letter_url,other_documents,created_at&order=created_at.desc`, { headers }),
+        fetch(`${SUPABASE_URL}/rest/v1/partner_registrations?select=id,agency_name,contact_person,email,user_id`, { headers }),
       ]);
       if (studentsRes.ok) setStudents(await studentsRes.json());
       if (partnersRes.ok) setPartners(await partnersRes.json());
@@ -118,26 +120,47 @@ export default function AdminStudents() {
     if (!selected || !session) return;
     setSaving(true);
     try {
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID || "kelwzcacbnrrioophnzh";
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/notify-student-status`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            student_id: selected.id,
-            new_status: newStatus,
-            admin_notes: adminNotes,
-          }),
-        }
-      );
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Update failed");
-      const emailNote = result.emailSent ? " Email notification sent to partner!" : "";
-      toast.success(`Student status updated to ${newStatus}!${emailNote}`);
+      const headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      };
+
+      const partner = getPartner(selected.partner_id);
+
+      // Update student row
+      const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/students?id=eq.${selected.id}`, {
+        method: "PATCH",
+        headers: { ...headers, "Prefer": "return=minimal" },
+        body: JSON.stringify({
+          status: newStatus,
+          admin_notes: adminNotes || "",
+        }),
+      });
+
+      if (!updateRes.ok) {
+        const err = await updateRes.text();
+        throw new Error(err || "Failed to update status");
+      }
+
+      // Insert in-app notification for partner dashboard.
+      const notifType = newStatus === "rejected" ? "warning" : (["documents_verified", "offer_received", "visa_approved", "enrolled"].includes(newStatus) ? "success" : "info");
+      const notifTitle = `${selected.full_name} — Status Updated`;
+      const notifMessage = `Status changed to ${newStatus.replace(/_/g, " ")}.${adminNotes ? ` Note: ${adminNotes}` : ""}`;
+
+      await fetch(`${SUPABASE_URL}/rest/v1/partner_notifications`, {
+        method: "POST",
+        headers: { ...headers, "Prefer": "return=minimal" },
+        body: JSON.stringify({
+          partner_id: selected.partner_id,
+          student_id: selected.id,
+          title: notifTitle,
+          message: notifMessage,
+          type: notifType,
+        }),
+      });
+
+      toast.success(`Student status updated to ${newStatus}!`);
       setDetailOpen(false);
       fetchData();
     } catch (e: any) {
@@ -373,6 +396,9 @@ export default function AdminStudents() {
                   <Label>Admin Notes</Label>
                   <Textarea value={adminNotes} onChange={e => setAdminNotes(e.target.value)} placeholder="Add notes about this application..." rows={3} className="mt-1" />
                 </div>
+
+
+
                 <Button onClick={handleUpdateStatus} disabled={saving} className="w-full">
                   {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
                   Save Changes

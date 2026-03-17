@@ -45,9 +45,14 @@ export function AdminSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                    <NavLink to={item.url} end className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                    <NavLink 
+                      to={item.url} 
+                      end 
+                      className="relative hover:bg-sidebar-accent/40 transition-colors" 
+                      activeClassName="bg-sidebar-accent/80 text-sidebar-primary font-semibold border-l-4 border-sidebar-primary"
+                    >
+                      <item.icon className="mr-2 h-5 w-5" />
+                      {!collapsed && <span className="text-sm font-medium">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -3,11 +3,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
@@ -44,7 +45,7 @@ Deno.serve(async (req) => {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
         body: JSON.stringify({
-          from: "YourUni Reminders <reminders@youruni.com>",
+          from: "YourUni <onboarding@resend.dev>",
           to: [reminder.email],
           subject: `⏰ Reminder: ${reminder.university_name} ${reminder.intake_label} Deadline`,
           html: `
@@ -73,7 +74,7 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ message: `Sent ${sent} reminder emails` }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (err) {
+  } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

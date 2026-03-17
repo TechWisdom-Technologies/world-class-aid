@@ -34,10 +34,6 @@ export function VideoExpertWidget({ bannerVisible = false }: VideoExpertWidgetPr
       toast.success("Request Submitted!", { description: "Our expert will contact you within 24 hours." });
       setFormData({ name: "", email: "", phone: "", message: "" });
       setOpen(false);
-      // Fire-and-forget notification
-      supabase.functions.invoke("notify-new-lead", {
-        body: { record: { full_name: formData.name, email: formData.email, source: "expert_call_widget" } },
-      }).catch(() => {});
     } catch {
       toast.error("Something went wrong", { description: "Please try again." });
     } finally {

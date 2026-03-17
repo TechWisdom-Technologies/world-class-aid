@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
@@ -19,7 +19,8 @@ import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,6 +51,7 @@ export function MegaMenu() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [consultOpen, setConsultOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
 
   const handleLogout = () => {
     signOut();
@@ -62,6 +64,31 @@ export function MegaMenu() {
     setConsultOpen(false);
     toast({ title: "Request submitted!", description: "A counselor will contact you within 24 hours." });
   };
+
+  useEffect(() => {
+    const loadAvatar = async () => {
+      if (!user) {
+        setAvatarUrl("");
+        return;
+      }
+
+      const directAvatar = (user.user_metadata?.avatar_url as string | undefined) || "";
+      if (directAvatar) {
+        setAvatarUrl(directAvatar);
+        return;
+      }
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("user_id", user.id)
+        .single();
+
+      setAvatarUrl(data?.avatar_url || "");
+    };
+
+    loadAvatar();
+  }, [user?.id]);
 
   const userInitial = user?.email?.charAt(0).toUpperCase() || "U";
 
@@ -221,6 +248,7 @@ export function MegaMenu() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 hover:ring-2 hover:ring-secondary/30 transition-all">
                     <Avatar className="h-9 w-9 border-2 border-secondary/30">
+                      <AvatarImage src={avatarUrl} alt={user?.email || "User avatar"} />
                       <AvatarFallback className="bg-primary text-primary-foreground text-sm font-bold">
                         {userInitial}
                       </AvatarFallback>
@@ -285,6 +313,7 @@ export function MegaMenu() {
                   <div className="px-5 py-4 bg-muted/30 border-b border-border/50">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10 border-2 border-secondary/30">
+                        <AvatarImage src={avatarUrl} alt={user?.email || "User avatar"} />
                         <AvatarFallback className="bg-primary text-primary-foreground font-bold">{userInitial}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">

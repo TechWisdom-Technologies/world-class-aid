@@ -5,13 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Eye, CheckCircle, XCircle, Loader2, FileText, ExternalLink, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 interface PartnerRegistration {
   id: string;
@@ -27,6 +28,7 @@ interface PartnerRegistration {
   certificate_urls: string[];
   status: string;
   admin_notes: string;
+  default_commission_percentage: number | null;
   created_at: string;
 }
 
@@ -37,6 +39,7 @@ export default function AdminPartners() {
   const [selectedReg, setSelectedReg] = useState<PartnerRegistration | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [adminNotes, setAdminNotes] = useState("");
+  const [defaultCommission, setDefaultCommission] = useState("8");
   const [processing, setProcessing] = useState(false);
 
   const fetchRegistrations = async () => {
@@ -56,6 +59,7 @@ export default function AdminPartners() {
   const openDetail = (reg: PartnerRegistration) => {
     setSelectedReg(reg);
     setAdminNotes(reg.admin_notes || "");
+    setDefaultCommission(String(reg.default_commission_percentage ?? 8));
     setDetailOpen(true);
   };
 
@@ -63,29 +67,26 @@ export default function AdminPartners() {
     if (!selectedReg || !session) return;
     setProcessing(true);
     try {
-      // Call edge function which handles: status update, role assignment, and email notification
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID || "kelwzcacbnrrioophnzh";
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/notify-partner`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            registration_id: selectedReg.id,
-            action,
-            admin_notes: adminNotes,
-          }),
-        }
-      );
+      const { error: regError } = await supabase
+        .from("partner_registrations")
+        .update({
+          status: action,
+          admin_notes: adminNotes || "",
+          default_commission_percentage: action === "approved" ? Number(defaultCommission || 8) : selectedReg.default_commission_percentage,
+        })
+        .eq("id", selectedReg.id);
 
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Action failed");
+      if (regError) throw regError;
 
-      const emailNote = result.emailSent ? " Email notification sent!" : " (Email not configured yet)";
-      toast.success(`Partner registration ${action}!${emailNote}`);
+      if (action === "approved" && selectedReg.user_id) {
+        const { error: roleError } = await supabase
+          .from("user_roles")
+          .upsert({ user_id: selectedReg.user_id, role: "partner" }, { onConflict: "user_id,role" });
+
+        if (roleError) throw roleError;
+      }
+
+      toast.success(`Partner registration ${action}!`);
       setDetailOpen(false);
       fetchRegistrations();
     } catch (err: any) {
@@ -231,6 +232,20 @@ export default function AdminPartners() {
 
               {/* Admin Notes */}
               <div className="border-t pt-4">
+                <div className="mb-3">
+                  <Label>Default Commission % (Negotiated)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value={defaultCommission}
+                    onChange={(e) => setDefaultCommission(e.target.value)}
+                    placeholder="e.g. 10"
+                    className="mt-1"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">This is the initial percentage after partner approval and can be changed per student later.</p>
+                </div>
                 <Label>Admin Notes</Label>
                 <Textarea
                   value={adminNotes}

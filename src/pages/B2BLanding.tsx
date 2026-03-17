@@ -26,6 +26,75 @@ const commissionTiers = [
   { tier: "Platinum", students: "100+", rate: "15%", color: "bg-primary/10 text-primary" },
 ];
 
+const registrationSteps = [
+  {
+    step: "01",
+    title: "Submit Agency Registration",
+    desc: "Provide agency profile, contact information, and required documents such as NID and trade license.",
+  },
+  {
+    step: "02",
+    title: "Compliance & Quality Review",
+    desc: "Our admin team reviews your documents, background, and student handling capacity.",
+  },
+  {
+    step: "03",
+    title: "Account Activation",
+    desc: "Once approved, your partner account is activated with access to student tools and tracking features.",
+  },
+  {
+    step: "04",
+    title: "Start Submitting Students",
+    desc: "Create student profiles, upload documents, and monitor each stage from review to visa and enrollment.",
+  },
+];
+
+const platformFeatures = [
+  {
+    title: "Student Application Management",
+    desc: "Add and manage unlimited student profiles, including intake preferences and target universities.",
+  },
+  {
+    title: "Document Upload & Tracking",
+    desc: "Upload passports, transcripts, IELTS, and statements securely with status visibility for each case.",
+  },
+  {
+    title: "Realtime Status Updates",
+    desc: "Receive timely updates for document review, offers, visa progress, approvals, and enrollment milestones.",
+  },
+  {
+    title: "Commission Visibility",
+    desc: "Track successful cases and commission tiers transparently so your team can forecast growth.",
+  },
+  {
+    title: "Marketing & Sales Support",
+    desc: "Use ready-to-share assets and program resources to acquire more students faster.",
+  },
+  {
+    title: "Dedicated Partner Assistance",
+    desc: "Get operational help from our team for escalations, documentation checks, and process optimization.",
+  },
+];
+
+const faqs = [
+  {
+    q: "How long does approval take?",
+    a: "Most registrations are reviewed within 2-5 business days, depending on document completeness.",
+  },
+  {
+    q: "Can multiple staff members manage one agency account?",
+    a: "Yes. You can operate through one main agency account and coordinate internal submissions as a team.",
+  },
+  {
+    q: "When do commissions get finalized?",
+    a: "Commissions are calculated on successful enrollments and follow your active tier rate.",
+  },
+  {
+    q: "Which destinations and institutions are supported?",
+    a: "You get access to a curated global network including Malaysia and other strategic study destinations.",
+  },
+];
+
 interface FileUploadProps {
   label: string;
   accept?: string;
@@ -118,7 +187,10 @@ export default function B2BLanding() {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { display_name: contactPerson } },
+        options: {
+          data: { display_name: contactPerson },
+          emailRedirectTo: `${window.location.origin}/login`,
+        },
       });
       if (authError) throw authError;
 
@@ -133,8 +205,8 @@ export default function B2BLanding() {
       }
 
       // 3. Insert registration record using REST API (anon key since user just signed up)
-      const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
+      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+      const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
       const token = authData.session?.access_token || SUPABASE_KEY;
 
@@ -287,6 +359,81 @@ export default function B2BLanding() {
                     <Badge className={`${t.color} mb-3`}>{t.tier}</Badge>
                     <div className="text-3xl font-extrabold text-secondary mb-1">{t.rate}</div>
                     <p className="text-sm text-muted-foreground">{t.students} students/year</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Registration Process */}
+        <div className="container mx-auto px-4 py-16">
+          <h2 className="text-2xl font-extrabold text-center mb-10">Registration Process</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {registrationSteps.map((s) => (
+              <Card key={s.step} className="border-dashed">
+                <CardContent className="p-6">
+                  <div className="text-xs font-bold text-secondary mb-2">STEP {s.step}</div>
+                  <h3 className="font-bold mb-2">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground">{s.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Platform Capabilities */}
+        <div className="bg-muted/40 py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-extrabold text-center mb-10">What You Can Do Through Our Platform</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {platformFeatures.map((f) => (
+                <Card key={f.title} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold mb-2">{f.title}</h3>
+                    <p className="text-sm text-muted-foreground">{f.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Operational Workflow */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto rounded-2xl border bg-background p-8">
+            <h2 className="text-2xl font-extrabold mb-6 text-center">How Agency Operations Work</h2>
+            <div className="grid md:grid-cols-4 gap-4 text-center">
+              <div className="p-4 rounded-lg bg-muted/50">
+                <p className="font-semibold">Create Student</p>
+                <p className="text-xs text-muted-foreground mt-1">Profile and intake details</p>
+              </div>
+              <div className="p-4 rounded-lg bg-muted/50">
+                <p className="font-semibold">Upload Documents</p>
+                <p className="text-xs text-muted-foreground mt-1">Passport, transcripts, IELTS</p>
+              </div>
+              <div className="p-4 rounded-lg bg-muted/50">
+                <p className="font-semibold">Track Status</p>
+                <p className="text-xs text-muted-foreground mt-1">Review, offer, visa, enrollment</p>
+              </div>
+              <div className="p-4 rounded-lg bg-muted/50">
+                <p className="font-semibold">Earn Commission</p>
+                <p className="text-xs text-muted-foreground mt-1">Based on successful outcomes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="bg-muted/50 py-16">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <h2 className="text-2xl font-extrabold text-center mb-10">Agency FAQs</h2>
+            <div className="space-y-4">
+              {faqs.map((item) => (
+                <Card key={item.q}>
+                  <CardContent className="p-5">
+                    <p className="font-semibold mb-1">{item.q}</p>
+                    <p className="text-sm text-muted-foreground">{item.a}</p>
                   </CardContent>
                 </Card>
               ))}

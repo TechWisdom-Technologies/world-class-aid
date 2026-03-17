@@ -45,14 +45,14 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminCountries from "./pages/admin/AdminCountries";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminLeads from "./pages/admin/AdminLeads";
 import PartnerLayout from "./pages/partner/PartnerLayout";
 import PartnerOverview from "./pages/partner/PartnerOverview";
 import PartnerMarketing from "./pages/partner/PartnerMarketing";
 import PartnerStudents from "./pages/partner/PartnerStudents";
 import PartnerProfile from "./pages/partner/PartnerProfile";
 import PartnerNotifications from "./pages/partner/PartnerNotifications";
-import AdminStudents from "./pages/admin/AdminStudents";
-import AdminLeads from "./pages/admin/AdminLeads";
 
 const queryClient = new QueryClient();
 

@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { GraduationCap, Menu, X, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NavLink } from "@/components/NavLink";
 import { useState } from "react";
 
 const navLinks = [
@@ -14,6 +15,7 @@ const navLinks = [
 
 export function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
@@ -26,11 +28,16 @@ export function PublicHeader() {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-5">
+        <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((l) => (
-            <Link key={l.label} to={l.href} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <NavLink 
+              key={l.label} 
+              to={l.href} 
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-md"
+              activeClassName="text-primary bg-primary/10 font-semibold border-b-2 border-primary"
+            >
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
 
@@ -56,9 +63,15 @@ export function PublicHeader() {
       {mobileOpen && (
         <div className="lg:hidden border-t bg-background p-4 space-y-3 animate-fade-in">
           {navLinks.map((l) => (
-            <Link key={l.label} to={l.href} className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors" onClick={() => setMobileOpen(false)}>
+            <NavLink 
+              key={l.label} 
+              to={l.href} 
+              className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors px-3 py-2 rounded-md"
+              activeClassName="text-primary bg-primary/10 font-semibold border-b-2 border-primary"
+              onClick={() => setMobileOpen(false)}
+            >
               {l.label}
-            </Link>
+            </NavLink>
           ))}
           <div className="flex flex-col gap-2 pt-2">
             <Link to="/login" onClick={() => setMobileOpen(false)}><Button variant="ghost" size="sm" className="w-full justify-start gap-1.5"><LogIn className="h-4 w-4" />Sign In</Button></Link>

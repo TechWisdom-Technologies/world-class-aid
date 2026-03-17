@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
 
-const notifications = [
-  { id: 1, message: "Student Yelim Ro's visa has been approved!", time: "2 hours ago", type: "success" as const, read: false },
-  { id: 2, message: "Missing documents for Khaled Hisham's application.", time: "5 hours ago", type: "warning" as const, read: false },
-  { id: 3, message: "Commission of $500 cleared and added to your wallet.", time: "1 day ago", type: "info" as const, read: false },
-  { id: 4, message: "New intake deadline: UTM Fall 2026 closes June 15.", time: "2 days ago", type: "info" as const, read: true },
-  { id: 5, message: "Student Maria Santos's offer letter received!", time: "3 days ago", type: "success" as const, read: true },
-];
+interface PartnerNotification {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  created_at: string;
+}
 
 const typeStyles = {
   success: "bg-success/10 border-success/20",
@@ -25,13 +29,61 @@ const dotStyles = {
 };
 
 export function NotificationCenter() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState(notifications);
+  const [items, setItems] = useState<PartnerNotification[]>([]);
+
+  const loadNotifications = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("partner_notifications")
+      .select("id, title, message, type, read, created_at")
+      .eq("partner_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(8);
+
+    if (data) {
+      setItems(data as PartnerNotification[]);
+    }
+  };
+
+  useEffect(() => {
+    loadNotifications();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`partner-bell-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "partner_notifications", filter: `partner_id=eq.${user.id}` },
+        () => loadNotifications()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
 
   const unreadCount = items.filter((n) => !n.read).length;
+  const sortedItems = useMemo(() => items.slice().sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at)), [items]);
 
-  const markAllRead = () => {
-    setItems(items.map((n) => ({ ...n, read: true })));
+  const markAllRead = async () => {
+    if (!user) return;
+    await supabase
+      .from("partner_notifications")
+      .update({ read: true })
+      .eq("partner_id", user.id)
+      .eq("read", false);
+    setItems((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
+
+  const markOneRead = async (id: string) => {
+    await supabase.from("partner_notifications").update({ read: true }).eq("id", id);
+    setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   };
 
   return (
@@ -56,23 +108,41 @@ export function NotificationCenter() {
           )}
         </div>
         <div className="max-h-80 overflow-y-auto">
-          {items.map((n, i) => (
+          {sortedItems.length === 0 && (
+            <div className="p-4 text-xs text-muted-foreground">No notifications yet.</div>
+          )}
+          {sortedItems.map((n, i) => (
             <div
               key={n.id}
               className={`p-3 border-b last:border-0 transition-colors ${!n.read ? "bg-muted/30" : ""} animate-fade-in`}
               style={{ animationDelay: `${i * 50}ms` }}
+              onClick={() => !n.read && markOneRead(n.id)}
             >
               <div className="flex items-start gap-2.5">
                 <div className={`h-2 w-2 rounded-full mt-1.5 flex-shrink-0 ${dotStyles[n.type]}`} />
                 <div className="flex-1 min-w-0">
+                  <p className={`text-xs mb-0.5 ${!n.read ? "font-semibold" : "font-medium"}`}>{n.title}</p>
                   <p className={`text-xs leading-relaxed ${!n.read ? "font-medium" : "text-muted-foreground"}`}>
                     {n.message}
                   </p>
-                  <p className="text-[10px] text-muted-foreground mt-1">{n.time}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">{formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}</p>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+        <div className="p-2 border-t">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full text-xs"
+            onClick={() => {
+              setOpen(false);
+              navigate("/partner-dashboard/notifications");
+            }}
+          >
+            View all notifications
+          </Button>
         </div>
       </PopoverContent>
     </Popover>

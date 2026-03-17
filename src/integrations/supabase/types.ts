@@ -400,6 +400,69 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_notification_reads: {
+        Row: {
+          admin_user_id: string
+          created_at: string
+          id: string
+          is_read: boolean
+          notification_key: string
+          updated_at: string
+        }
+        Insert: {
+          admin_user_id: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          notification_key: string
+          updated_at?: string
+        }
+        Update: {
+          admin_user_id?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          notification_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_notifications: {
+        Row: {
+          created_at: string
+          event_type: string
+          href: string
+          id: string
+          message: string
+          metadata: Json
+          source_id: string
+          source_table: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          href: string
+          id?: string
+          message: string
+          metadata?: Json
+          source_id: string
+          source_table: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          href?: string
+          id?: string
+          message?: string
+          metadata?: Json
+          source_id?: string
+          source_table?: string
+          title?: string
+        }
+        Relationships: []
+      }
       partner_notifications: {
         Row: {
           created_at: string
@@ -450,6 +513,7 @@ export type Database = {
           contact_person: string
           country: string
           created_at: string
+          default_commission_percentage: number | null
           email: string
           id: string
           nid_document_url: string | null
@@ -467,6 +531,7 @@ export type Database = {
           contact_person: string
           country?: string
           created_at?: string
+          default_commission_percentage?: number | null
           email: string
           id?: string
           nid_document_url?: string | null
@@ -484,6 +549,7 @@ export type Database = {
           contact_person?: string
           country?: string
           created_at?: string
+          default_commission_percentage?: number | null
           email?: string
           id?: string
           nid_document_url?: string | null
@@ -567,6 +633,9 @@ export type Database = {
         Row: {
           academic_transcript_url: string | null
           admin_notes: string | null
+          commission_notes: string | null
+          commission_percentage: number | null
+          contract_amount_usd: number | null
           created_at: string
           date_of_birth: string | null
           degree_level: string | null
@@ -581,6 +650,9 @@ export type Database = {
           nationality: string | null
           other_documents: Json | null
           partner_id: string
+          payment_verification_url: string | null
+          payment_verified_at: string | null
+          payment_verified_by: string | null
           passport_number: string | null
           passport_url: string | null
           personal_statement_url: string | null
@@ -596,6 +668,9 @@ export type Database = {
         Insert: {
           academic_transcript_url?: string | null
           admin_notes?: string | null
+          commission_notes?: string | null
+          commission_percentage?: number | null
+          contract_amount_usd?: number | null
           created_at?: string
           date_of_birth?: string | null
           degree_level?: string | null
@@ -610,6 +685,9 @@ export type Database = {
           nationality?: string | null
           other_documents?: Json | null
           partner_id: string
+          payment_verification_url?: string | null
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
           passport_number?: string | null
           passport_url?: string | null
           personal_statement_url?: string | null
@@ -625,6 +703,9 @@ export type Database = {
         Update: {
           academic_transcript_url?: string | null
           admin_notes?: string | null
+          commission_notes?: string | null
+          commission_percentage?: number | null
+          contract_amount_usd?: number | null
           created_at?: string
           date_of_birth?: string | null
           degree_level?: string | null
@@ -639,6 +720,9 @@ export type Database = {
           nationality?: string | null
           other_documents?: Json | null
           partner_id?: string
+          payment_verification_url?: string | null
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
           passport_number?: string | null
           passport_url?: string | null
           personal_statement_url?: string | null

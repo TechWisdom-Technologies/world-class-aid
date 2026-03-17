@@ -28,8 +28,8 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const SUPABASE_URL = "https://kelwzcacbnrrioophnzh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlbHd6Y2FjYm5ycmlvb3BobnpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODU0NzYsImV4cCI6MjA4ODU2MTQ3Nn0.VUCY4HY0LNX4umOfEWh1NmkKKHQ-DYj7VvRCJkeDe_c";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 async function fetchUserRoles(userId: string, accessToken?: string): Promise<AppRole[]> {
   try {
@@ -94,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: {
         data: { display_name: displayName || email.split("@")[0] },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/login`,
       },
     });
     if (error) return { success: false, error: error.message };

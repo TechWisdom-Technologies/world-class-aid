@@ -49,8 +49,6 @@ export function LeadCaptureModal({ open, onOpenChange, defaultCourse = "", defau
     }
     setSuccess(true);
     toast.success("Application submitted! We'll contact you soon.");
-    // Notify admin via edge function (fire and forget)
-    supabase.functions.invoke("notify-new-lead", { body: { record: leadData } }).catch(() => {});
   };
 
   const handleClose = () => {

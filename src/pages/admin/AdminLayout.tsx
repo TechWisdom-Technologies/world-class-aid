@@ -5,6 +5,7 @@ import { ArrowLeft, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { AdminNotificationCenter } from "@/components/admin/AdminNotificationCenter";
 
 export default function AdminLayout() {
   const { signOut, user } = useAuth();
@@ -30,6 +31,7 @@ export default function AdminLayout() {
               </Link>
             </div>
             <div className="flex items-center gap-3">
+              <AdminNotificationCenter />
               <span className="text-sm text-muted-foreground">{user?.email}</span>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-1" />Sign Out

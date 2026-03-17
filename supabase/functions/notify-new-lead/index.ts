@@ -3,11 +3,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
@@ -31,12 +32,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    const roleRows = (adminRoles || []) as Array<{ user_id: string }>;
+
     const { data: profiles } = await supabase
       .from("profiles")
       .select("email")
-      .in("user_id", adminRoles.map((r) => r.user_id));
+      .in("user_id", roleRows.map((r: { user_id: string }) => r.user_id));
 
-    const adminEmails = (profiles || []).map((p) => p.email).filter(Boolean);
+    const profileRows = (profiles || []) as Array<{ email: string | null }>;
+    const adminEmails = profileRows.map((p: { email: string | null }) => p.email).filter(Boolean);
 
     if (adminEmails.length === 0) {
       return new Response(JSON.stringify({ message: "No admin emails found" }), {
@@ -48,7 +52,7 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
       body: JSON.stringify({
-        from: "YourUni Leads <leads@youruni.com>",
+        from: "YourUni <onboarding@resend.dev>",
         to: adminEmails,
         subject: `🔔 New Lead: ${record.full_name} — ${record.source}`,
         html: `
@@ -74,8 +78,9 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ success: res.ok, detail: body }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

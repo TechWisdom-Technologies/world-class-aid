@@ -1,73 +1,183 @@
-# Welcome to your Lovable project
+# World Class Aid
 
-## Project info
+A comprehensive educational services platform built with React, TypeScript, and Supabase. The application provides a variety of pages and utilities for students, partners, and administrators to manage courses, events, scholarships, visa guidance, and more.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🚀 Project Overview
 
-There are several ways of editing your application.
+- **Framework**: Vite + React (TSX)
+- **UI**: Tailwind CSS with shadcn-ui components
+- **State & Hooks**: Custom hooks under `src/hooks`
+- **Backend**: Supabase (authentication, database, functions, migrations)
+- **Deployment**: Managed through Netlify, Vercel, or any static hosting provider
 
-**Use Lovable**
+This repository powers the front-end of the World Class Aid platform. Supabase integration provides authentication, data storage, and serverless functions for email notifications and reminders.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📁 Repository Structure
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+.
+├── public/                  # Static assets
+├── src/
+│   ├── components/          # Reusable React components
+│   ├── data/                # Mock data for tests/dev
+│   ├── hooks/               # Custom hooks (auth, supabase, toast, mobile)
+│   ├── integrations/        # Supabase configuration
+│   ├── lib/                 # Utility functions
+│   ├── pages/               # Route components grouped by feature
+│   │   ├── admin/           # Admin dashboard pages
+│   │   ├── partner/         # Partner-specific pages
+│   │   └── public/          # Public-facing pages
+│   └── App.tsx              # Root component
+├── supabase/                # Database migrations and edge functions
+│   ├── functions/           # Serverless functions
+│   └── migrations/          # SQL migrations
+├── test/                    # Vitest configuration and examples
+├── package.json
+├── tsconfig*.json           # TypeScript configs
+└── vite.config.ts
 ```
 
-**Edit a file directly in GitHub**
+> 📌 **Tip:** Use the `src/pages` directory as the primary reference for available routes and application structure.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 🛠️ Setup & Local Development
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Clone the repository**
+    ```bash
+    git clone <YOUR_GIT_URL>
+    cd world-class-aid
+    ```
 
-## What technologies are used for this project?
+2. **Install dependencies**
+    ```bash
+    npm install
+    # or using pnpm/yarn if preferred
+    ```
 
-This project is built with:
+3. **Configure environment**
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+   Create a `.env` file at the root with the following variables (example values):
 
-## How can I deploy this project?
+   ```env
+   VITE_SUPABASE_URL=https://xyzcompany.supabase.co
+   VITE_SUPABASE_ANON_KEY=public-anon-key
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+   > ⚠️ Do NOT commit your production keys. Use a secrets manager or CI variables.
 
-## Can I connect a custom domain to my Lovable project?
+4. **Run the development server**
+    ```bash
+    npm run dev
+    ```
 
-Yes, you can!
+   The app will be available at `http://localhost:5173` by default.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+5. **Supabase local development**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+   - Use the [Supabase CLI](https://supabase.com/docs/guides/cli) to run a local instance if you need to test migrations or functions.
+   - Migrations are stored under `supabase/migrations` and can be applied with `supabase db push`.
+
+---
+
+## 🧪 Testing
+
+The project uses [Vitest](https://vitest.dev/) for unit tests.
+
+- Run all tests:
+  ```bash
+  npm run test
+  ```
+
+- Watch mode for development:
+  ```bash
+  npm run test:watch
+  ```
+
+There is an example test file at `test/example.test.ts` and testing setup in `test/setup.ts`.
+
+---
+
+## 🔌 Supabase Integration
+
+### Configuration
+
+Supabase is initialized in `src/integrations/supabase/index.ts` and used by custom hooks in `src/hooks/useSupabaseData.tsx`, `useAuth.tsx`, etc.
+
+Environment variables prefixed with `VITE_` are forwarded to the client.
+
+### Serverless Functions
+
+Edge functions live under `supabase/functions/` and include:
+
+- `notify-new-lead`: Alerts on new leads
+- `notify-partner`: Partner notifications
+- `notify-student-status`: Student status updates
+- `send-intake-reminders`: Automated reminders
+
+Deploy these via the Supabase CLI using `supabase functions deploy <name>`.
+
+### Migrations
+
+Migrations are automatically generated and stored under `supabase/migrations/`. Apply them with:
+
+```bash
+supabase db push
+```
+
+---
+
+## 📦 Deployment
+
+### Via Netlify
+
+1. Build the project: `npm run build`
+2. Generate API keys from Supabase dashboard
+3. Deploy to Netlify, Vercel, or your preferred hosting platform
+4. Add environment variables in hosting platform settings
+
+### Manual Deploy
+
+Build the static assets and deploy anywhere that can serve HTML files:
+
+```bash
+npm run build
+# then upload the contents of dist/ to your host
+```
+
+Common targets include Vercel, Netlify, GitHub Pages, etc.
+
+---
+
+## 🙌 Contributing
+
+1. Fork the repository and create a new branch for your feature or fix.
+2. Run `npm install` and make sure tests pass locally.
+3. Add or update tests as needed.
+4. Submit a pull request describing your changes.
+
+Please follow existing code style and conventions. We use ESLint and Prettier; you can run `npm run lint`.
+
+---
+
+## 📘 Additional Resources
+
+- **Supabase Docs**: https://supabase.com/docs
+- **React**: https://reactjs.org
+- **Vite**: https://vitejs.dev
+- **Tailwind CSS**: https://tailwindcss.com
+- **Vitest**: https://vitest.dev
+
+---
+
+## 📝 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+_Feel free to reach out if you need help understanding the codebase or contributing. Happy hacking!_
