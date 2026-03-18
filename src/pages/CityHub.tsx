@@ -1,7 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { universities, courses, accommodations, costOfLivingData } from "@/data/mockData";
+import {
+  universities as mockUniversities,
+  courses as mockCourses,
+  accommodations as mockAccommodations,
+  costOfLivingData,
+} from "@/data/mockData";
+import { useTableData } from "@/hooks/useSupabaseData";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,11 +16,9 @@ import { Progress } from "@/components/ui/progress";
 import {
   MapPin, Trophy, ArrowRight, Building, GraduationCap, Home, UtensilsCrossed,
   Bus, Wifi, DollarSign, BookOpen, Users, Coffee, Train, ShoppingBag,
-  Utensils, Landmark, Sun, Palette, Cpu, Waves, Phone, Send,
+  Utensils, Landmark, Sun, Palette, Cpu, Waves, Phone,
 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface CityInfo {
@@ -103,7 +108,14 @@ export default function CityHub() {
   const { citySlug } = useParams<{ citySlug: string }>();
   const city = cityData[citySlug || ""];
   const { toast } = useToast();
-  const [consultOpen, setConsultOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const { data: liveUniversities = [] } = useTableData("universities");
+  const { data: liveCourses = [] } = useTableData("courses");
+  const { data: liveAccommodations = [] } = useTableData("accommodations");
+
+  const universities = useMemo(() => (liveUniversities.length > 0 ? liveUniversities : mockUniversities), [liveUniversities]);
+  const courses = useMemo(() => (liveCourses.length > 0 ? liveCourses : mockCourses), [liveCourses]);
+  const accommodations = useMemo(() => (liveAccommodations.length > 0 ? liveAccommodations : mockAccommodations), [liveAccommodations]);
 
   if (!city) {
     return (
@@ -126,19 +138,21 @@ export default function CityHub() {
     (u) => u.city.toLowerCase().replace(/\s+/g, "-") === citySlug || u.city.toLowerCase() === city.name.toLowerCase()
   );
 
-  const cityUniIds = cityUnis.map((u) => u.id);
-  const cityCourses = courses.filter((c) => cityUniIds.includes(c.university_id));
+  const cityUniIds = cityUnis.map((u: any) => String(u.id));
+  const cityCourses = courses.filter((c: any) => cityUniIds.includes(String(c.university_id)));
   const cityAccom = accommodations.filter(
-    (a) => a.city.toLowerCase() === city.name.toLowerCase() || a.near_university_ids.some((id) => cityUniIds.includes(id))
+    (a: any) => {
+      const nearIds = Array.isArray(a.near_university_ids) ? a.near_university_ids.map((id: any) => String(id)) : [];
+      return a.city?.toLowerCase() === city.name.toLowerCase() || nearIds.some((id: string) => cityUniIds.includes(id));
+    }
   );
 
   const costs = costOfLivingData?.find((c) => c.city === city.costLabel) || fallbackCosts[city.name];
   const totalCost = costs ? costs.rent + costs.food + costs.transport + costs.utilities + (costs.entertainment || 0) : 0;
   const maxCost = 900;
 
-  const handleConsult = (e: React.FormEvent) => {
-    e.preventDefault();
-    setConsultOpen(false);
+  const handleConsult = () => {
+    setLeadOpen(true);
     toast({ title: "Consultation booked!", description: `Our ${city.name} advisor will contact you within 24 hours.` });
   };
 
@@ -314,8 +328,8 @@ export default function CityHub() {
             </Card>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {cityCourses.slice(0, 6).map((course) => {
-                const uni = universities.find((u) => u.id === course.university_id);
+              {cityCourses.slice(0, 6).map((course: any) => {
+                const uni = universities.find((u: any) => String(u.id) === String(course.university_id));
                 return (
                   <Link key={course.id} to={`/courses/${course.id}`}>
                     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full">
@@ -486,24 +500,9 @@ export default function CityHub() {
             Our expert counselors will guide you from application to arrival — completely free.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-13 px-8">
-                  <Phone className="h-4 w-4 mr-2" /> Free Consultation
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Study in {city.name} — Free Consultation</DialogTitle></DialogHeader>
-                <form onSubmit={handleConsult} className="space-y-4 pt-2">
-                  <Input placeholder="Full Name" required />
-                  <Input type="email" placeholder="Email Address" required />
-                  <Input placeholder="Phone Number" required />
-                  <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                    <Send className="h-4 w-4 mr-2" /> Submit
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-13 px-8" onClick={handleConsult}>
+              <Phone className="h-4 w-4 mr-2" /> Free Consultation
+            </Button>
             <Link to="/destinations/malaysia">
               <Button size="lg" variant="outline" className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 font-bold h-13 px-8">
                 <Building className="h-4 w-4 mr-2" /> Explore All of Malaysia
@@ -512,6 +511,13 @@ export default function CityHub() {
           </div>
         </div>
       </section>
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        defaultUniversity={city.name}
+        source={`city-${citySlug || "unknown"}`}
+      />
 
       <PublicFooter />
     </div>

@@ -5,8 +5,9 @@ import { useTableData } from "@/hooks/useSupabaseData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { CheckCircle, Clock, DollarSign, MapPin, CalendarDays, GraduationCap, Languages, Download, Loader2 } from "lucide-react";
+import { CheckCircle, Clock, DollarSign, MapPin, CalendarDays, GraduationCap, Languages, Download } from "lucide-react";
 
 export default function LanguageCenterDetail() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function LanguageCenterDetail() {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <MegaMenu />
-        <div className="flex-1 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        <LoadingScreen label="Loading program details" sublabel="Getting language center information" className="flex-1" />
         <PublicFooter />
       </div>
     );

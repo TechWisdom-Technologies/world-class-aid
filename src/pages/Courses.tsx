@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Clock, GraduationCap, ChevronLeft, ChevronRight, DollarSign, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Search, Clock, GraduationCap, ChevronLeft, ChevronRight, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const ITEMS_PER_PAGE = 8;
@@ -64,7 +65,7 @@ export default function Courses() {
 
       <div className="container mx-auto px-4 py-10">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+          <LoadingScreen label="Loading courses" sublabel="Fetching program listings" className="py-12" />
         ) : (
           <div className="flex flex-col lg:flex-row gap-8" ref={listRef}>
             <aside className="lg:w-1/4 shrink-0 space-y-6">

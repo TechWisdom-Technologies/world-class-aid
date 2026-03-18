@@ -1,8 +1,10 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider, useIsFetching } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
@@ -56,9 +58,50 @@ import PartnerNotifications from "./pages/partner/PartnerNotifications";
 
 const queryClient = new QueryClient();
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, left: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+  }, [pathname]);
+
+  return null;
+};
+
+const GlobalLoadingOverlay = () => {
+  const isFetching = useIsFetching();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    let timer: number | undefined;
+
+    if (isFetching > 0) {
+      timer = window.setTimeout(() => setVisible(true), 80);
+    } else {
+      setVisible(false);
+    }
+
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [isFetching]);
+
+  if (!visible) return null;
+
+  return <LoadingScreen overlay label="Loading content" sublabel="Please wait a moment" />;
+};
+
+const LegacyUniversityRedirect = () => {
+  const { universityId } = useParams<{ universityId: string }>();
+  return <Navigate to={`/universities/${universityId || ""}`} replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
+      <ScrollToTop />
+      <GlobalLoadingOverlay />
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
@@ -120,7 +163,7 @@ const App = () => (
             <Route path="/study-in-malaysia" element={<Navigate to="/destinations/malaysia" replace />} />
             <Route path="/countries" element={<Navigate to="/destinations/malaysia" replace />} />
             <Route path="/country/:countryId" element={<Navigate to="/destinations/malaysia" replace />} />
-            <Route path="/university/:universityId" element={<Navigate to="/universities/:universityId" replace />} />
+            <Route path="/university/:universityId" element={<LegacyUniversityRedirect />} />
             <Route path="/cost-calculator" element={<Navigate to="/tools/calculator" replace />} />
             <Route path="/calculator" element={<Navigate to="/tools/calculator" replace />} />
             <Route path="/gpa-converter" element={<Navigate to="/tools/gpa-converter" replace />} />

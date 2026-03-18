@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, Clock, DollarSign, MapPin, ChevronLeft, ChevronRight, Languages, GraduationCap, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Search, Clock, DollarSign, MapPin, ChevronLeft, ChevronRight, Languages, GraduationCap } from "lucide-react";
 
 const ITEMS_PER_PAGE = 6;
 const LEVELS = ["All", "Beginner", "Intermediate", "Advanced"];
@@ -59,7 +60,7 @@ export default function LanguageCentersPage() {
 
       <div className="container mx-auto px-4 py-10">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+          <LoadingScreen label="Loading language programs" sublabel="Gathering available classes" className="py-12" />
         ) : (
           <div className="flex flex-col lg:flex-row gap-8" ref={listRef}>
             <aside className="lg:w-1/4 shrink-0 space-y-6">

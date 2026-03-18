@@ -3,17 +3,19 @@ import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { useTableData } from "@/hooks/useSupabaseData";
+import { universities as mockUniversities, courses as mockCourses, accommodations as mockAccommodations } from "@/data/mockData";
 import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MapPin, Trophy, Download, Users, Globe, CalendarDays, Landmark,
   BookOpen, FlaskConical, Sparkles, ArrowRight, CheckCircle, Building,
-  GraduationCap, HelpCircle, Loader2, Home, Clock
+  GraduationCap, HelpCircle, Home, Clock
 } from "lucide-react";
 import { AccommodationMap } from "@/components/public/AccommodationMap";
 
@@ -22,11 +24,14 @@ const sectionLabels: Record<string, string> = { about: "About", study: "Why Stud
 
 export default function UniversityDetail() {
   const { universityId } = useParams();
-  const { data: universities = [], isLoading } = useTableData("universities");
-  const { data: courses = [] } = useTableData("courses");
-  const { data: accommodations = [] } = useTableData("accommodations");
-  const uni = universities.find((u: any) => u.id === universityId);
-  const uniCourses = courses.filter((c: any) => c.university_id === universityId);
+  const { data: liveUniversities = [], isLoading } = useTableData("universities");
+  const { data: liveCourses = [] } = useTableData("courses");
+  const { data: liveAccommodations = [] } = useTableData("accommodations");
+  const universities = liveUniversities.length > 0 ? liveUniversities : (mockUniversities as any[]);
+  const courses = liveCourses.length > 0 ? liveCourses : (mockCourses as any[]);
+  const accommodations = liveAccommodations.length > 0 ? liveAccommodations : (mockAccommodations as any[]);
+  const uni = universities.find((u: any) => String(u.id) === String(universityId));
+  const uniCourses = courses.filter((c: any) => String(c.university_id) === String(universityId));
   const similarUnis = uni ? universities.filter((u: any) => u.id !== uni.id).slice(0, 3) : [];
   const [leadOpen, setLeadOpen] = useState(false);
 
@@ -39,7 +44,7 @@ export default function UniversityDetail() {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <MegaMenu />
-        <div className="flex-1 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        <LoadingScreen label="Loading university profile" sublabel="Getting campus and course data" className="flex-1" />
         <PublicFooter />
       </div>
     );

@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Search, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -54,7 +55,7 @@ export default function Universities() {
 
       <div className="container mx-auto px-4 py-10">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+          <LoadingScreen label="Loading universities" sublabel="Finding top institutions" className="py-12" />
         ) : (
           <div className="flex flex-col lg:flex-row gap-8" ref={gridRef}>
             <aside className="lg:w-1/4 shrink-0 space-y-6">

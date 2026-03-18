@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { countries, universities, costOfLivingData } from "@/data/mockData";
+import { countries, universities as mockUniversities, costOfLivingData } from "@/data/mockData";
+import { useTableData } from "@/hooks/useSupabaseData";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import {
   MapPin, Trophy, ArrowRight, Landmark, Banknote, Languages, Users,
   DollarSign, Globe, Laptop, Plane, Shield, Award, GraduationCap,
-  Home, UtensilsCrossed, Bus, FileText, Phone, Send, BookOpen, Cpu,
+  Home, UtensilsCrossed, Bus, FileText, Phone, BookOpen, Cpu,
   Building, Wifi, Coffee, Briefcase,
 } from "lucide-react";
 
@@ -25,12 +25,14 @@ const malaysia = countries[0];
 
 export default function StudyInMalaysia() {
   const { toast } = useToast();
-  const [consultOpen, setConsultOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const { data: liveUniversities = [] } = useTableData("universities", { orderBy: "ranking" });
 
-  const handleConsult = (e: React.FormEvent) => {
-    e.preventDefault();
-    setConsultOpen(false);
-    toast({ title: "Consultation booked!", description: "Our team will reach out within 24 hours." });
+  const universities = useMemo(() => (liveUniversities.length > 0 ? liveUniversities : mockUniversities), [liveUniversities]);
+
+  const handleConsult = () => {
+    setLeadOpen(true);
+    toast({ title: "Great choice", description: "Fill out the form and our counselor will contact you shortly." });
   };
 
   const quickFacts = [
@@ -157,7 +159,7 @@ export default function StudyInMalaysia() {
               <Link key={uni.id} to={`/universities/${uni.id}`}>
                 <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden h-full">
                   <div className="h-36 overflow-hidden bg-muted">
-                    <img src={uni.heroImage || uni.logo_url} alt={uni.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <img src={uni.hero_image || uni.heroImage || uni.logo_url} alt={uni.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   </div>
                   <CardContent className="p-5 space-y-2">
                     <h3 className="font-bold text-sm leading-tight group-hover:text-secondary transition-colors">{uni.name}</h3>
@@ -284,24 +286,9 @@ export default function StudyInMalaysia() {
             Our expert counselors will guide you from application to arrival — completely free of charge.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-13 px-8">
-                  <Phone className="h-4 w-4 mr-2" /> Book a Free Consultation
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Free Consultation — Study in Malaysia</DialogTitle></DialogHeader>
-                <form onSubmit={handleConsult} className="space-y-4 pt-2">
-                  <Input placeholder="Full Name" required />
-                  <Input type="email" placeholder="Email Address" required />
-                  <Input placeholder="Phone Number" required />
-                  <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                    <Send className="h-4 w-4 mr-2" /> Submit
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-13 px-8" onClick={handleConsult}>
+              <Phone className="h-4 w-4 mr-2" /> Book a Free Consultation
+            </Button>
             <Link to="/courses">
               <Button size="lg" variant="outline" className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 font-bold h-13 px-8">
                 View All Courses
@@ -310,6 +297,13 @@ export default function StudyInMalaysia() {
           </div>
         </div>
       </section>
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        defaultUniversity="Malaysia"
+        source="destination-malaysia"
+      />
 
       <PublicFooter />
     </div>

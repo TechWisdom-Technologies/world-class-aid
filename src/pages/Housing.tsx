@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Home, MapPin, Loader2, Wifi, Dumbbell, ShieldCheck, Car, BedDouble, Building2, Clock, Phone, Mail, ChevronRight, LayoutGrid, Map } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Home, MapPin, Wifi, Dumbbell, ShieldCheck, Car, BedDouble, Building2, Clock, Phone, Mail, ChevronRight, LayoutGrid, Map } from "lucide-react";
 import { useState, useMemo, lazy, Suspense } from "react";
 import { AccommodationMap } from "@/components/public/AccommodationMap";
 
@@ -105,7 +106,7 @@ export default function Housing() {
               </Tabs>
 
               {isLoading ? (
-                <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+                <LoadingScreen label="Loading accommodations" sublabel="Finding available housing" className="py-12" />
               ) : viewMode === "map" ? (
                 <AccommodationMap
                   accommodations={filtered as any}

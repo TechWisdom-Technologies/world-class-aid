@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, Clock, Users, Video, BookOpen, Presentation, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Calendar, Clock, Users, Video, BookOpen, Presentation } from "lucide-react";
 import { toast } from "sonner";
 
 const typeIcons: Record<string, typeof Video> = {
@@ -41,7 +42,7 @@ export default function Events() {
 
       <main className="flex-1 container mx-auto px-4 py-10">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+          <LoadingScreen label="Loading events" sublabel="Checking upcoming sessions" className="py-12" />
         ) : events.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">No events yet. Add some from the admin panel!</div>
         ) : (

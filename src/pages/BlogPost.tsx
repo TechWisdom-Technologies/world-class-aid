@@ -5,7 +5,8 @@ import { useTableData } from "@/hooks/useSupabaseData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Clock, User, ArrowLeft, ArrowRight, BookOpen, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Calendar, Clock, User, ArrowLeft, ArrowRight, BookOpen } from "lucide-react";
 
 export default function BlogPost() {
   const { id } = useParams();
@@ -29,7 +30,7 @@ export default function BlogPost() {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <MegaMenu />
-        <div className="flex-1 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        <LoadingScreen label="Loading article" sublabel="Getting the full post" className="flex-1" />
         <PublicFooter />
       </div>
     );

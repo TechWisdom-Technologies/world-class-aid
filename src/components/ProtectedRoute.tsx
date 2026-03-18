@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 type AppRole = "admin" | "partner" | "user";
 
@@ -12,11 +13,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   const { user, loading, hasRole } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-      </div>
-    );
+    return <LoadingScreen fullScreen label="Checking access" sublabel="Verifying your account" />;
   }
 
   if (!user) {

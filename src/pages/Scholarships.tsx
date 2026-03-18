@@ -3,7 +3,8 @@ import { PublicFooter } from "@/components/public/PublicFooter";
 import { useTableData } from "@/hooks/useSupabaseData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Award, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Award } from "lucide-react";
 
 export default function Scholarships() {
   const { data: scholarships = [], isLoading: loadingS } = useTableData("scholarships");
@@ -22,7 +23,7 @@ export default function Scholarships() {
 
       <main className="flex-1 container mx-auto px-4 py-10">
         {loadingS ? (
-          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+          <LoadingScreen label="Loading scholarships" sublabel="Finding funding options" className="py-12" />
         ) : scholarships.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">No scholarships yet. Add some from the admin panel!</div>
         ) : (

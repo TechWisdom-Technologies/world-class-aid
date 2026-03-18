@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { useTableData } from "@/hooks/useSupabaseData";
+import { courses as mockCourses, universities as mockUniversities } from "@/data/mockData";
 import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,25 +11,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import {
   CheckCircle, Clock, GraduationCap, MapPin, DollarSign,
-  CalendarDays, FileText, Download, Briefcase, BookOpen, Loader2
+  CalendarDays, FileText, Download, Briefcase, BookOpen
 } from "lucide-react";
 
 export default function CourseDetail() {
   const { courseId } = useParams();
-  const { data: courses = [], isLoading: loadingC } = useTableData("courses");
-  const { data: universities = [] } = useTableData("universities");
+  const { data: liveCourses = [], isLoading: loadingC } = useTableData("courses");
+  const { data: liveUniversities = [] } = useTableData("universities");
+  const courses = liveCourses.length > 0 ? liveCourses : (mockCourses as any[]);
+  const universities = liveUniversities.length > 0 ? liveUniversities : (mockUniversities as any[]);
   const [leadOpen, setLeadOpen] = useState(false);
 
-  const course = courses.find((c: any) => c.id === courseId);
-  const uni = course ? universities.find((u: any) => u.id === course.university_id) : null;
+  const course = courses.find((c: any) => String(c.id) === String(courseId));
+  const uni = course ? universities.find((u: any) => String(u.id) === String(course.university_id)) : null;
 
   if (loadingC) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <MegaMenu />
-        <div className="flex-1 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        <LoadingScreen label="Loading course details" sublabel="Getting program information" className="flex-1" />
         <PublicFooter />
       </div>
     );

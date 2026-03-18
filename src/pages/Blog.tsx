@@ -6,7 +6,8 @@ import { useTableData } from "@/hooks/useSupabaseData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, ChevronLeft, ChevronRight, ArrowRight, BookOpen, Loader2 } from "lucide-react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+import { Calendar, Clock, ChevronLeft, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -33,7 +34,7 @@ export default function Blog() {
 
       <div className="container mx-auto px-4 py-10">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+          <LoadingScreen label="Loading blog" sublabel="Preparing stories and guides" className="py-16" />
         ) : blogPosts.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">No blog posts yet. Add some from the admin panel!</div>
         ) : (

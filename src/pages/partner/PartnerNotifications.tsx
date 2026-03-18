@@ -6,7 +6,7 @@ import { Bell, CheckCheck, Circle, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { formatDistanceToNow } from "date-fns";
 
 interface Notification {
@@ -128,17 +128,7 @@ export default function PartnerNotifications() {
         </CardHeader>
         <CardContent className="p-0">
           {loading ? (
-            <div className="space-y-4 p-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex gap-3">
-                  <Skeleton className="h-3 w-3 rounded-full mt-1" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <LoadingScreen label="Loading notifications" sublabel="Checking your activity feed" className="py-10" />
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Bell className="h-10 w-10 mx-auto mb-3 opacity-30" />

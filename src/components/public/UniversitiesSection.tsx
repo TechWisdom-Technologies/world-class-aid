@@ -4,6 +4,7 @@ import { MapPin, Trophy, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTableData } from "@/hooks/useSupabaseData";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export function UniversitiesSection() {
   const { data: universities = [], isLoading } = useTableData("universities");
@@ -11,7 +12,13 @@ export function UniversitiesSection() {
   if (isLoading) {
     return (
       <section id="universities" className="py-20">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">Loading universities...</div>
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-2">Top Universities</h2>
+          <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto">
+            Explore our partnered universities worldwide
+          </p>
+          <LoadingScreen label="Loading universities" sublabel="Getting partner institutions" className="py-10" />
+        </div>
       </section>
     );
   }
