@@ -27,7 +27,7 @@ export default function Alumni() {
     <div className="min-h-screen flex flex-col">
       <MegaMenu />
       <main className="flex-1">
-        <section className="bg-primary text-primary-foreground py-16">
+        <section className="intro-surface py-16">
           <div className="container mx-auto px-4 text-center">
             <Users className="h-12 w-12 mx-auto mb-4 text-secondary" />
             <h1 className="text-4xl font-extrabold mb-3">Alumni Success Network</h1>

@@ -10,7 +10,7 @@ export default function Countries() {
     <div className="min-h-screen flex flex-col">
       <MegaMenu />
       <main className="flex-1">
-        <div className="bg-primary text-primary-foreground py-16">
+        <div className="intro-surface py-16">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-3xl md:text-4xl font-extrabold mb-3">Explore by Country</h1>
             <p className="text-primary-foreground/70 max-w-xl mx-auto">Choose a country to discover top universities and programs available for international students.</p>

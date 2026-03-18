@@ -34,6 +34,7 @@ export default function UniversityDetail() {
   const uniCourses = courses.filter((c: any) => String(c.university_id) === String(universityId));
   const similarUnis = uni ? universities.filter((u: any) => u.id !== uni.id).slice(0, 3) : [];
   const [leadOpen, setLeadOpen] = useState(false);
+  const [leadContext, setLeadContext] = useState<{ course?: string; source: string }>({ source: "university_apply" });
 
   const nearbyAccommodations = useMemo(() => {
     if (!uni) return [];
@@ -93,7 +94,16 @@ export default function UniversityDetail() {
               <Badge className="bg-secondary text-secondary-foreground"><Trophy className="h-3 w-3 mr-1" /> #{uni.ranking} World</Badge>
             </div>
             <div className="flex items-center justify-center gap-3">
-              <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold" onClick={() => setLeadOpen(true)}>Apply Now</Button>
+              <Button
+                size="lg"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold"
+                onClick={() => {
+                  setLeadContext({ source: "university_hero_apply" });
+                  setLeadOpen(true);
+                }}
+              >
+                Apply Now
+              </Button>
               <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
                 <Download className="h-4 w-4 mr-2" /> Download Prospectus
               </Button>
@@ -195,9 +205,17 @@ export default function UniversityDetail() {
                       <TableCell className="text-muted-foreground">{c.duration}</TableCell>
                       <TableCell className="font-semibold text-secondary">${Number(c.tuition_fee).toLocaleString()}</TableCell>
                       <TableCell className="text-right">
-                        <Link to={`/courses/${c.id}`}>
-                          <Button size="sm" variant="outline" className="text-xs">Apply <ArrowRight className="h-3 w-3 ml-1" /></Button>
-                        </Link>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs"
+                          onClick={() => {
+                            setLeadContext({ course: c.title, source: "university_courses_table_apply" });
+                            setLeadOpen(true);
+                          }}
+                        >
+                          Apply <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -307,7 +325,16 @@ export default function UniversityDetail() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold text-secondary-foreground mb-3">Register Now & Secure Your Spot!</h2>
           <p className="text-secondary-foreground/80 max-w-xl mx-auto mb-8">Don't miss the upcoming intake.</p>
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-base px-10 h-14" onClick={() => setLeadOpen(true)}>Start Your Application</Button>
+          <Button
+            size="lg"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-base px-10 h-14"
+            onClick={() => {
+              setLeadContext({ source: "university_bottom_cta_apply" });
+              setLeadOpen(true);
+            }}
+          >
+            Start Your Application
+          </Button>
         </div>
       </section>
 
@@ -341,8 +368,9 @@ export default function UniversityDetail() {
       <LeadCaptureModal
         open={leadOpen}
         onOpenChange={setLeadOpen}
+        defaultCourse={leadContext.course || ""}
         defaultUniversity={uni.name}
-        source="university_apply"
+        source={leadContext.source}
       />
 
       <PublicFooter />

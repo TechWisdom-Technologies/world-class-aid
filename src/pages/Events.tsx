@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { useTableData } from "@/hooks/useSupabaseData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { Calendar, Clock, Users, Video, BookOpen, Presentation } from "lucide-react";
-import { toast } from "sonner";
 
 const typeIcons: Record<string, typeof Video> = {
   "Open Day": Video,
@@ -21,18 +18,18 @@ const typeIcons: Record<string, typeof Video> = {
 
 export default function Events() {
   const { data: events = [], isLoading } = useTableData("events");
-  const [regEvent, setRegEvent] = useState<any | null>(null);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Registration successful! Check your email for confirmation.");
-    setRegEvent(null);
+  const openLeadForEvent = (event: any) => {
+    setSelectedEvent(event);
+    setLeadOpen(true);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <MegaMenu />
-      <section className="bg-primary text-primary-foreground py-16">
+      <section className="intro-surface py-16">
         <div className="container mx-auto px-4 text-center">
           <Badge variant="secondary" className="mb-4">Events</Badge>
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Upcoming Events</h1>
@@ -63,7 +60,7 @@ export default function Events() {
                       <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{ev.time}</span>
                     </div>
                     {ev.spots_left > 0 && <p className="text-xs text-secondary font-semibold">{ev.spots_left} spots left</p>}
-                    <Button size="sm" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={() => setRegEvent(ev)}>Register</Button>
+                    <Button size="sm" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={() => openLeadForEvent(ev)}>Register</Button>
                   </CardContent>
                 </Card>
               );
@@ -72,16 +69,16 @@ export default function Events() {
         )}
       </main>
 
-      <Dialog open={!!regEvent} onOpenChange={() => setRegEvent(null)}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Register for {regEvent?.title}</DialogTitle></DialogHeader>
-          <form onSubmit={handleRegister} className="space-y-4 pt-2">
-            <div><Label>Full Name</Label><Input required placeholder="Your name" /></div>
-            <div><Label>Email</Label><Input type="email" required placeholder="you@example.com" /></div>
-            <Button type="submit" className="w-full bg-secondary text-secondary-foreground">Confirm Registration</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={(open) => {
+          setLeadOpen(open);
+          if (!open) setSelectedEvent(null);
+        }}
+        defaultCourse={selectedEvent ? `${selectedEvent.title} (${selectedEvent.type})` : "Event Registration"}
+        defaultUniversity="Events"
+        source={selectedEvent ? `events_register_${selectedEvent.id}` : "events_register"}
+      />
 
       <PublicFooter />
     </div>

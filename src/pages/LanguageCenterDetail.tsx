@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { useTableData } from "@/hooks/useSupabaseData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,11 +9,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { CheckCircle, Clock, DollarSign, MapPin, CalendarDays, GraduationCap, Languages, Download } from "lucide-react";
+import { useState } from "react";
 
 export default function LanguageCenterDetail() {
   const { id } = useParams();
   const { data: languageCenters = [], isLoading } = useTableData("language_centers");
   const lc = languageCenters.find((l: any) => l.id === id);
+  const [leadOpen, setLeadOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -47,7 +50,7 @@ export default function LanguageCenterDetail() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <MegaMenu />
-      <div className="bg-primary text-primary-foreground py-10 md:py-14">
+      <div className="intro-surface py-10 md:py-14">
         <div className="container mx-auto px-4">
           <Breadcrumb className="mb-5">
             <BreadcrumbList>
@@ -59,7 +62,7 @@ export default function LanguageCenterDetail() {
             </BreadcrumbList>
           </Breadcrumb>
           <div className="flex items-start gap-4">
-            <div className="h-14 w-14 rounded-lg bg-primary-foreground/10 flex items-center justify-center shrink-0 hidden sm:flex">
+            <div className="h-14 w-14 rounded-lg bg-primary-foreground/10 items-center justify-center shrink-0 hidden sm:flex">
               <Languages className="h-7 w-7 text-secondary" />
             </div>
             <div>
@@ -120,7 +123,7 @@ export default function LanguageCenterDetail() {
                     ))}
                   </div>
                   <div className="pt-2 space-y-3">
-                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 text-base font-bold">Apply Now</Button>
+                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 text-base font-bold" onClick={() => setLeadOpen(true)}>Apply Now</Button>
                     <Button variant="outline" className="w-full h-10"><Download className="h-4 w-4 mr-2" /> Download Brochure</Button>
                   </div>
                 </CardContent>
@@ -129,6 +132,15 @@ export default function LanguageCenterDetail() {
           </aside>
         </div>
       </div>
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        defaultCourse={lc?.name || ""}
+        defaultUniversity={lc?.institute || ""}
+        source="language_center_detail_apply"
+      />
+
       <PublicFooter />
     </div>
   );

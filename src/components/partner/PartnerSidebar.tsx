@@ -33,12 +33,17 @@ export function PartnerSidebar() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const loadUnreadCount = async () => {
-    if (!user) return;
+    if (!user) {
+      setUnreadCount(0);
+      return;
+    }
+
     const { count } = await supabase
       .from("partner_notifications")
       .select("id", { count: "exact", head: true })
       .eq("partner_id", user.id)
-      .eq("read", false);
+      .neq("read", true);
+
     setUnreadCount(count || 0);
   };
 
@@ -57,7 +62,10 @@ export function PartnerSidebar() {
       )
       .subscribe();
 
+    const pollTimer = window.setInterval(loadUnreadCount, 15000);
+
     return () => {
+      window.clearInterval(pollTimer);
       supabase.removeChannel(channel);
     };
   }, [user?.id]);

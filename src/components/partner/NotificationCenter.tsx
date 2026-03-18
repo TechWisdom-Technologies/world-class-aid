@@ -9,6 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 
 interface PartnerNotification {
   id: string;
+  student_id: string | null;
   title: string;
   message: string;
   type: string;
@@ -38,7 +39,7 @@ export function NotificationCenter() {
     if (!user) return;
     const { data } = await supabase
       .from("partner_notifications")
-      .select("id, title, message, type, read, created_at")
+      .select("id, student_id, title, message, type, read, created_at")
       .eq("partner_id", user.id)
       .order("created_at", { ascending: false })
       .limit(8);
@@ -63,7 +64,10 @@ export function NotificationCenter() {
       )
       .subscribe();
 
+    const pollTimer = window.setInterval(loadNotifications, 15000);
+
     return () => {
+      window.clearInterval(pollTimer);
       supabase.removeChannel(channel);
     };
   }, [user?.id]);
@@ -82,8 +86,27 @@ export function NotificationCenter() {
   };
 
   const markOneRead = async (id: string) => {
-    await supabase.from("partner_notifications").update({ read: true }).eq("id", id);
+    if (!user) return;
+    await supabase
+      .from("partner_notifications")
+      .update({ read: true })
+      .eq("id", id)
+      .eq("partner_id", user.id);
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  };
+
+  const handleNotificationClick = async (notification: PartnerNotification) => {
+    if (!notification.read) {
+      await markOneRead(notification.id);
+    }
+
+    setOpen(false);
+    if (notification.student_id) {
+      navigate(`/partner-dashboard/students?studentId=${notification.student_id}`);
+      return;
+    }
+
+    navigate("/partner-dashboard/notifications");
   };
 
   return (
@@ -114,9 +137,9 @@ export function NotificationCenter() {
           {sortedItems.map((n, i) => (
             <div
               key={n.id}
-              className={`p-3 border-b last:border-0 transition-colors ${!n.read ? "bg-muted/30" : ""} animate-fade-in`}
+              className={`p-3 border-b last:border-0 transition-colors cursor-pointer hover:bg-muted/40 ${!n.read ? "bg-muted/30" : ""} animate-fade-in`}
               style={{ animationDelay: `${i * 50}ms` }}
-              onClick={() => !n.read && markOneRead(n.id)}
+              onClick={() => handleNotificationClick(n)}
             >
               <div className="flex items-start gap-2.5">
                 <div className={`h-2 w-2 rounded-full mt-1.5 flex-shrink-0 ${dotStyles[n.type]}`} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
@@ -14,8 +14,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +26,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 
 const cityLinks = [
   { label: "Kuala Lumpur", to: "/destinations/malaysia/kuala-lumpur" },
@@ -49,20 +49,34 @@ const resourceToolsLinks = [
 export function MegaMenu() {
   const { user, hasRole, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const [consultOpen, setConsultOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const pathname = location.pathname;
+
+  const isRouteActive = (route: string) => {
+    if (route === "/") return pathname === "/";
+    return pathname === route || pathname.startsWith(`${route}/`);
+  };
+
+  const toolsRoots = [
+    "/eligibility",
+    "/compare",
+    "/tools",
+    "/scholarships",
+    "/visa-guide",
+    "/events",
+    "/blog",
+  ];
+
+  const destinationsActive = isRouteActive("/destinations");
+  const toolsActive = toolsRoots.some((route) => isRouteActive(route));
 
   const handleLogout = () => {
     signOut();
     navigate("/");
     toast({ title: "Signed out successfully" });
-  };
-
-  const handleConsult = (e: React.FormEvent) => {
-    e.preventDefault();
-    setConsultOpen(false);
-    toast({ title: "Request submitted!", description: "A counselor will contact you within 24 hours." });
   };
 
   useEffect(() => {
@@ -118,7 +132,10 @@ export function MegaMenu() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors">
+                  <NavigationMenuTrigger className={cn(
+                    "h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors",
+                    destinationsActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm",
+                  )}>
                     Destinations
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -166,7 +183,10 @@ export function MegaMenu() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors">
+                  <NavigationMenuTrigger className={cn(
+                    "h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors",
+                    toolsActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm",
+                  )}>
                     Tools
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -212,8 +232,15 @@ export function MegaMenu() {
           {/* Desktop Right Actions */}
           <div className="hidden lg:flex items-center gap-2">
             <Link to="/partner">
-              <Button variant="ghost" size="sm" className="text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg">
-                For Agencies
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg",
+                  isRouteActive("/partner") && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm hover:bg-secondary/35",
+                )}
+              >
+                Partnership
               </Button>
             </Link>
 
@@ -224,22 +251,13 @@ export function MegaMenu() {
                     Log In
                   </Button>
                 </Link>
-                <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm font-semibold">
-                      <Phone className="h-3.5 w-3.5 mr-1.5" /> Free Consult
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader><DialogTitle>Book a Free Consultation</DialogTitle></DialogHeader>
-                    <form onSubmit={handleConsult} className="space-y-4 pt-2">
-                      <Input placeholder="Your Name" required />
-                      <Input type="email" placeholder="Email Address" required />
-                      <Input placeholder="Phone Number" required />
-                      <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">Submit Request</Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                <Button
+                  size="sm"
+                  className="rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm font-semibold"
+                  onClick={() => setLeadOpen(true)}
+                >
+                  <Phone className="h-3.5 w-3.5 mr-1.5" /> Free Consult
+                </Button>
               </>
             )}
 
@@ -365,7 +383,7 @@ export function MegaMenu() {
                   </Collapsible>
 
                   <div className="h-px bg-border/50 my-2" />
-                  <MobileNavLink to="/partner">For Agencies</MobileNavLink>
+                  <MobileNavLink to="/partner">Partnership</MobileNavLink>
                 </nav>
 
                 {/* Mobile Auth Footer */}
@@ -378,11 +396,12 @@ export function MegaMenu() {
                         </Link>
                       </SheetClose>
                       <SheetClose asChild>
-                        <Link to="/eligibility" className="block">
-                          <Button className="w-full rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-sm">
-                            <Phone className="h-4 w-4 mr-1.5" /> Free Consultation
-                          </Button>
-                        </Link>
+                        <Button
+                          className="w-full rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-sm"
+                          onClick={() => setLeadOpen(true)}
+                        >
+                          <Phone className="h-4 w-4 mr-1.5" /> Free Consultation
+                        </Button>
                       </SheetClose>
                     </>
                   )}
@@ -413,14 +432,31 @@ export function MegaMenu() {
           </Sheet>
         </div>
       </div>
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        source="mega_menu_free_consult"
+      />
     </header>
   );
 }
 
 function NavItem({ to, children, icon: Icon }: { to: string; children: React.ReactNode; icon?: React.ElementType }) {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const isActive = to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+
   return (
     <Link to={to}>
-      <Button variant="ghost" size="sm" className="h-9 text-sm font-medium rounded-lg hover:bg-accent/60 gap-1.5 px-3 transition-colors">
+      <Button
+        variant="ghost"
+        size="sm"
+        className={cn(
+          "h-9 text-sm font-medium rounded-lg hover:bg-accent/60 gap-1.5 px-3 transition-colors",
+          isActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm hover:bg-secondary/35",
+        )}
+      >
         {Icon && <Icon className="h-3.5 w-3.5" />}
         {children}
       </Button>
@@ -429,10 +465,20 @@ function NavItem({ to, children, icon: Icon }: { to: string; children: React.Rea
 }
 
 function MobileNavLink({ to, children, icon: Icon }: { to: string; children: React.ReactNode; icon?: React.ElementType }) {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const isActive = to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+
   return (
     <SheetClose asChild>
-      <Link to={to} className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors">
-        {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
+      <Link
+        to={to}
+        className={cn(
+          "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent/60 transition-colors",
+          isActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm",
+        )}
+      >
+        {Icon && <Icon className={cn("h-4 w-4 text-muted-foreground", isActive && "text-foreground")} />}
         {children}
       </Link>
     </SheetClose>

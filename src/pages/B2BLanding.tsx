@@ -256,7 +256,7 @@ export default function B2BLanding() {
       <MegaMenu />
       <main className="flex-1">
         {/* Hero */}
-        <div className="bg-primary text-primary-foreground py-20">
+        <div className="intro-surface py-20">
           <div className="container mx-auto px-4 text-center">
             <Handshake className="h-16 w-16 mx-auto mb-4 text-secondary" />
             <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Partner With YourUni</h1>

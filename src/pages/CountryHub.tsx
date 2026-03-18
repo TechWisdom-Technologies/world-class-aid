@@ -6,14 +6,12 @@ import { countries, universities } from "@/data/mockData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import {
   MapPin, Trophy, ArrowRight, Landmark, Banknote, Languages, Users,
   DollarSign, Globe, Laptop, Plane, Shield, Award, GraduationCap,
   Clock, FlaskConical, Building, Heart, Briefcase, Sun, Lightbulb,
-  Mountain, Cpu, Home, UtensilsCrossed, Bus, FileText, Phone, Send,
+  Mountain, Cpu, Home, UtensilsCrossed, Bus, FileText, Phone,
   BookOpen, Handshake
 } from "lucide-react";
 
@@ -27,8 +25,7 @@ export default function CountryHub() {
   const { countryId } = useParams();
   const country = countries.find((c) => c.id === Number(countryId));
   const countryUnis = universities.filter((u) => u.country_id === Number(countryId));
-  const { toast } = useToast();
-  const [consultOpen, setConsultOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
 
   if (!country) {
     return (
@@ -46,12 +43,6 @@ export default function CountryHub() {
       </div>
     );
   }
-
-  const handleConsult = (e: React.FormEvent) => {
-    e.preventDefault();
-    setConsultOpen(false);
-    toast({ title: "Consultation booked!", description: "Our team will reach out within 24 hours." });
-  };
 
   const quickFacts = [
     { icon: Landmark, label: "Capital", value: country.capital || "N/A" },
@@ -275,24 +266,9 @@ export default function CountryHub() {
             Our expert counselors will guide you from application to arrival — completely free of charge.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-13 px-8">
-                  <Phone className="h-4 w-4 mr-2" /> Book a Free Consultation
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Free Consultation — Study in {country.name}</DialogTitle></DialogHeader>
-                <form onSubmit={handleConsult} className="space-y-4 pt-2">
-                  <Input placeholder="Full Name" required />
-                  <Input type="email" placeholder="Email Address" required />
-                  <Input placeholder="Phone Number" required />
-                  <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                    <Send className="h-4 w-4 mr-2" /> Submit
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-13 px-8" onClick={() => setLeadOpen(true)}>
+              <Phone className="h-4 w-4 mr-2" /> Book a Free Consultation
+            </Button>
             <Link to="/courses">
               <Button size="lg" variant="outline" className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 font-bold h-13 px-8">
                 View All Courses
@@ -301,6 +277,13 @@ export default function CountryHub() {
           </div>
         </div>
       </section>
+
+      <LeadCaptureModal
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        defaultUniversity={country.name}
+        source={`country_hub_${country.id}_cta`}
+      />
 
       <PublicFooter />
     </div>

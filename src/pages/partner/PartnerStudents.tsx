@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Users, UserPlus, Eye, Loader2, Upload, FileText, Search } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -64,6 +65,7 @@ const emptyForm = {
 
 export default function PartnerStudents() {
   const { session, user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [addOpen, setAddOpen] = useState(false);
@@ -73,6 +75,9 @@ export default function PartnerStudents() {
   const [submitting, setSubmitting] = useState(false);
   const [search, setSearch] = useState("");
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const [highlightedStudentId, setHighlightedStudentId] = useState<string | null>(null);
+  const handledStudentParamRef = useRef(false);
+  const studentRowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
 
   const fetchStudents = async () => {
     if (!session) return;
@@ -86,6 +91,36 @@ export default function PartnerStudents() {
   };
 
   useEffect(() => { fetchStudents(); }, [session]);
+
+  useEffect(() => {
+    const studentIdFromQuery = searchParams.get("studentId");
+
+    if (!studentIdFromQuery) {
+      handledStudentParamRef.current = false;
+      return;
+    }
+
+    if (handledStudentParamRef.current || students.length === 0) return;
+
+    const studentFromNotification = students.find((student) => student.id === studentIdFromQuery);
+    if (!studentFromNotification) return;
+
+    handledStudentParamRef.current = true;
+    setSearch("");
+    setHighlightedStudentId(studentFromNotification.id);
+
+    window.requestAnimationFrame(() => {
+      const row = studentRowRefs.current[studentFromNotification.id];
+      if (!row) return;
+      row.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    window.setTimeout(() => setHighlightedStudentId(null), 2600);
+
+    const params = new URLSearchParams(searchParams);
+    params.delete("studentId");
+    setSearchParams(params, { replace: true });
+  }, [searchParams, students, setSearchParams]);
 
   const handleAdd = async () => {
     if (!form.full_name || !form.email) {
@@ -267,7 +302,13 @@ export default function PartnerStudents() {
                   const st = statusMap[s.status] || { label: s.status, class: "" };
                   const docCount = [s.passport_url, s.academic_transcript_url, s.ielts_certificate_url, s.personal_statement_url, s.recommendation_letter_url].filter(Boolean).length;
                   return (
-                    <TableRow key={s.id}>
+                    <TableRow
+                      key={s.id}
+                      ref={(row) => {
+                        studentRowRefs.current[s.id] = row;
+                      }}
+                      className={highlightedStudentId === s.id ? "bg-secondary/10 ring-1 ring-secondary/40" : undefined}
+                    >
                       <TableCell className="font-medium">{s.full_name}</TableCell>
                       <TableCell>{s.target_university || "—"}</TableCell>
                       <TableCell>{s.target_course || "—"}</TableCell>

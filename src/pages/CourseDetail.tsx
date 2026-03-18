@@ -64,7 +64,7 @@ export default function CourseDetail() {
     <div className="min-h-screen flex flex-col bg-background">
       <MegaMenu />
 
-      <div className="bg-primary text-primary-foreground py-10 md:py-14">
+      <div className="intro-surface py-10 md:py-14">
         <div className="container mx-auto px-4">
           <Breadcrumb className="mb-5">
             <BreadcrumbList>

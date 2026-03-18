@@ -90,7 +90,7 @@ export default function EligibilityWizard() {
     <div className="min-h-screen flex flex-col">
       <MegaMenu />
       <main className="flex-1 bg-muted/30">
-        <div className="bg-primary text-primary-foreground py-12 text-center">
+        <div className="intro-surface py-12 text-center">
           <GraduationCap className="h-12 w-12 mx-auto mb-3 text-secondary" />
           <h1 className="text-3xl font-extrabold mb-2">University Match & Eligibility Test</h1>
           <p className="text-primary-foreground/70">Answer a few questions and we'll find the best universities for you</p>

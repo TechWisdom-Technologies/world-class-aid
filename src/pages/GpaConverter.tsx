@@ -38,15 +38,30 @@ export default function GpaConverter() {
     <div className="min-h-screen flex flex-col bg-background">
       <MegaMenu />
 
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-lg">
-          <div className="text-center mb-10">
-            <Badge className="bg-secondary/10 text-secondary mb-3">
-              <RefreshCw className="h-3 w-3 mr-1" /> Free Tool
-            </Badge>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">GPA Converter</h1>
-            <p className="text-muted-foreground">Convert your GPA to the Malaysian 4.0 scale used by universities.</p>
+      <section className="intro-surface py-14 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <Badge className="bg-secondary/15 text-secondary-foreground mb-3">
+                <RefreshCw className="h-3 w-3 mr-1" /> Free Tool
+              </Badge>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-2">GPA Converter</h1>
+              <p className="text-primary-foreground/80 max-w-md">Convert your GPA to the Malaysian 4.0 scale used by universities.</p>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden border border-primary-foreground/20 shadow-xl bg-primary-foreground/5">
+              <img
+                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1100&h=700&fit=crop"
+                alt="Student reviewing grades"
+                className="w-full h-56 md:h-64 object-cover"
+              />
+            </div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-12">
+        <div className="container mx-auto px-4 max-w-lg">
 
           <Card>
             <CardContent className="p-6 space-y-5">

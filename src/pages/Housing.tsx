@@ -57,7 +57,7 @@ export default function Housing() {
       <MegaMenu />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary text-primary-foreground py-16">
+        <section className="intro-surface py-16">
           <div className="container mx-auto px-4 text-center">
             <Badge variant="secondary" className="mb-4">Accommodations</Badge>
             <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Student Housing in Malaysia</h1>

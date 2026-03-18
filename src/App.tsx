@@ -1,9 +1,8 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { LoadingScreen } from "@/components/ui/loading-screen";
-import { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider, useIsFetching } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -62,34 +61,24 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, left: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+    const root = document.getElementById("root");
+    if (!root) return;
+
+    root.classList.remove("route-fade-in");
+    // Reflow so repeated navigations restart animation reliably.
+    void root.offsetWidth;
+    root.classList.add("route-fade-in");
+
+    const cleanup = window.setTimeout(() => {
+      root.classList.remove("route-fade-in");
+    }, 280);
+
+    return () => window.clearTimeout(cleanup);
   }, [pathname]);
 
   return null;
-};
-
-const GlobalLoadingOverlay = () => {
-  const isFetching = useIsFetching();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    let timer: number | undefined;
-
-    if (isFetching > 0) {
-      timer = window.setTimeout(() => setVisible(true), 80);
-    } else {
-      setVisible(false);
-    }
-
-    return () => {
-      if (timer) window.clearTimeout(timer);
-    };
-  }, [isFetching]);
-
-  if (!visible) return null;
-
-  return <LoadingScreen overlay label="Loading content" sublabel="Please wait a moment" />;
 };
 
 const LegacyUniversityRedirect = () => {
@@ -101,7 +90,6 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <ScrollToTop />
-      <GlobalLoadingOverlay />
       <AuthProvider>
         <TooltipProvider>
           <Toaster />

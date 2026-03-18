@@ -46,7 +46,7 @@ export default function Universities() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <MegaMenu />
-      <div className="bg-primary text-primary-foreground py-14">
+      <div className="intro-surface py-14">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">Universities in Malaysia</h1>
           <p className="text-primary-foreground/70 max-w-xl mx-auto">Browse and compare {universities.length}+ partner universities across Malaysia.</p>

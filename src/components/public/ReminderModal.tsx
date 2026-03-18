@@ -22,25 +22,29 @@ export function ReminderModal({ open, onOpenChange, universityName, intakeLabel,
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.email.trim()) {
-      toast.error("Please enter your email.");
+    if (!form.full_name.trim() || !form.email.trim()) {
+      toast.error("Please enter your name and email.");
       return;
     }
+
     setLoading(true);
-    const { error } = await supabase.from("intake_reminders" as any).insert({
-      ...form,
-      university_name: universityName,
-      intake_label: intakeLabel,
-      deadline_date: deadlineDate,
-      active: true,
+    const { error } = await supabase.from("leads" as any).insert({
+      full_name: form.full_name,
+      email: form.email,
+      interested_university: universityName,
+      interested_course: `${intakeLabel} reminder (${deadlineDate})`,
+      source: "intake_calendar_set_reminder",
+      status: "new",
     });
+
     setLoading(false);
     if (error) {
       toast.error("Something went wrong. Please try again.");
       return;
     }
+
     setSuccess(true);
-    toast.success("Reminder set! You'll receive weekly updates.");
+    toast.success("Reminder request submitted! We'll notify you.");
   };
 
   const handleClose = () => {
@@ -59,20 +63,20 @@ export function ReminderModal({ open, onOpenChange, universityName, intakeLabel,
             <div className="mx-auto h-16 w-16 rounded-full bg-secondary/15 flex items-center justify-center">
               <CheckCircle className="h-8 w-8 text-secondary" />
             </div>
-            <DialogTitle className="text-xl">Reminder Set!</DialogTitle>
-            <p className="text-muted-foreground text-sm">We'll send you weekly email reminders about the <strong>{universityName}</strong> {intakeLabel} deadline.</p>
+            <DialogTitle className="text-xl">Reminder Requested!</DialogTitle>
+            <p className="text-muted-foreground text-sm">Thanks! We captured your lead and our team will follow up for the <strong>{universityName}</strong> {intakeLabel} deadline.</p>
             <Button onClick={handleClose} className="mt-2">Done</Button>
           </div>
         ) : (
           <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2"><Bell className="h-5 w-5 text-secondary" /> Set Deadline Reminder</DialogTitle>
-              <DialogDescription>Get weekly email reminders for {universityName} — {intakeLabel} intake (deadline: {deadlineDate}).</DialogDescription>
+              <DialogDescription>Share your name and email for {universityName} — {intakeLabel} intake (deadline: {deadlineDate}).</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
               <div className="space-y-2">
-                <Label htmlFor="rem-name">Your Name</Label>
-                <Input id="rem-name" placeholder="Your name" value={form.full_name} onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))} maxLength={100} />
+                <Label htmlFor="rem-name">Your Name *</Label>
+                <Input id="rem-name" placeholder="Your name" value={form.full_name} onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))} required maxLength={100} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="rem-email">Email *</Label>
@@ -80,7 +84,7 @@ export function ReminderModal({ open, onOpenChange, universityName, intakeLabel,
               </div>
               <Button type="submit" disabled={loading} className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 h-11 font-bold">
                 {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Bell className="h-4 w-4 mr-2" />}
-                Set Weekly Reminder
+                Submit Reminder Request
               </Button>
             </form>
           </>

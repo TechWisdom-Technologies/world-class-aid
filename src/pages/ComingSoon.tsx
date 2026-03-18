@@ -17,16 +17,34 @@ export default function ComingSoon() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <MegaMenu />
-      <div className="flex-1 flex items-center justify-center py-20">
-        <div className="text-center space-y-5 max-w-md px-4">
-          <div className="h-16 w-16 rounded-2xl bg-secondary/10 flex items-center justify-center mx-auto">
-            <Construction className="h-8 w-8 text-secondary" />
+
+      <section className="intro-surface py-14 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="space-y-5">
+              <Badge className="bg-secondary/15 text-secondary-foreground text-sm px-4 py-1 w-fit">Coming Soon</Badge>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-primary-foreground">{title}</h1>
+              <p className="text-primary-foreground/80 max-w-md">
+                We're building something great. This feature will be available shortly.
+              </p>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden border border-primary-foreground/20 shadow-xl bg-primary-foreground/5">
+              <img
+                src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1200&h=700&fit=crop"
+                alt="Team building new feature"
+                className="w-full h-56 md:h-64 object-cover"
+              />
+            </div>
           </div>
-          <h1 className="text-3xl font-extrabold text-foreground">{title}</h1>
-          <Badge className="bg-secondary/10 text-secondary text-sm px-4 py-1">Coming Soon</Badge>
-          <p className="text-muted-foreground">
-            We're building something great. This feature will be available shortly.
-          </p>
+        </div>
+      </section>
+
+      <div className="flex-1 flex items-center justify-center py-10">
+        <div className="text-center space-y-4 max-w-md px-4">
+          <div className="h-14 w-14 rounded-2xl bg-secondary/10 flex items-center justify-center mx-auto">
+            <Construction className="h-7 w-7 text-secondary" />
+          </div>
           <Link to="/">
             <Button variant="outline" className="gap-2 mt-4">
               <ArrowLeft className="h-4 w-4" /> Back to Home

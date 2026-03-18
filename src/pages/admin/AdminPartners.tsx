@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Eye, CheckCircle, XCircle, Loader2, FileText, ExternalLink, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,7 +27,6 @@ interface PartnerRegistration {
   certificate_urls: string[];
   status: string;
   admin_notes: string;
-  default_commission_percentage: number | null;
   created_at: string;
 }
 
@@ -39,7 +37,6 @@ export default function AdminPartners() {
   const [selectedReg, setSelectedReg] = useState<PartnerRegistration | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [adminNotes, setAdminNotes] = useState("");
-  const [defaultCommission, setDefaultCommission] = useState("8");
   const [processing, setProcessing] = useState(false);
 
   const fetchRegistrations = async () => {
@@ -59,7 +56,6 @@ export default function AdminPartners() {
   const openDetail = (reg: PartnerRegistration) => {
     setSelectedReg(reg);
     setAdminNotes(reg.admin_notes || "");
-    setDefaultCommission(String(reg.default_commission_percentage ?? 8));
     setDetailOpen(true);
   };
 
@@ -72,7 +68,6 @@ export default function AdminPartners() {
         .update({
           status: action,
           admin_notes: adminNotes || "",
-          default_commission_percentage: action === "approved" ? Number(defaultCommission || 8) : selectedReg.default_commission_percentage,
         })
         .eq("id", selectedReg.id);
 
@@ -232,20 +227,6 @@ export default function AdminPartners() {
 
               {/* Admin Notes */}
               <div className="border-t pt-4">
-                <div className="mb-3">
-                  <Label>Default Commission % (Negotiated)</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="0.01"
-                    value={defaultCommission}
-                    onChange={(e) => setDefaultCommission(e.target.value)}
-                    placeholder="e.g. 10"
-                    className="mt-1"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">This is the initial percentage after partner approval and can be changed per student later.</p>
-                </div>
                 <Label>Admin Notes</Label>
                 <Textarea
                   value={adminNotes}

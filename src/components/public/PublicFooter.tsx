@@ -1,5 +1,6 @@
 import { GraduationCap, Facebook, Twitter, Instagram, Linkedin, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SupportFaqWidget } from "@/components/public/SupportFaqWidget";
 
 interface PublicFooterProps {
   bannerVisible?: boolean;
@@ -63,6 +64,8 @@ export function PublicFooter({ bannerVisible = false }: PublicFooterProps) {
           <p className="mt-2">Developed by TechWisdom Technologies</p>
         </div>
       </footer>
+
+      <SupportFaqWidget bannerVisible={bannerVisible} />
 
       {/* WhatsApp Floating Widget */}
       <a

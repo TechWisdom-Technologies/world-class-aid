@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bell, CheckCheck, Circle, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -28,6 +29,7 @@ const typeBadge: Record<string, { label: string; variant: "default" | "secondary
 
 export default function PartnerNotifications() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
@@ -53,17 +55,22 @@ export default function PartnerNotifications() {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel("partner-notifs")
+      .channel(`partner-notifs-page-${user.id}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "partner_notifications", filter: `partner_id=eq.${user.id}` },
-        (payload) => {
-          setNotifications((prev) => [payload.new as unknown as Notification, ...prev]);
+        { event: "*", schema: "public", table: "partner_notifications", filter: `partner_id=eq.${user.id}` },
+        () => {
+          fetchNotifications();
         }
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    const pollTimer = window.setInterval(fetchNotifications, 15000);
+
+    return () => {
+      window.clearInterval(pollTimer);
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   const markAllRead = async () => {
@@ -77,11 +84,26 @@ export default function PartnerNotifications() {
   };
 
   const markRead = async (id: string) => {
+    if (!user) return;
     await supabase
       .from("partner_notifications" as any)
       .update({ read: true } as any)
-      .eq("id", id);
+      .eq("id", id)
+      .eq("partner_id", user.id);
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  };
+
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.read) {
+      await markRead(notification.id);
+    }
+
+    if (notification.student_id) {
+      navigate(`/partner-dashboard/students?studentId=${notification.student_id}`);
+      return;
+    }
+
+    navigate("/partner-dashboard/notifications");
   };
 
   const filtered = filter === "all" ? notifications : notifications.filter((n) => (filter === "unread" ? !n.read : n.type === filter));
@@ -143,7 +165,7 @@ export default function PartnerNotifications() {
                   <div
                     key={n.id}
                     className={`p-4 flex items-start gap-3 transition-colors hover:bg-muted/30 cursor-pointer ${!n.read ? "bg-muted/20" : ""}`}
-                    onClick={() => !n.read && markRead(n.id)}
+                    onClick={() => handleNotificationClick(n)}
                   >
                     <Circle className={`h-2.5 w-2.5 mt-1.5 flex-shrink-0 ${!n.read ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
                     <div className="flex-1 min-w-0">

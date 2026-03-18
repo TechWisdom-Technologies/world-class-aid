@@ -36,7 +36,7 @@ export default function LanguagePrep() {
       <MegaMenu />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary text-primary-foreground py-20">
+        <section className="intro-surface py-20">
           <div className="container mx-auto px-4 text-center">
             <BookOpen className="h-12 w-12 mx-auto mb-4 text-secondary" />
             <h1 className="text-4xl font-extrabold mb-3">IELTS & TOEFL Preparation</h1>
