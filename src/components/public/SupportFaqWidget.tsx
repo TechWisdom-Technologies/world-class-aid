@@ -157,7 +157,7 @@ export function SupportFaqWidget({ bannerVisible = false }: SupportFaqWidgetProp
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed right-6 z-40 h-12 px-4 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-200 flex items-center gap-2"
+        className="fixed right-6 z-[60] h-12 px-4 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-200 flex items-center gap-2"
         style={{ bottom: `${supportBottomPx}px` }}
         aria-label="Open support FAQs"
       >
@@ -168,16 +168,7 @@ export function SupportFaqWidget({ bannerVisible = false }: SupportFaqWidgetProp
   }
 
   return (
-    <div className="fixed right-4 z-40 w-[min(22rem,calc(100vw-2rem))] animate-scale-in" style={{ bottom: `${supportBottomPx}px` }}>
-      <button
-        type="button"
-        onClick={() => setOpen(false)}
-        className="absolute -top-3 -right-3 h-8 w-8 rounded-full bg-foreground text-background shadow-lg border-2 border-background flex items-center justify-center hover:scale-105 transition-transform"
-        aria-label="Close support FAQ"
-      >
-        <X className="h-4 w-4" />
-      </button>
-
+    <div className="fixed right-4 z-[60] w-[min(22rem,calc(100vw-2rem))] animate-scale-in" style={{ bottom: `${supportBottomPx}px` }}>
       <Card className="shadow-2xl border-primary/20">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between gap-2">
