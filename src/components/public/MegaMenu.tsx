@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
-  BookOpen, FileText, Calendar, Building2, Languages, PenTool, X, User,
+  BookOpen, FileText, Calendar, Building2, Languages, PenTool, X, User, Wrench, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -116,16 +116,16 @@ export function MegaMenu() {
           {/* Brand */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
             <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center group-hover:shadow-md transition-shadow">
-              <GraduationCap className="h-5 w-5 text-primary-foreground" />
+              <GraduationCap className="h-4.5 w-4.5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-extrabold tracking-tight">
+            <span className="text-lg font-extrabold tracking-tight">
               <span className="text-foreground">Your</span>
               <span className="text-secondary">Uni</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-0.5">
+          <nav className="hidden lg:flex items-center gap-0.25">
             <NavItem to="/" icon={Home}>Home</NavItem>
 
             {/* Destinations Dropdown */}
@@ -133,13 +133,13 @@ export function MegaMenu() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className={cn(
-                    "h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors",
+                    "h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-2.5 transition-colors gap-1",
                     destinationsActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm",
                   )}>
-                    Destinations
+                    <MapPin className="h-3.5 w-3.5" /> Destinations
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="w-[440px] p-5">
+                    <div className="w-[360px] max-w-[calc(100vw-3rem)] p-5 overflow-x-auto">
                       <Link
                         to="/destinations/malaysia"
                         className="flex items-center gap-4 rounded-xl p-4 hover:bg-accent/60 transition-all group"
@@ -174,8 +174,8 @@ export function MegaMenu() {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <NavItem to="/universities">Universities</NavItem>
-            <NavItem to="/courses">Courses</NavItem>
+            <NavItem to="/universities" icon={GraduationCap}>Universities</NavItem>
+            <NavItem to="/courses" icon={BookOpen}>Courses</NavItem>
             <NavItem to="/language-centers" icon={Languages}>Language</NavItem>
             <NavItem to="/housing" icon={Building2}>Housing</NavItem>
 
@@ -184,31 +184,17 @@ export function MegaMenu() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className={cn(
-                    "h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-3 transition-colors",
+                    "h-9 text-sm font-medium bg-transparent hover:bg-accent/60 data-[state=open]:bg-accent/60 rounded-lg px-2.5 transition-colors gap-1",
                     toolsActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm",
                   )}>
-                    Tools
+                    <Wrench className="h-3.5 w-3.5" /> Tools
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid w-[540px] grid-cols-5 p-5 gap-5">
-                      <div className="col-span-2 rounded-xl bg-gradient-to-br from-secondary/15 to-secondary/5 p-5 flex flex-col justify-between border border-secondary/10">
-                        <div>
-                          <div className="h-10 w-10 rounded-lg bg-secondary/20 flex items-center justify-center mb-3">
-                            <Sparkles className="h-5 w-5 text-secondary" />
-                          </div>
-                          <p className="font-bold text-sm text-foreground leading-tight">AI Eligibility Matcher</p>
-                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                            Find your acceptance chances at top universities in 60 seconds.
-                          </p>
-                        </div>
-                        <Link to="/eligibility" className="mt-4 inline-flex items-center text-xs font-bold text-secondary hover:underline">
-                          Try it Now <ChevronRight className="h-3 w-3 ml-0.5" />
-                        </Link>
-                      </div>
-                      <div className="col-span-3 space-y-0.5">
-                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest px-3 pb-2">
-                          Tools & Resources
-                        </p>
+                    <div className="w-[380px] max-w-[calc(100vw-3rem)] p-5 overflow-x-auto">
+                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest px-3 pb-3 mb-2">
+                        Tools & Resources
+                      </p>
+                      <div className="space-y-0.5">
                         {resourceToolsLinks.map((item) => (
                           <Link
                             key={item.to}
@@ -230,33 +216,33 @@ export function MegaMenu() {
           </nav>
 
           {/* Desktop Right Actions */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1">
             <Link to="/partner">
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  "text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg",
+                  "h-9 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg gap-1.5 px-2.5 transition-colors",
                   isRouteActive("/partner") && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm hover:bg-secondary/35",
                 )}
               >
-                Partnership
+                <Zap className="h-3.5 w-3.5" /> Partnership
               </Button>
             </Link>
 
             {!user && (
               <>
                 <Link to="/login">
-                  <Button variant="outline" size="sm" className="rounded-lg border-border/60 font-medium">
+                  <Button variant="outline" size="sm" className="rounded-lg border-border/60 font-medium text-sm h-9">
                     Log In
                   </Button>
                 </Link>
                 <Button
                   size="sm"
-                  className="rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm font-semibold"
+                  className="rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm font-semibold text-sm h-9 gap-1.5"
                   onClick={() => setLeadOpen(true)}
                 >
-                  <Phone className="h-3.5 w-3.5 mr-1.5" /> Free Consult
+                  <Phone className="h-3.5 w-3.5" /> Consult
                 </Button>
               </>
             )}
@@ -453,7 +439,7 @@ function NavItem({ to, children, icon: Icon }: { to: string; children: React.Rea
         variant="ghost"
         size="sm"
         className={cn(
-          "h-9 text-sm font-medium rounded-lg hover:bg-accent/60 gap-1.5 px-3 transition-colors",
+          "h-9 text-sm font-medium rounded-lg hover:bg-accent/60 gap-1.5 px-2.5 transition-colors",
           isActive && "text-foreground bg-secondary/30 border border-secondary/60 shadow-sm hover:bg-secondary/35",
         )}
       >

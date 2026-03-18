@@ -1,4 +1,4 @@
-import { GraduationCap, Facebook, Twitter, Instagram, Linkedin, MessageCircle } from "lucide-react";
+import { GraduationCap, Facebook, Twitter, Instagram, Linkedin, MessageCircle, BookOpen, MapPin, Sparkles, Calendar, Calculator, RefreshCw, Award, FileText, Zap, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SupportFaqWidget } from "@/components/public/SupportFaqWidget";
 
@@ -27,23 +27,23 @@ export function PublicFooter({ bannerVisible = false }: PublicFooterProps) {
           <div>
             <h4 className="font-semibold mb-3">Quick Links</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li><Link to="/universities" className="hover:text-secondary transition-colors">Universities</Link></li>
-              <li><Link to="/courses" className="hover:text-secondary transition-colors">Courses</Link></li>
-              <li><Link to="/destinations/malaysia" className="hover:text-secondary transition-colors">Study in Malaysia</Link></li>
-              <li><Link to="/eligibility" className="hover:text-secondary transition-colors">Eligibility Test</Link></li>
-              <li><Link to="/events" className="hover:text-secondary transition-colors">Events</Link></li>
+              <li className="flex items-center gap-2"><GraduationCap className="h-4 w-4 text-secondary" /><Link to="/universities" className="hover:text-secondary transition-colors">Universities</Link></li>
+              <li className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-secondary" /><Link to="/courses" className="hover:text-secondary transition-colors">Courses</Link></li>
+              <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-secondary" /><Link to="/destinations/malaysia" className="hover:text-secondary transition-colors">Study in Malaysia</Link></li>
+              <li className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-secondary" /><Link to="/eligibility" className="hover:text-secondary transition-colors">Eligibility Test</Link></li>
+              <li className="flex items-center gap-2"><Calendar className="h-4 w-4 text-secondary" /><Link to="/events" className="hover:text-secondary transition-colors">Events</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-3">Tools & Resources</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li><Link to="/tools/calculator" className="hover:text-secondary transition-colors">Cost Calculator</Link></li>
-              <li><Link to="/tools/gpa-converter" className="hover:text-secondary transition-colors">GPA Converter</Link></li>
-              <li><Link to="/scholarships" className="hover:text-secondary transition-colors">Scholarships</Link></li>
-              <li><Link to="/visa-guide" className="hover:text-secondary transition-colors">Visa Guide</Link></li>
-              <li><Link to="/partner" className="hover:text-secondary transition-colors">For Agencies</Link></li>
-              <li><Link to="/login" className="hover:text-secondary transition-colors">Sign In</Link></li>
+              <li className="flex items-center gap-2"><Calculator className="h-4 w-4 text-secondary" /><Link to="/tools/calculator" className="hover:text-secondary transition-colors">Cost Calculator</Link></li>
+              <li className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-secondary" /><Link to="/tools/gpa-converter" className="hover:text-secondary transition-colors">GPA Converter</Link></li>
+              <li className="flex items-center gap-2"><Award className="h-4 w-4 text-secondary" /><Link to="/scholarships" className="hover:text-secondary transition-colors">Scholarships</Link></li>
+              <li className="flex items-center gap-2"><FileText className="h-4 w-4 text-secondary" /><Link to="/visa-guide" className="hover:text-secondary transition-colors">Visa Guide</Link></li>
+              <li className="flex items-center gap-2"><Zap className="h-4 w-4 text-secondary" /><Link to="/partner" className="hover:text-secondary transition-colors">For Agencies</Link></li>
+              <li className="flex items-center gap-2"><LogIn className="h-4 w-4 text-secondary" /><Link to="/login" className="hover:text-secondary transition-colors">Sign In</Link></li>
             </ul>
           </div>
 
