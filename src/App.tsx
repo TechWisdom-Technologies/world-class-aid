@@ -25,7 +25,6 @@ import Scholarships from "./pages/Scholarships";
 import VisaGuide from "./pages/VisaGuide";
 import Housing from "./pages/Housing";
 import LanguagePrep from "./pages/LanguagePrep";
-import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPost";
 import LanguageCentersPage from "./pages/LanguageCenters";
@@ -121,7 +120,6 @@ const App = () => (
             <Route path="/housing" element={<Housing />} />
             <Route path="/events" element={<Events />} />
             <Route path="/language-prep" element={<LanguagePrep />} />
-            <Route path="/careers" element={<Careers />} />
             <Route path="/alumni" element={<Alumni />} />
             <Route path="/pre-departure" element={<PreDeparture />} />
             <Route path="/help" element={<HelpCenter />} />

@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { MegaMenu } from "@/components/public/MegaMenu";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { LeadCaptureModal } from "@/components/public/LeadCaptureModal";
 import { useTableData } from "@/hooks/useSupabaseData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,8 +21,6 @@ export default function Courses() {
   const [degreeLevel, setDegreeLevel] = useState("All");
   const [universityId, setUniversityId] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [leadOpen, setLeadOpen] = useState(false);
-  const [selectedLead, setSelectedLead] = useState<{ course: string; university: string } | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setCurrentPage(1); }, [search, degreeLevel, universityId]);
@@ -43,11 +41,6 @@ export default function Courses() {
   const changePage = (page: number) => {
     setCurrentPage(page);
     listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const openLead = (courseTitle: string, universityName: string) => {
-    setSelectedLead({ course: courseTitle, university: universityName });
-    setLeadOpen(true);
   };
 
   const levelColor = (level: string) => {
@@ -132,12 +125,8 @@ export default function Courses() {
                               <span className="text-xs text-muted-foreground flex items-center gap-1"><DollarSign className="h-3 w-3" /> USD {Number(c.tuition_fee).toLocaleString()}/yr</span>
                             </div>
                           </div>
-                          <Button
-                            size="sm"
-                            className="shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/90"
-                            onClick={() => openLead(c.title, uni?.name || "Unknown University")}
-                          >
-                            Apply Now
+                          <Button asChild size="sm" className="shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                            <Link to={`/courses/${c.id}`}>View Details</Link>
                           </Button>
                         </CardContent>
                       </Card>
@@ -160,18 +149,6 @@ export default function Courses() {
           </div>
         )}
       </div>
-
-      <LeadCaptureModal
-        open={leadOpen}
-        onOpenChange={(open) => {
-          setLeadOpen(open);
-          if (!open) setSelectedLead(null);
-        }}
-        defaultCourse={selectedLead?.course || ""}
-        defaultUniversity={selectedLead?.university || ""}
-        source="courses_list_apply_now"
-      />
-
       <PublicFooter />
     </div>
   );

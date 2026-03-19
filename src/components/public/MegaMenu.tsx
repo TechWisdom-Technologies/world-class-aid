@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   GraduationCap, Menu, ChevronDown, LogOut, LayoutDashboard, ShieldCheck, Phone,
   Calculator, RefreshCw, Sparkles, ChevronRight, MapPin, Home, Award, GitCompare,
-  BookOpen, FileText, Calendar, Building2, Languages, PenTool, X, User, Wrench, Zap,
+  BookOpen, FileText, Calendar, Building2, Languages, PenTool, User, Wrench, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -36,14 +36,15 @@ const cityLinks = [
 ];
 
 const resourceToolsLinks = [
+  { label: "Blog", to: "/blog", icon: PenTool },
+  { label: "Events & Webinars", to: "/events", icon: Calendar },
+  { label: "Alumni", to: "/alumni", icon: User },
   { label: "AI Eligibility Test", to: "/eligibility", icon: Sparkles },
   { label: "Compare Universities", to: "/compare", icon: GitCompare },
   { label: "Cost Calculator", to: "/tools/calculator", icon: Calculator },
   { label: "GPA Converter", to: "/tools/gpa-converter", icon: RefreshCw },
   { label: "Scholarships", to: "/scholarships", icon: Award },
   { label: "Visa Guide", to: "/visa-guide", icon: FileText },
-  { label: "Events & Webinars", to: "/events", icon: Calendar },
-  { label: "Blog", to: "/blog", icon: PenTool },
 ];
 
 export function MegaMenu() {
@@ -61,13 +62,14 @@ export function MegaMenu() {
   };
 
   const toolsRoots = [
+    "/blog",
+    "/events",
+    "/alumni",
     "/eligibility",
     "/compare",
     "/tools",
     "/scholarships",
     "/visa-guide",
-    "/events",
-    "/blog",
   ];
 
   const destinationsActive = isRouteActive("/destinations");
@@ -190,7 +192,7 @@ export function MegaMenu() {
                     <Wrench className="h-3.5 w-3.5" /> Tools
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="w-[380px] max-w-[calc(100vw-3rem)] p-5 overflow-x-auto">
+                    <div className="w-[360px] max-w-[calc(100vw-3rem)] p-5 overflow-x-auto">
                       <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest px-3 pb-3 mb-2">
                         Tools & Resources
                       </p>

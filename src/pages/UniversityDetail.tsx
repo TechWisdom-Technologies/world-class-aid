@@ -205,16 +205,8 @@ export default function UniversityDetail() {
                       <TableCell className="text-muted-foreground">{c.duration}</TableCell>
                       <TableCell className="font-semibold text-secondary">${Number(c.tuition_fee).toLocaleString()}</TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-xs"
-                          onClick={() => {
-                            setLeadContext({ course: c.title, source: "university_courses_table_apply" });
-                            setLeadOpen(true);
-                          }}
-                        >
-                          Apply <ArrowRight className="h-3 w-3 ml-1" />
+                        <Button asChild size="sm" variant="outline" className="text-xs">
+                          <Link to={`/courses/${c.id}`}>View Details</Link>
                         </Button>
                       </TableCell>
                     </TableRow>
