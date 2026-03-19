@@ -1,5 +1,5 @@
 import AdminCrudTable, { FieldConfig } from "@/components/admin/AdminCrudTable";
-import { useTableData, useInsertRow, useUpdateRow, useDeleteRow } from "@/hooks/useSupabaseData";
+import { useTableData, useInsertRow, useUpdateRow, useDeleteRow, useBulkUpsertRows } from "@/hooks/useSupabaseData";
 
 export default function AdminCourses() {
   const { data, isLoading } = useTableData("courses");
@@ -7,6 +7,7 @@ export default function AdminCourses() {
   const insert = useInsertRow("courses");
   const update = useUpdateRow("courses");
   const del = useDeleteRow("courses");
+  const bulkUpsert = useBulkUpsertRows("courses");
 
   const fields: FieldConfig[] = [
     { key: "title", label: "Title", showInTable: true },
@@ -31,6 +32,7 @@ export default function AdminCourses() {
       onInsert={(row) => insert.mutate(row)}
       onUpdate={(row) => update.mutate(row)}
       onDelete={(id) => del.mutate(id)}
+      onBulkUpsert={(rows) => bulkUpsert.mutateAsync(rows).then(() => undefined)}
     />
   );
 }

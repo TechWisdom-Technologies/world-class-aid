@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef, useState, type ChangeEvent } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,9 +7,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LoadingScreen } from "@/components/ui/loading-screen";
-import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, X, Upload, Download } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import * as XLSX from "xlsx";
+import { useToast } from "@/hooks/use-toast";
+
+type TemplateColumnMeta = {
+  column: string;
+  label: string;
+  type: string;
+  example: string | number;
+};
 
 export interface FieldConfig {
   key: string;
@@ -36,6 +46,7 @@ interface AdminCrudTableProps {
   onInsert: (row: Record<string, any>) => void;
   onUpdate: (row: Record<string, any>) => void;
   onDelete: (id: string) => void;
+  onBulkUpsert?: (rows: Record<string, any>[]) => Promise<void>;
   renderCell?: (row: any, key: string) => React.ReactNode;
 }
 
@@ -138,12 +149,15 @@ function JsonArrayEditor({ value, onChange, placeholder }: { value: any; onChang
 }
 
 export default function AdminCrudTable({
-  title, data, isLoading, fields, searchKey, onInsert, onUpdate, onDelete, renderCell,
+  title, data, isLoading, fields, searchKey, onInsert, onUpdate, onDelete, onBulkUpsert, renderCell,
 }: AdminCrudTableProps) {
+  const { toast } = useToast();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<any | null>(null);
   const [form, setForm] = useState<Record<string, any>>({});
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const tableFields = fields.filter((f) => f.showInTable !== false);
 
@@ -157,6 +171,216 @@ export default function AdminCrudTable({
     if (f.type === "json_object") return {};
     if (f.type === "tag_input") return [];
     return "";
+  };
+
+  const parseUnknownJson = (value: unknown) => {
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    if (!trimmed) return value;
+    if (!(trimmed.startsWith("{") || trimmed.startsWith("["))) return value;
+    try {
+      return JSON.parse(trimmed);
+    } catch {
+      return value;
+    }
+  };
+
+  const parseByFieldType = (field: FieldConfig, value: unknown) => {
+    if (field.type === "number") {
+      if (value === "" || value === null || value === undefined) return 0;
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    if (field.type === "json_object") {
+      if (value === "" || value === null || value === undefined) return {};
+      const parsed = parseUnknownJson(value);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    }
+
+    if (field.type === "json_array") {
+      if (value === "" || value === null || value === undefined) return [];
+      const parsed = parseUnknownJson(value);
+      if (Array.isArray(parsed)) return parsed;
+      if (typeof value === "string") {
+        const tags = value
+          .split(/[,;]+/)
+          .map((v) => v.trim())
+          .filter(Boolean);
+        return tags;
+      }
+      return [];
+    }
+
+    if (field.type === "tag_input") {
+      if (value === "" || value === null || value === undefined) return [];
+      if (Array.isArray(value)) return value.map((v) => String(v).trim()).filter(Boolean);
+      const parsed = parseUnknownJson(value);
+      if (Array.isArray(parsed)) return parsed.map((v) => String(v).trim()).filter(Boolean);
+      if (typeof value === "string") {
+        return value
+          .split(/[,;]+/)
+          .map((v) => v.trim())
+          .filter(Boolean);
+      }
+      return [];
+    }
+
+    if (field.type === "relation") {
+      if (value === "" || value === null || value === undefined) return null;
+      return value;
+    }
+
+    if (typeof value === "string") return value.trim();
+    return value;
+  };
+
+  const mapImportedRow = (row: Record<string, any>) => {
+    const keyLookup: Record<string, string> = { id: "id" };
+    fields.forEach((f) => {
+      keyLookup[f.key.toLowerCase()] = f.key;
+      keyLookup[f.label.toLowerCase()] = f.key;
+    });
+
+    const normalized: Record<string, any> = {};
+    Object.keys(row).forEach((rawKey) => {
+      const normalizedKey = keyLookup[String(rawKey).trim().toLowerCase()];
+      if (normalizedKey) {
+        normalized[normalizedKey] = row[rawKey];
+      }
+    });
+
+    const cleaned: Record<string, any> = {};
+    if (normalized.id !== undefined && normalized.id !== "") {
+      cleaned.id = String(normalized.id);
+    }
+
+    fields.forEach((f) => {
+      const rawVal = normalized[f.key];
+      if (rawVal !== undefined) {
+        cleaned[f.key] = parseByFieldType(f, rawVal);
+      }
+    });
+
+    return cleaned;
+  };
+
+  const toExportValue = (field: FieldConfig, value: unknown) => {
+    if (value === null || value === undefined) return "";
+    if (field.type === "tag_input" && Array.isArray(value)) return value.join(", ");
+    if (field.type === "json_array" || field.type === "json_object") return JSON.stringify(value);
+    if (Array.isArray(value) || typeof value === "object") return JSON.stringify(value);
+    return value;
+  };
+
+  const getTemplateValue = (field: FieldConfig): string | number => {
+    if (field.type === "number") return 0;
+    if (field.type === "json_array") return "[]";
+    if (field.type === "json_object") return "{}";
+    if (field.type === "tag_input") return "value-1, value-2";
+    if (field.type === "relation") return "related-record-id";
+    if (field.type === "select") return field.options?.[0] || "";
+    return field.placeholder || "";
+  };
+
+  const getColumnTypeLabel = (field: FieldConfig) => {
+    if (!field.type) return "text";
+    return field.type;
+  };
+
+  const handleDownloadTemplate = () => {
+    const templateRow: Record<string, string | number> = { id: "" };
+    fields.forEach((f) => {
+      templateRow[f.key] = getTemplateValue(f);
+    });
+
+    const guideRows: TemplateColumnMeta[] = [
+      { column: "id", label: "ID", type: "uuid", example: "leave empty for new rows" },
+      ...fields.map((f) => ({
+        column: f.key,
+        label: f.label,
+        type: getColumnTypeLabel(f),
+        example: getTemplateValue(f),
+      })),
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    const templateSheet = XLSX.utils.json_to_sheet([templateRow]);
+    const guideSheet = XLSX.utils.json_to_sheet(guideRows);
+
+    XLSX.utils.book_append_sheet(workbook, templateSheet, "Template");
+    XLSX.utils.book_append_sheet(workbook, guideSheet, "Column Guide");
+
+    const filePrefix = title.toLowerCase().replace(/\s+/g, "_");
+    XLSX.writeFile(workbook, `${filePrefix}_template.xlsx`);
+  };
+
+  const handleExportExcel = () => {
+    const rows = data || [];
+    if (rows.length === 0) {
+      toast({ title: "No data to export", description: `Add ${title.toLowerCase()} first.` });
+      return;
+    }
+
+    const exportRows = rows.map((row) => {
+      const result: Record<string, any> = {};
+      if (row.id) result.id = row.id;
+      fields.forEach((f) => {
+        result[f.key] = toExportValue(f, row[f.key]);
+      });
+      return result;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(exportRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    const filePrefix = title.toLowerCase().replace(/\s+/g, "_");
+    XLSX.writeFile(workbook, `${filePrefix}_export.xlsx`);
+  };
+
+  const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !onBulkUpsert) return;
+
+    setIsImporting(true);
+    try {
+      const lowerName = file.name.toLowerCase();
+      let importedRows: Record<string, any>[] = [];
+
+      if (lowerName.endsWith(".json")) {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (!Array.isArray(parsed)) throw new Error("JSON file must contain an array of objects");
+        importedRows = parsed;
+      } else if (lowerName.endsWith(".xlsx") || lowerName.endsWith(".xls")) {
+        const buffer = await file.arrayBuffer();
+        const workbook = XLSX.read(buffer, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        importedRows = XLSX.utils.sheet_to_json<Record<string, any>>(sheet, { defval: "" });
+      } else {
+        throw new Error("Unsupported file type. Use .xlsx, .xls, or .json");
+      }
+
+      const cleanedRows = importedRows
+        .map(mapImportedRow)
+        .filter((row) => Object.keys(row).some((key) => key !== "id"));
+
+      if (cleanedRows.length === 0) {
+        throw new Error("No valid rows found in the selected file");
+      }
+
+      await onBulkUpsert(cleanedRows);
+      toast({ title: "Import complete", description: `${cleanedRows.length} rows imported into ${title.toLowerCase()}.` });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to import file";
+      toast({ title: "Import failed", description: message, variant: "destructive" });
+    } finally {
+      setIsImporting(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   const openCreate = () => {
@@ -302,9 +526,31 @@ export default function AdminCrudTable({
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">{title}</h1>
-        <Button onClick={openCreate}>
-          <Plus className="h-4 w-4 mr-2" />Add {title.replace(/s$/, "")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".xlsx,.xls,.json"
+            className="hidden"
+            onChange={handleFileSelect}
+          />
+          <Button variant="outline" onClick={handleDownloadTemplate}>
+            <Download className="h-4 w-4 mr-2" />Download Template
+          </Button>
+          <Button variant="outline" onClick={handleExportExcel}>
+            <Download className="h-4 w-4 mr-2" />Export Excel
+          </Button>
+          <Button
+            variant="outline"
+            disabled={!onBulkUpsert || isImporting}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className="h-4 w-4 mr-2" />{isImporting ? "Importing..." : "Import Excel/JSON"}
+          </Button>
+          <Button onClick={openCreate}>
+            <Plus className="h-4 w-4 mr-2" />Add {title.replace(/s$/, "")}
+          </Button>
+        </div>
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

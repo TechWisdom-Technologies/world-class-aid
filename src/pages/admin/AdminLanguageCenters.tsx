@@ -1,5 +1,5 @@
 import AdminCrudTable, { FieldConfig } from "@/components/admin/AdminCrudTable";
-import { useTableData, useInsertRow, useUpdateRow, useDeleteRow } from "@/hooks/useSupabaseData";
+import { useTableData, useInsertRow, useUpdateRow, useDeleteRow, useBulkUpsertRows } from "@/hooks/useSupabaseData";
 
 const fields: FieldConfig[] = [
   { key: "name", label: "Program Name", showInTable: true },
@@ -18,6 +18,7 @@ export default function AdminLanguageCenters() {
   const insert = useInsertRow("language_centers");
   const update = useUpdateRow("language_centers");
   const del = useDeleteRow("language_centers");
+  const bulkUpsert = useBulkUpsertRows("language_centers");
 
   return (
     <AdminCrudTable
@@ -29,6 +30,7 @@ export default function AdminLanguageCenters() {
       onInsert={(row) => insert.mutate(row)}
       onUpdate={(row) => update.mutate(row)}
       onDelete={(id) => del.mutate(id)}
+      onBulkUpsert={(rows) => bulkUpsert.mutateAsync(rows).then(() => undefined)}
     />
   );
 }

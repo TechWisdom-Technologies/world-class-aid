@@ -86,3 +86,41 @@ export function useDeleteRow(table: TableName) {
     onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
 }
+
+export function useBulkUpsertRows(table: TableName) {
+  const qc = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (rows: Record<string, any>[]) => {
+      if (!Array.isArray(rows) || rows.length === 0) return [];
+
+      const prepared = rows.map((row) => {
+        const next = { ...row };
+        if (next.id === "" || next.id === undefined || next.id === null) {
+          delete next.id;
+        }
+        return next;
+      });
+
+      const chunkSize = 200;
+      let affected: any[] = [];
+      for (let i = 0; i < prepared.length; i += chunkSize) {
+        const chunk = prepared.slice(i, i + chunkSize);
+        const { data, error } = await (supabase.from(table) as any)
+          .upsert(chunk, { onConflict: "id" })
+          .select("id");
+
+        if (error) throw error;
+        affected = affected.concat(data || []);
+      }
+
+      return affected;
+    },
+    onSuccess: (_data, rows) => {
+      qc.invalidateQueries({ queryKey: [table] });
+      toast({ title: `Imported ${rows.length} rows successfully` });
+    },
+    onError: (e: Error) => toast({ title: "Import failed", description: e.message, variant: "destructive" }),
+  });
+}
