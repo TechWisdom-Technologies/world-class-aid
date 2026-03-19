@@ -122,9 +122,9 @@ export default function PartnerNotifications() {
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Student status updates and important alerts</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-full sm:w-[150px]">
               <Filter className="h-4 w-4 mr-1" />
               <SelectValue />
             </SelectTrigger>
@@ -137,7 +137,7 @@ export default function PartnerNotifications() {
             </SelectContent>
           </Select>
           {unreadCount > 0 && (
-            <Button variant="outline" size="sm" onClick={markAllRead}>
+            <Button variant="outline" size="sm" onClick={markAllRead} className="w-full sm:w-auto">
               <CheckCheck className="h-4 w-4 mr-1" /> Mark all read
             </Button>
           )}

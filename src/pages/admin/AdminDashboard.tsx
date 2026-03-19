@@ -151,7 +151,7 @@ export default function AdminDashboard() {
             ) : (
               <div className="space-y-3">
                 {recentStudents.map(s => (
-                  <div key={s.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                  <div key={s.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-2 border-b last:border-0">
                     <div>
                       <p className="text-sm font-medium">{s.full_name}</p>
                       <p className="text-xs text-muted-foreground">{s.target_university || "No university"}</p>
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
             ) : (
               <div className="space-y-3">
                 {recentPartners.map(p => (
-                  <div key={p.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                  <div key={p.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-2 border-b last:border-0">
                     <div>
                       <p className="text-sm font-medium">{p.agency_name}</p>
                       <p className="text-xs text-muted-foreground">{p.contact_person}</p>

@@ -99,7 +99,7 @@ export default function Housing() {
             {/* Listings / Map */}
             <div className="flex-1">
               <Tabs value={viewMode} onValueChange={setViewMode} className="mb-4">
-                <TabsList className="grid w-[200px] grid-cols-2">
+                <TabsList className="grid w-full sm:w-[200px] grid-cols-2">
                   <TabsTrigger value="grid" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" /> Grid</TabsTrigger>
                   <TabsTrigger value="map" className="gap-1.5"><Map className="h-3.5 w-3.5" /> Map</TabsTrigger>
                 </TabsList>

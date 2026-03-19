@@ -37,13 +37,13 @@ export default function PartnerMarketing() {
             <h3 className="font-bold">Your Unique Referral Link</h3>
           </div>
           <p className="text-sm text-muted-foreground mb-4">Share this link to track organic leads from your network. All students who apply through this link will be automatically attributed to your agency.</p>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Input value={REFERRAL_LINK} readOnly className="flex-1 font-mono text-sm bg-muted/50" />
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-1.5" onClick={copyLink}>
+            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-1.5 w-full sm:w-auto" onClick={copyLink}>
               <Copy className="h-4 w-4" /> Copy
             </Button>
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-4">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="text-center p-3 bg-muted/50 rounded-xl">
               <p className="text-lg font-extrabold">247</p>
               <p className="text-xs text-muted-foreground">Total Clicks</p>

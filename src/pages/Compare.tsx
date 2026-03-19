@@ -97,7 +97,7 @@ export default function Compare() {
             <div className="space-y-8 animate-fade-in">
               {/* Sticky university headers */}
               <div className="sticky top-16 z-30 bg-background/95 backdrop-blur border-b py-4 -mx-4 px-4 md:mx-0 md:px-0 md:rounded-xl md:border md:shadow-sm">
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {activeUnis.map((a, i) => (
                     <div key={i} className="text-center">
                       {a ? (
@@ -155,7 +155,7 @@ export default function Compare() {
                       <row.icon className="h-4 w-4 text-secondary" />
                       <h3 className="font-semibold text-sm">{row.label}</h3>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {activeUnis.map((a, i) => (
                         <div key={i} className="text-center">
                           {a ? (
@@ -182,7 +182,7 @@ export default function Compare() {
                     <GraduationCap className="h-4 w-4 text-secondary" />
                     <h3 className="font-semibold text-sm">Top Courses</h3>
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {activeUnis.map((a, i) => (
                       <div key={i}>
                         {a ? (
@@ -210,7 +210,7 @@ export default function Compare() {
                   {["academic_difficulty", "affordability", "campus_life"].map((key) => (
                     <div key={key} className="mb-4">
                       <p className="text-xs text-muted-foreground mb-2 capitalize">{key.replace("_", " ")}</p>
-                      <div className="grid grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {activeUnis.map((a, i) => (
                           <div key={i}>
                             {a ? (

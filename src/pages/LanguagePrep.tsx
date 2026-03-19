@@ -49,7 +49,7 @@ export default function LanguagePrep() {
 
         {/* Stats */}
         <div className="container mx-auto px-4 -mt-8 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: "Students Trained", value: "5,000+" },
               { label: "Avg Score Improvement", value: "+1.5 Band" },

@@ -106,9 +106,9 @@ export default function AdminPartners() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">Partner Registrations</h1>
-        <div className="flex gap-2 text-sm">
+        <div className="flex flex-wrap gap-2 text-sm">
           <Badge variant="secondary">{registrations.filter(r => r.status === "pending").length} Pending</Badge>
           <Badge variant="secondary">{registrations.filter(r => r.status === "approved").length} Approved</Badge>
         </div>
@@ -119,7 +119,7 @@ export default function AdminPartners() {
           No partner registrations yet.
         </div>
       ) : (
-        <div className="rounded-lg border bg-card">
+        <div className="rounded-lg border bg-card overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -174,7 +174,7 @@ export default function AdminPartners() {
           {selectedReg && (
             <div className="space-y-6">
               {/* Info Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><Label className="text-muted-foreground text-xs">Agency Name</Label><p className="font-medium">{selectedReg.agency_name}</p></div>
                 <div><Label className="text-muted-foreground text-xs">Contact Person</Label><p className="font-medium">{selectedReg.contact_person}</p></div>
                 <div><Label className="text-muted-foreground text-xs">Email</Label><p className="font-medium">{selectedReg.email}</p></div>
@@ -182,7 +182,7 @@ export default function AdminPartners() {
                 <div><Label className="text-muted-foreground text-xs">Country</Label><p className="font-medium">{selectedReg.country || "N/A"}</p></div>
                 <div><Label className="text-muted-foreground text-xs">Annual Students</Label><p className="font-medium">{selectedReg.annual_students || "N/A"}</p></div>
                 <div><Label className="text-muted-foreground text-xs">Status</Label><div className="mt-1">{statusBadge(selectedReg.status)}</div></div>
-                <div><Label className="text-muted-foreground text-xs">Submitted</Label><p className="font-medium">{new Date(selectedReg.created_at).toLocaleString()}</p></div>
+                <div><Label className="text-muted-foreground text-xs">Submitted</Label><p className="font-medium break-words">{new Date(selectedReg.created_at).toLocaleString()}</p></div>
               </div>
 
               {/* Documents */}
@@ -239,7 +239,7 @@ export default function AdminPartners() {
 
               {/* Actions */}
               {selectedReg.status === "pending" && (
-                <div className="flex gap-3 border-t pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 border-t pt-4">
                   <Button
                     className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                     onClick={() => handleAction("approved")}

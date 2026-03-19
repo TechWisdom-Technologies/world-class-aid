@@ -524,9 +524,9 @@ export default function AdminCrudTable({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">{title}</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <input
             ref={fileInputRef}
             type="file"
@@ -534,20 +534,21 @@ export default function AdminCrudTable({
             className="hidden"
             onChange={handleFileSelect}
           />
-          <Button variant="outline" onClick={handleDownloadTemplate}>
+          <Button variant="outline" onClick={handleDownloadTemplate} className="w-full sm:w-auto">
             <Download className="h-4 w-4 mr-2" />Download Template
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+          <Button variant="outline" onClick={handleExportExcel} className="w-full sm:w-auto">
             <Download className="h-4 w-4 mr-2" />Export Excel
           </Button>
           <Button
             variant="outline"
             disabled={!onBulkUpsert || isImporting}
             onClick={() => fileInputRef.current?.click()}
+            className="w-full sm:w-auto"
           >
             <Upload className="h-4 w-4 mr-2" />{isImporting ? "Importing..." : "Import Excel/JSON"}
           </Button>
-          <Button onClick={openCreate}>
+          <Button onClick={openCreate} className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />Add {title.replace(/s$/, "")}
           </Button>
         </div>
@@ -573,7 +574,7 @@ export default function AdminCrudTable({
         </DialogContent>
       </Dialog>
 
-      <div className="relative mb-4 max-w-sm">
+      <div className="relative mb-4 w-full sm:max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input placeholder={`Search ${title.toLowerCase()}...`} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
       </div>
@@ -603,7 +604,8 @@ export default function AdminCrudTable({
                       {renderCell ? renderCell(row, f.key) ?? formatCellValue(row, f.key) : formatCellValue(row, f.key)}
                     </TableCell>
                   ))}
-                  <TableCell className="text-right space-x-1">
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1">
                     <Button variant="ghost" size="icon" onClick={() => openEdit(row)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -624,6 +626,7 @@ export default function AdminCrudTable({
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

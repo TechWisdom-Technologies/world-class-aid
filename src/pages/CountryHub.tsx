@@ -86,7 +86,7 @@ export default function CountryHub() {
       <div className="container mx-auto px-4 -mt-12 relative z-10">
         <Card className="shadow-xl border-2">
           <CardContent className="p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {quickFacts.map((f) => (
                 <div key={f.label} className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0">
@@ -191,7 +191,7 @@ export default function CountryHub() {
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">Cost of Living in {country.name}</h2>
             <p className="text-muted-foreground mb-8">Estimated monthly expenses for international students.</p>
-            <div className="grid sm:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {costItems.map((c) => (
                 <Card key={c.label}>
                   <CardContent className="p-6">

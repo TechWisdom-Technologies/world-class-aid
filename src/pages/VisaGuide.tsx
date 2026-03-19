@@ -61,7 +61,7 @@ export default function VisaGuide() {
         <div className="container mx-auto px-4 py-10">
           <div className="flex justify-center mb-10">
             <Select value={selected} onValueChange={setSelected}>
-              <SelectTrigger className="w-[240px]"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-full max-w-[240px]"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {countries.map((c) => (
                   <SelectItem key={c.name} value={c.name}>{c.flag_icon} {c.name}</SelectItem>

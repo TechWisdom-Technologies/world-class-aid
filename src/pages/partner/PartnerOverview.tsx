@@ -151,7 +151,7 @@ export default function PartnerOverview() {
           <CardContent>
             <div className="space-y-3">
               {students.slice(0, 5).map(s => (
-                <div key={s.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                <div key={s.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-2 border-b last:border-0">
                   <div>
                     <p className="font-medium text-sm">{s.full_name}</p>
                     <p className="text-xs text-muted-foreground">{s.target_university} — {s.target_course}</p>

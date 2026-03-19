@@ -53,7 +53,7 @@ export default function AdminLeads() {
         <p className="text-muted-foreground">Track and manage all incoming leads from the website.</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total Leads", value: stats.total, icon: Users, color: "text-primary" },
           { label: "New", value: stats.new, icon: UserPlus, color: "text-secondary" },
@@ -73,10 +73,10 @@ export default function AdminLeads() {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 gap-3">
           <CardTitle>All Leads</CardTitle>
           <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className="w-[150px]"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full sm:w-[150px]"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="new">New</SelectItem>
@@ -91,7 +91,7 @@ export default function AdminLeads() {
           {filtered.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">No leads found.</p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -128,9 +128,9 @@ export default function AdminLeads() {
                       <TableCell><Badge variant="outline" className="text-xs">{lead.source}</Badge></TableCell>
                       <TableCell><Badge className={`${statusColors[lead.status] || ""} border-0`}>{lead.status}</Badge></TableCell>
                       <TableCell className="text-xs text-muted-foreground">{new Date(lead.created_at).toLocaleDateString()}</TableCell>
-                      <TableCell>
+                      <TableCell className="min-w-[150px]">
                         <Select value={lead.status} onValueChange={(v) => updateStatus(lead.id, v)}>
-                          <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
+                          <SelectTrigger className="h-8 w-full sm:w-[120px] text-xs"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="new">New</SelectItem>
                             <SelectItem value="contacted">Contacted</SelectItem>

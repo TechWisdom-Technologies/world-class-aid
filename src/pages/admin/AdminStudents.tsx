@@ -185,9 +185,9 @@ export default function AdminStudents() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h1 className="text-2xl font-bold">Student Management</h1>
-        <div className="flex gap-2 text-sm">
+        <div className="flex flex-wrap gap-2 text-sm">
           <Badge variant="secondary">{students.length} Total Students</Badge>
           <Badge variant="secondary">{partners.length} Partners</Badge>
         </div>
@@ -216,19 +216,19 @@ export default function AdminStudents() {
 
       {/* Filters */}
       <div className="flex gap-3 flex-wrap">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="relative flex-1 min-w-[220px] w-full sm:w-auto sm:max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search students..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
         <Select value={filterPartner} onValueChange={setFilterPartner}>
-          <SelectTrigger className="w-[200px]"><Filter className="h-4 w-4 mr-2" /><SelectValue placeholder="All Partners" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[200px]"><Filter className="h-4 w-4 mr-2" /><SelectValue placeholder="All Partners" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Partners</SelectItem>
             {partners.map(p => <SelectItem key={p.user_id} value={p.user_id}>{p.agency_name}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-[200px]"><SelectValue placeholder="All Statuses" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="All Statuses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
             {statusOptions.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
@@ -240,7 +240,7 @@ export default function AdminStudents() {
       {filtered.length === 0 ? (
         <Card><CardContent className="p-12 text-center text-muted-foreground">No students found.</CardContent></Card>
       ) : (
-        <div className="rounded-lg border bg-card">
+        <div className="rounded-lg border bg-card overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -294,7 +294,7 @@ export default function AdminStudents() {
               {/* Personal Info */}
               <div>
                 <h3 className="font-semibold mb-3">Personal Information</h3>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div><Label className="text-muted-foreground text-xs">Email</Label><p className="font-medium text-sm">{selected.email}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Phone</Label><p className="font-medium text-sm">{selected.phone || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Passport</Label><p className="font-medium text-sm">{selected.passport_number || "—"}</p></div>
@@ -307,7 +307,7 @@ export default function AdminStudents() {
               {/* Academic Info */}
               <div className="border-t pt-4">
                 <h3 className="font-semibold mb-3">Academic Background</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label className="text-muted-foreground text-xs">Previous Institution</Label><p className="font-medium text-sm">{selected.previous_institution || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Previous Degree</Label><p className="font-medium text-sm">{selected.previous_degree || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">GPA</Label><p className="font-medium text-sm">{selected.gpa || "—"}</p></div>
@@ -318,7 +318,7 @@ export default function AdminStudents() {
               {/* Target Program */}
               <div className="border-t pt-4">
                 <h3 className="font-semibold mb-3">Target Program</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label className="text-muted-foreground text-xs">University</Label><p className="font-medium text-sm">{selected.target_university || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Course</Label><p className="font-medium text-sm">{selected.target_course || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Intake</Label><p className="font-medium text-sm">{selected.intake_month || "—"}</p></div>
@@ -342,7 +342,7 @@ export default function AdminStudents() {
                     const isPdf = url && /\.pdf(\?|$)/i.test(url);
                     return (
                       <div key={doc.field} className="rounded-lg border overflow-hidden">
-                        <div className="flex items-center gap-3 p-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-2">
                           {isImage ? <Image className="h-4 w-4 text-primary" /> : isPdf ? <File className="h-4 w-4 text-destructive" /> : <FileText className={`h-4 w-4 ${url ? "text-green-600" : "text-muted-foreground/40"}`} />}
                           <span className="text-sm flex-1 font-medium">{doc.label}</span>
                           {url ? (

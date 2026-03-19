@@ -195,14 +195,14 @@ export default function PartnerStudents() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-extrabold">Student Profiles</h1>
           <p className="text-muted-foreground text-sm">Manage your students and track their application progress</p>
         </div>
         <Dialog open={addOpen} onOpenChange={setAddOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full sm:w-auto">
               <UserPlus className="h-4 w-4 mr-2" />Add Student
             </Button>
           </DialogTrigger>
@@ -210,7 +210,7 @@ export default function PartnerStudents() {
             <DialogHeader><DialogTitle>Add New Student</DialogTitle></DialogHeader>
             <div className="space-y-4 pt-2">
               <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Personal Information</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><Label>Full Name *</Label><Input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} placeholder="Full name" /></div>
                 <div><Label>Email *</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="email@example.com" /></div>
                 <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+880..." /></div>
@@ -231,7 +231,7 @@ export default function PartnerStudents() {
               </div>
 
               <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide pt-2">Academic Background</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><Label>Previous Institution</Label><Input value={form.previous_institution} onChange={e => setForm(f => ({ ...f, previous_institution: e.target.value }))} /></div>
                 <div><Label>Previous Degree</Label><Input value={form.previous_degree} onChange={e => setForm(f => ({ ...f, previous_degree: e.target.value }))} /></div>
                 <div><Label>GPA</Label><Input type="number" step="0.01" value={form.gpa} onChange={e => setForm(f => ({ ...f, gpa: e.target.value }))} /></div>
@@ -239,7 +239,7 @@ export default function PartnerStudents() {
               </div>
 
               <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide pt-2">Target Program</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><Label>University</Label><Input value={form.target_university} onChange={e => setForm(f => ({ ...f, target_university: e.target.value }))} /></div>
                 <div><Label>Course</Label><Input value={form.target_course} onChange={e => setForm(f => ({ ...f, target_course: e.target.value }))} /></div>
                 <div><Label>Intake Month</Label><Input value={form.intake_month} onChange={e => setForm(f => ({ ...f, intake_month: e.target.value }))} placeholder="e.g. September 2026" /></div>
@@ -268,7 +268,7 @@ export default function PartnerStudents() {
       </div>
 
       {/* Search */}
-      <div className="relative max-w-sm">
+      <div className="relative w-full sm:max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input placeholder="Search students..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
       </div>
@@ -284,7 +284,7 @@ export default function PartnerStudents() {
         </Card>
       ) : (
         <Card>
-          <div className="rounded-xl border overflow-hidden">
+          <div className="rounded-xl border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -315,7 +315,7 @@ export default function PartnerStudents() {
                       <TableCell>{s.degree_level}</TableCell>
                       <TableCell><Badge variant="outline" className={st.class}>{st.label}</Badge></TableCell>
                       <TableCell><Badge variant="secondary">{docCount}/5</Badge></TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right min-w-[120px]">
                         <Button variant="ghost" size="sm" onClick={() => { setSelected(s); setDetailOpen(true); }}>
                           <Eye className="h-4 w-4 mr-1" />View
                         </Button>
@@ -347,7 +347,7 @@ export default function PartnerStudents() {
               </div>
 
               {/* Info Grid */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div><Label className="text-muted-foreground text-xs">Email</Label><p className="font-medium text-sm">{selected.email}</p></div>
                 <div><Label className="text-muted-foreground text-xs">Phone</Label><p className="font-medium text-sm">{selected.phone || "—"}</p></div>
                 <div><Label className="text-muted-foreground text-xs">Passport</Label><p className="font-medium text-sm">{selected.passport_number || "—"}</p></div>
@@ -358,7 +358,7 @@ export default function PartnerStudents() {
 
               <div className="border-t pt-4">
                 <h3 className="font-semibold mb-3">Academic Background</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label className="text-muted-foreground text-xs">Previous Institution</Label><p className="font-medium text-sm">{selected.previous_institution || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Previous Degree</Label><p className="font-medium text-sm">{selected.previous_degree || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">GPA</Label><p className="font-medium text-sm">{selected.gpa || "—"}</p></div>
@@ -368,7 +368,7 @@ export default function PartnerStudents() {
 
               <div className="border-t pt-4">
                 <h3 className="font-semibold mb-3">Target Program</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label className="text-muted-foreground text-xs">University</Label><p className="font-medium text-sm">{selected.target_university || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Course</Label><p className="font-medium text-sm">{selected.target_course || "—"}</p></div>
                   <div><Label className="text-muted-foreground text-xs">Intake</Label><p className="font-medium text-sm">{selected.intake_month || "—"}</p></div>
@@ -389,7 +389,7 @@ export default function PartnerStudents() {
                   ].map(doc => {
                     const url = (selected as any)[doc.field];
                     return (
-                      <div key={doc.field} className="flex items-center gap-3 p-3 rounded-lg border">
+                      <div key={doc.field} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border">
                         <FileText className={`h-5 w-5 ${url ? "text-green-600" : "text-muted-foreground"}`} />
                         <div className="flex-1">
                           <p className="font-medium text-sm">{doc.label}</p>

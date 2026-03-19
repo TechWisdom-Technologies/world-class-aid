@@ -45,14 +45,14 @@ export default function PartnerTeam() {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-extrabold">Team Management</h1>
           <p className="text-muted-foreground text-sm">Manage your agency's staff and permissions</p>
         </div>
         <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full sm:w-auto">
               <UserPlus className="h-4 w-4 mr-2" />Invite Team Member
             </Button>
           </DialogTrigger>
@@ -122,7 +122,7 @@ export default function PartnerTeam() {
       <Card>
         <CardHeader><CardTitle>Manage Staff</CardTitle></CardHeader>
         <CardContent>
-          <div className="rounded-xl border overflow-hidden">
+          <div className="rounded-xl border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
